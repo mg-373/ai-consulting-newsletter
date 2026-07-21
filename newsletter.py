@@ -1,19 +1,27 @@
 """
-AI & Consulting Daily Newsletter — webpage version
-----------------------------------------------------
+AI & Consulting Daily Newsletter — webpage version (upgraded)
+----------------------------------------------------------------
 Fetches the last 24 hours of headlines from credible AI and consulting
-sources, asks Gemini to write a balanced-length newsletter, and publishes
-it as a webpage (docs/index.html) with an archive of past editions.
+sources, asks Gemini to structure them into a newsletter, and publishes
+it as a webpage (docs/index.html) with:
+  - a "story of the day" hero section
+  - colour-coded category tags per story
+  - topic weighting toward things you say you care about (optional)
+  - a dark mode toggle
+  - an RSS feed of past editions (docs/feed.xml)
+  - a read-time estimate and weekly stats footer
+  - an archive of past editions
 
-GitHub Pages serves the docs/ folder, so once this script runs and the
-workflow commits the result, your page is live automatically.
-
-You should not need to edit this file. The only thing that changes
-between setups is your Gemini API key, set as a GitHub secret.
+You should not need to edit this file. Everything that changes between
+setups is read from GitHub secrets: GEMINI_API_KEY (required),
+YOUR_NAME (optional), TOPICS (optional).
 """
 
 import os
+import re
+import json
 import glob
+import time
 import datetime
 import html as html_lib
 
@@ -42,6 +50,19 @@ CONSULTING_FEEDS = [
 
 DOCS_DIR = "docs"
 ARCHIVE_DIR = os.path.join(DOCS_DIR, "archive")
+
+# Category tags Gemini can choose from, each with its own colour.
+CATEGORY_COLORS = {
+    "Funding": "#0b8a3e",
+    "Product Launch": "#0b5fff",
+    "Research": "#7a3fd6",
+    "Policy & Regulation": "#c2410c",
+    "M&A": "#b91c1c",
+    "Partnership": "#0f766e",
+    "Earnings": "#a16207",
+    "Hiring & Leadership": "#4338ca",
+    "Other": "#525252",
+}
 
 
 # ---------------------------------------------------------------------
@@ -79,50 +100,11 @@ def fetch_recent_items(feed_urls, hours=24):
 
 
 # ---------------------------------------------------------------------
-# 3. ASK GEMINI TO WRITE THE NEWSLETTER
+# 3. ASK GEMINI FOR STRUCTURED NEWSLETTER DATA
 # ---------------------------------------------------------------------
-def build_newsletter(ai_items, consulting_items, today_str):
-    api_key = os.environ["GEMINI_API_KEY"]
-
-    def format_items(items):
-        if not items:
-            return "No notable items found in the last 24 hours."
-        lines = []
-        for i in items:
-            lines.append(f"- [{i['source']}] {i['title']} — {i['summary']} ({i['link']})")
-        return "\n".join(lines)
-
-    prompt = f"""You are writing a daily newsletter called "AI & Consulting Daily"
-for {today_str}. You are given raw headlines/snippets from the last 24 hours,
-split into two sections: AI news, and Consulting industry news.
-
-Write a newsletter that:
-- Has a short, punchy intro line (1 sentence).
-- Has two clear sections: "AI" and "Consulting"
-- Under each section, covers the most important 4-7 stories as short bullet
-  points (1-2 sentences each) — enough detail to actually understand what
-  happened and why it matters, but NOT long paragraphs. Skip minor/duplicate
-  stories.
-- Ends with a one-line "Worth a deeper look" pick if anything stands out.
-- Keep the whole thing readable in under 3 minutes.
-- Do not invent facts. Only use what's provided below. If a section has
-  no real items, say so briefly instead of padding.
-- Output valid HTML fragment only (no <html>/<head>/<body> tags, no
-  markdown). Use <h2> for section headers, <p> for the intro/closing lines,
-  and <ul><li> for bullet points. Wrap story titles in <strong>. Where a
-  link is available, wrap the story title in an <a href="..."> tag.
-
-RAW AI ITEMS:
-{format_items(ai_items)}
-
-RAW CONSULTING ITEMS:
-{format_items(consulting_items)}
-"""
-
-    import time
-
+def call_gemini(prompt, api_key):
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
-    last_error = None
+    last_response = None
 
     for attempt in range(4):
         response = requests.post(
@@ -132,81 +114,282 @@ RAW CONSULTING ITEMS:
             timeout=60,
         )
         if response.status_code == 429:
-            # Rate-limited: wait a bit and try again rather than failing outright.
             wait_seconds = 20 * (attempt + 1)
             print(f"Got 429 (rate limited), waiting {wait_seconds}s and retrying...")
-            last_error = response
+            last_response = response
             time.sleep(wait_seconds)
             continue
         response.raise_for_status()
         data = response.json()
         return data["candidates"][0]["content"]["parts"][0]["text"]
 
-    # If we got here, all retries were rate-limited.
-    last_error.raise_for_status()
+    last_response.raise_for_status()
+
+
+def build_newsletter_data(ai_items, consulting_items, today_str, name, topics):
+    api_key = os.environ["GEMINI_API_KEY"]
+    category_list = ", ".join(f'"{c}"' for c in CATEGORY_COLORS)
+
+    def format_items(items):
+        if not items:
+            return "No notable items found in the last 24 hours."
+        lines = []
+        for i in items:
+            lines.append(f"- [{i['source']}] {i['title']} — {i['summary']} ({i['link']})")
+        return "\n".join(lines)
+
+    greeting_instruction = (
+        f'Address the reader by name ("{name}") naturally in the greeting, e.g. "Morning, {name} —".'
+        if name else
+        "Keep the greeting short and friendly, no name needed."
+    )
+
+    topics_instruction = (
+        f'The reader has told you they especially care about: {topics}. '
+        f'When genuinely relevant stories exist, prioritize them in ordering and '
+        f'strongly prefer one as the hero. Do not force a connection if nothing '
+        f'in today\'s items actually relates — never fabricate relevance.'
+        if topics else
+        "No specific topic preferences given — just pick the most objectively important stories."
+    )
+
+    prompt = f"""You are writing a daily newsletter called "AI & Consulting Daily" for {today_str}.
+You are given raw headlines/snippets from the last 24 hours, split into AI news and
+Consulting industry news.
+
+{greeting_instruction}
+{topics_instruction}
+
+Respond with ONLY valid JSON (no markdown fences, no commentary before or after),
+matching exactly this shape:
+
+{{
+  "greeting": "one short punchy sentence to open the newsletter",
+  "hero": {{
+    "title": "the single most important story across both topics",
+    "summary": "2-3 sentences explaining it and why it matters",
+    "link": "url or empty string",
+    "source": "publication name",
+    "category": "one of: {category_list}"
+  }},
+  "ai_stories": [
+    {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}"}}
+  ],
+  "consulting_stories": [
+    {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}"}}
+  ],
+  "closer": "one sentence recommending the single best story to read in full, or empty string if nothing stands out"
+}}
+
+Rules:
+- Do NOT include the hero story again inside ai_stories or consulting_stories.
+- Include 4-7 stories in ai_stories and 4-7 in consulting_stories (fewer is fine if
+  there genuinely isn't more real material — never pad with filler).
+- Do not invent facts. Only use what's provided below.
+- If a whole section has no real items, return an empty array for it.
+- Keep summaries concise — this must be readable in under 3 minutes total.
+
+RAW AI ITEMS:
+{format_items(ai_items)}
+
+RAW CONSULTING ITEMS:
+{format_items(consulting_items)}
+"""
+
+    raw = call_gemini(prompt, api_key)
+
+    # Gemini sometimes wraps JSON in ```json fences despite instructions — strip them.
+    cleaned = re.sub(r"^```json\s*|^```\s*|```\s*$", "", raw.strip(), flags=re.MULTILINE).strip()
+
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        print("Failed to parse Gemini's JSON response. Raw output was:")
+        print(raw)
+        raise e
 
 
 # ---------------------------------------------------------------------
-# 4. RENDER THE HTML PAGE
+# 4. HTML BUILDING HELPERS
+# ---------------------------------------------------------------------
+def tag_badge(category):
+    color = CATEGORY_COLORS.get(category, CATEGORY_COLORS["Other"])
+    safe_category = html_lib.escape(category or "Other")
+    return f'<span class="tag" style="background:{color}22;color:{color};border:1px solid {color}55;">{safe_category}</span>'
+
+
+def story_card(story, is_hero=False):
+    title = html_lib.escape(story.get("title", ""))
+    summary = html_lib.escape(story.get("summary", ""))
+    source = html_lib.escape(story.get("source", ""))
+    link = story.get("link", "") or ""
+    category = story.get("category", "Other")
+
+    title_html = f'<a href="{html_lib.escape(link)}">{title}</a>' if link else title
+    css_class = "hero-card" if is_hero else "story-card"
+
+    return f"""<div class="{css_class}">
+  <div class="story-meta">{tag_badge(category)}<span class="source">{source}</span></div>
+  <h3 class="story-title">{title_html}</h3>
+  <p class="story-summary">{summary}</p>
+</div>"""
+
+
+def estimate_read_minutes(data):
+    text_parts = [data.get("greeting", ""), data.get("closer", "")]
+    hero = data.get("hero", {})
+    text_parts.append(hero.get("title", ""))
+    text_parts.append(hero.get("summary", ""))
+    for story in data.get("ai_stories", []) + data.get("consulting_stories", []):
+        text_parts.append(story.get("title", ""))
+        text_parts.append(story.get("summary", ""))
+
+    word_count = sum(len(t.split()) for t in text_parts if t)
+    minutes = max(1, round(word_count / 200))
+    return minutes
+
+
+# ---------------------------------------------------------------------
+# 5. PAGE TEMPLATE
 # ---------------------------------------------------------------------
 PAGE_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI & Consulting Daily — {date_title}</title>
+<title>{page_title}</title>
+<link rel="alternate" type="application/rss+xml" title="{header_title_plain} RSS Feed" href="feed.xml">
 <style>
+  :root {{
+    --bg: #fafafa;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #ddd;
+    --card-bg: #ffffff;
+    --link: #0b5fff;
+  }}
+  html[data-theme="dark"] {{
+    --bg: #14161a;
+    --text: #eaeaea;
+    --muted: #9a9a9a;
+    --border: #2c2f36;
+    --card-bg: #1d2027;
+    --link: #6ea8ff;
+  }}
+  * {{ box-sizing: border-box; }}
   body {{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 680px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 32px 20px 80px;
-    color: #1a1a1a;
+    color: var(--text);
+    background: var(--bg);
     line-height: 1.55;
-    background: #fafafa;
+    transition: background 0.2s, color 0.2s;
   }}
   header {{
-    border-bottom: 3px solid #1a1a1a;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid var(--text);
     padding-bottom: 14px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
+    gap: 12px;
   }}
   header h1 {{
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin: 0 0 4px;
   }}
   header .date {{
-    color: #666;
-    font-size: 0.95rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }}
+  #theme-toggle {{
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }}
+  .meta-line {{
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }}
+  .greeting {{
+    font-size: 1.05rem;
+    margin-bottom: 28px;
   }}
   h2 {{
-    font-size: 1.15rem;
-    margin-top: 32px;
-    border-bottom: 1px solid #ddd;
+    font-size: 1.1rem;
+    margin-top: 36px;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 6px;
   }}
-  ul {{
-    padding-left: 20px;
+  .hero-card {{
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0 32px;
   }}
-  li {{
-    margin-bottom: 10px;
+  .hero-card .story-title {{
+    font-size: 1.25rem;
   }}
-  a {{
-    color: #0b5fff;
-    text-decoration: none;
+  .story-card {{
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
   }}
-  a:hover {{
-    text-decoration: underline;
+  .story-meta {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }}
+  .tag {{
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }}
+  .source {{
+    color: var(--muted);
+    font-size: 0.8rem;
+  }}
+  .story-title {{
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }}
+  .story-summary {{
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }}
+  a {{ color: var(--link); text-decoration: none; }}
+  a:hover {{ text-decoration: underline; }}
+  .closer {{
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
   }}
   footer {{
     margin-top: 48px;
     padding-top: 16px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--border);
     font-size: 0.85rem;
-    color: #777;
+    color: var(--muted);
   }}
   footer h3 {{
     font-size: 0.9rem;
-    color: #333;
+    color: var(--text);
     margin-bottom: 8px;
   }}
   footer ul {{
@@ -216,15 +399,37 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   footer li {{
     margin-bottom: 4px;
   }}
+  .stats {{
+    margin: 20px 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }}
 </style>
 </head>
 <body>
 <header>
-  <h1>AI &amp; Consulting Daily</h1>
-  <div class="date">{date_title}</div>
+  <div>
+    <h1>{header_title}</h1>
+    <div class="date">{date_title}</div>
+  </div>
+  <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
-{content}
+<div class="meta-line">{read_minutes} min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">{greeting}</p>
+
+{hero_html}
+
+<h2>🤖 AI</h2>
+{ai_html}
+
+<h2>📊 Consulting</h2>
+{consulting_html}
+
+{closer_html}
+
+<div class="stats">{stats_line}</div>
 
 <footer>
   <h3>Past editions</h3>
@@ -232,25 +437,104 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   {archive_links}
   </ul>
 </footer>
+
+<script>
+  function applyTheme(theme) {{
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }}
+  function toggleTheme() {{
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }}
+  (function() {{
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  }})();
+</script>
 </body>
 </html>
 """
 
 
-def render_html(content_fragment, date_title, archive_link_items):
+def render_html(data, date_title, archive_link_items, name, stats_line):
+    header_title_plain = f"{name}'s AI & Consulting Daily" if name else "AI & Consulting Daily"
+    page_title = f"{header_title_plain} — {date_title}"
     archive_html = "\n".join(archive_link_items) if archive_link_items else "<li>No past editions yet.</li>"
+
+    hero = data.get("hero") or {}
+    hero_html = story_card(hero, is_hero=True) if hero.get("title") else ""
+
+    ai_stories = data.get("ai_stories") or []
+    consulting_stories = data.get("consulting_stories") or []
+    ai_html = "\n".join(story_card(s) for s in ai_stories) or "<p>No notable AI stories in the last 24 hours.</p>"
+    consulting_html = "\n".join(story_card(s) for s in consulting_stories) or "<p>No notable consulting stories in the last 24 hours.</p>"
+
+    closer = data.get("closer", "")
+    closer_html = f'<p class="closer">{html_lib.escape(closer)}</p>' if closer else ""
+
+    read_minutes = estimate_read_minutes(data)
+
     return PAGE_TEMPLATE.format(
+        page_title=html_lib.escape(page_title),
+        header_title=html_lib.escape(header_title_plain),
+        header_title_plain=html_lib.escape(header_title_plain),
         date_title=html_lib.escape(date_title),
-        content=content_fragment,
+        read_minutes=read_minutes,
+        greeting=html_lib.escape(data.get("greeting", "")),
+        hero_html=hero_html,
+        ai_html=ai_html,
+        consulting_html=consulting_html,
+        closer_html=closer_html,
+        stats_line=html_lib.escape(stats_line),
         archive_links=archive_html,
     )
 
 
 # ---------------------------------------------------------------------
-# 5. MAIN
+# 6. RSS FEED
+# ---------------------------------------------------------------------
+def build_rss_feed(manifest_entries, site_title):
+    """manifest_entries: list of dicts with date_slug, date_title, hero_title, link (relative)."""
+    items_xml = []
+    for entry in manifest_entries[:30]:
+        try:
+            pub_date = datetime.datetime.strptime(entry["date_slug"], "%Y-%m-%d")
+        except ValueError:
+            continue
+        pub_date_str = pub_date.strftime("%a, %d %b %Y 21:00:00 +0000")
+        title = html_lib.escape(f"{entry['date_title']}: {entry.get('hero_title', '')}".strip(": "))
+        link = entry["link"]
+        items_xml.append(f"""  <item>
+    <title>{title}</title>
+    <link>{link}</link>
+    <guid>{link}</guid>
+    <pubDate>{pub_date_str}</pubDate>
+  </item>""")
+
+    items_block = "\n".join(items_xml)
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>{html_lib.escape(site_title)}</title>
+  <description>Daily AI and consulting industry news roundup</description>
+{items_block}
+</channel>
+</rss>
+"""
+
+
+# ---------------------------------------------------------------------
+# 7. MAIN
 # ---------------------------------------------------------------------
 if __name__ == "__main__":
     os.makedirs(ARCHIVE_DIR, exist_ok=True)
+
+    name = os.environ.get("YOUR_NAME", "").strip()
+    topics = os.environ.get("TOPICS", "").strip()
 
     today = datetime.date.today()
     today_str = today.strftime("%A, %B %d, %Y")
@@ -264,36 +548,75 @@ if __name__ == "__main__":
     consulting_items = fetch_recent_items(CONSULTING_FEEDS)
     print(f"Found {len(consulting_items)} consulting items")
 
-    print("Asking Gemini to write the newsletter...")
-    content_fragment = build_newsletter(ai_items, consulting_items, today_str)
+    print("Asking Gemini to structure the newsletter...")
+    data = build_newsletter_data(ai_items, consulting_items, today_str, name, topics)
 
-    # Gather existing archive files (before writing today's), newest first
-    existing_archive_files = sorted(
-        glob.glob(os.path.join(ARCHIVE_DIR, "*.html")), reverse=True
+    # Gather existing manifest entries (before writing today's), newest first
+    existing_manifests = sorted(
+        glob.glob(os.path.join(ARCHIVE_DIR, "*.json")), reverse=True
     )
+    manifest_entries = []
+    for path in existing_manifests:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                manifest_entries.append(json.load(f))
+        except Exception:
+            continue
 
     def link_item(slug, label):
         return f'<li><a href="archive/{slug}.html">{html_lib.escape(label)}</a></li>'
 
     archive_link_items = [link_item(today_slug, today_str)]
-    for path in existing_archive_files[:20]:  # keep the list to the last 20
-        slug = os.path.splitext(os.path.basename(path))[0]
-        try:
-            label = datetime.datetime.strptime(slug, "%Y-%m-%d").strftime("%A, %B %d, %Y")
-        except ValueError:
-            label = slug
-        archive_link_items.append(link_item(slug, label))
+    for m in manifest_entries[:20]:
+        archive_link_items.append(link_item(m["date_slug"], m["date_title"]))
 
-    page_html = render_html(content_fragment, today_str, archive_link_items)
+    # Weekly stats: sum today's + last 6 days' manifest counts
+    week_cutoff = today - datetime.timedelta(days=6)
+    week_ai_count = len(data.get("ai_stories") or []) + (1 if (data.get("hero") or {}).get("category") else 0) * 0
+    week_consulting_count = len(data.get("consulting_stories") or [])
+    for m in manifest_entries:
+        try:
+            m_date = datetime.datetime.strptime(m["date_slug"], "%Y-%m-%d").date()
+        except (KeyError, ValueError):
+            continue
+        if m_date >= week_cutoff:
+            week_ai_count += m.get("ai_count", 0)
+            week_consulting_count += m.get("consulting_count", 0)
+
+    stats_line = f"This week so far: {week_ai_count} AI stories tracked · {week_consulting_count} consulting stories tracked"
+
+    page_html = render_html(data, today_str, archive_link_items, name, stats_line)
 
     # Write today's archive copy
     archive_path = os.path.join(ARCHIVE_DIR, f"{today_slug}.html")
     with open(archive_path, "w", encoding="utf-8") as f:
         f.write(page_html)
 
+    # Write today's manifest (used for stats + RSS on future runs)
+    hero_title = (data.get("hero") or {}).get("title", "")
+    manifest = {
+        "date_slug": today_slug,
+        "date_title": today_str,
+        "hero_title": hero_title,
+        "ai_count": len(data.get("ai_stories") or []),
+        "consulting_count": len(data.get("consulting_stories") or []),
+    }
+    manifest_path = os.path.join(ARCHIVE_DIR, f"{today_slug}.json")
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f)
+
     # Write/overwrite the homepage with today's edition
     index_path = os.path.join(DOCS_DIR, "index.html")
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(page_html)
 
-    print("Done! Wrote", index_path, "and", archive_path)
+    # Build RSS feed from today's + past manifests
+    rss_entries = [{**manifest, "link": f"archive/{today_slug}.html"}]
+    for m in manifest_entries:
+        rss_entries.append({**m, "link": f"archive/{m['date_slug']}.html"})
+    site_title = f"{name}'s AI & Consulting Daily" if name else "AI & Consulting Daily"
+    rss_xml = build_rss_feed(rss_entries, site_title)
+    with open(os.path.join(DOCS_DIR, "feed.xml"), "w", encoding="utf-8") as f:
+        f.write(rss_xml)
+
+    print("Done! Wrote", index_path, archive_path, "and feed.xml")
