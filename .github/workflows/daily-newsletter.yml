@@ -1,0 +1,40 @@
+name: Daily AI & Consulting Newsletter
+
+on:
+  schedule:
+    # 21:00 UTC = 10:00 PM UK time during British Summer Time (BST),
+    # and 9:00 PM UK time during winter (GMT). See setup notes for
+    # how to adjust this if you want it exact year-round.
+    - cron: "0 21 * * *"
+  workflow_dispatch: {}   # lets you click "Run workflow" manually to test
+
+permissions:
+  contents: write   # needed so the workflow can commit the new page
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate today's newsletter page
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python newsletter.py
+
+      - name: Commit and push the updated page
+        run: |
+          git config user.name "newsletter-bot"
+          git config user.email "actions@github.com"
+          git add docs/
+          git diff --quiet --cached || git commit -m "Daily newsletter: $(date -u +'%Y-%m-%d')"
+          git push
