@@ -35,17 +35,25 @@ import requests
 # ---------------------------------------------------------------------
 AI_FEEDS = [
     "https://techcrunch.com/category/artificial-intelligence/feed/",
-    "https://www.technologyreview.com/feed/",
+    "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
     "https://venturebeat.com/category/ai/feed/",
     "https://arstechnica.com/ai/feed/",
+    "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+    "https://openai.com/news/rss.xml",
+    "https://blog.google/technology/ai/rss/",
+    "https://www.marktechpost.com/feed/",
+    "https://huggingface.co/blog/feed.xml",
     "https://www.artificialintelligence-news.com/feed/",
 ]
 
 CONSULTING_FEEDS = [
     "https://hbr.org/feed",
     "https://www.mckinsey.com/insights/rss",
-    "https://www.consultancy.uk/rss",
     "https://www.bain.com/rss/insights/",
+    "https://www.consultancy.uk/rss",
+    "https://www.strategy-business.com/all_updates.xml",
+    "https://www.ft.com/companies/professional-services?format=rss",
+    "https://www.managementtoday.co.uk/rss",
 ]
 
 DOCS_DIR = "docs"
@@ -171,13 +179,14 @@ matching exactly this shape:
     "link": "url or empty string",
     "source": "publication name",
     "category": "one of: {category_list}",
-    "context": ["2-4 short bullets giving objective background on WHY this is happening"]
+    "context": ["2-4 short bullets giving objective background on WHY this is happening"],
+    "knock_on_effects": ["2-3 short bullets on plausible secondary/downstream effects"]
   }},
   "ai_stories": [
-    {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}", "context": ["2-4 short bullets"]}}
+    {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}", "context": ["2-4 short bullets"], "knock_on_effects": ["2-3 short bullets"]}}
   ],
   "consulting_stories": [
-    {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}", "context": ["2-4 short bullets"]}}
+    {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}", "context": ["2-4 short bullets"], "knock_on_effects": ["2-3 short bullets"]}}
   ],
   "closer": "one sentence recommending the single best story to read in full, or empty string if nothing stands out"
 }}
@@ -196,6 +205,14 @@ Rules:
   regulators vs. competitors), briefly represent the different viewpoints neutrally
   rather than picking a side. Stay factual — do not speculate beyond what a
   well-informed, neutral analyst could reasonably infer from the story itself.
+- For "knock_on_effects" on every story: write 2-3 short bullets (each under 20
+  words) on plausible secondary or downstream effects — who or what else this
+  could affect next (competitors, regulators, job markets, adjacent industries,
+  consumers, share prices, etc.). Clearly signal these are plausible/likely
+  outcomes, not confirmed facts (e.g. "could pressure...", "may prompt...",
+  "likely to..."). Never state a knock-on effect as if it has already happened.
+  If a story is too minor or self-contained for meaningful knock-on effects,
+  return an empty array rather than inventing weak ones.
 
 RAW AI ITEMS:
 {format_items(ai_items)}
@@ -233,24 +250,29 @@ def story_card(story, is_hero=False):
     link = story.get("link", "") or ""
     category = story.get("category", "Other")
     context = story.get("context") or []
+    knock_on_effects = story.get("knock_on_effects") or []
 
     title_html = f'<a href="{html_lib.escape(link)}">{title}</a>' if link else title
     css_class = "hero-card" if is_hero else "story-card"
 
-    context_html = ""
-    if context:
-        bullets = "\n".join(f"<li>{html_lib.escape(b)}</li>" for b in context if b)
-        if bullets:
-            context_html = f"""<details class="context">
-  <summary>Why this is happening</summary>
+    def details_block(css_name, label, bullet_list):
+        bullets = "\n".join(f"<li>{html_lib.escape(b)}</li>" for b in bullet_list if b)
+        if not bullets:
+            return ""
+        return f"""<details class="{css_name}">
+  <summary>{label}</summary>
   <ul>{bullets}</ul>
 </details>"""
+
+    context_html = details_block("context", "Why this is happening", context)
+    knock_on_html = details_block("knock-on", "Possible knock-on effects", knock_on_effects)
 
     return f"""<div class="{css_class}">
   <div class="story-meta">{tag_badge(category)}<span class="source">{source}</span></div>
   <h3 class="story-title">{title_html}</h3>
   <p class="story-summary">{summary}</p>
   {context_html}
+  {knock_on_html}
 </div>"""
 
 
@@ -260,10 +282,12 @@ def estimate_read_minutes(data):
     text_parts.append(hero.get("title", ""))
     text_parts.append(hero.get("summary", ""))
     text_parts.extend(hero.get("context") or [])
+    text_parts.extend(hero.get("knock_on_effects") or [])
     for story in data.get("ai_stories", []) + data.get("consulting_stories", []):
         text_parts.append(story.get("title", ""))
         text_parts.append(story.get("summary", ""))
         text_parts.extend(story.get("context") or [])
+        text_parts.extend(story.get("knock_on_effects") or [])
 
     word_count = sum(len(t.split()) for t in text_parts if t)
     minutes = max(1, round(word_count / 200))
@@ -507,6 +531,38 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 5px;
   }}
   .context li:last-child {{ margin-bottom: 0; }}
+  .knock-on {{
+    margin-top: 8px;
+  }}
+  .knock-on summary {{
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }}
+  html[data-theme="dark"] .knock-on summary {{
+    color: #e0a530;
+  }}
+  .knock-on summary::-webkit-details-marker {{
+    display: none;
+  }}
+  .knock-on summary::before {{
+    content: "▸ ";
+  }}
+  .knock-on[open] summary::before {{
+    content: "▾ ";
+  }}
+  .knock-on ul {{
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }}
+  .knock-on li {{
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }}
+  .knock-on li:last-child {{ margin-bottom: 0; }}
   a {{ color: var(--link); text-decoration: none; }}
   a:hover {{ text-decoration: underline; }}
   .closer {{
