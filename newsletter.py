@@ -279,13 +279,97 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   * {{ box-sizing: border-box; }}
   body {{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
+    margin: 0;
     color: var(--text);
     background: var(--bg);
     line-height: 1.55;
     transition: background 0.2s, color 0.2s;
+  }}
+  .layout {{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }}
+  @media (min-width: 960px) {{
+    .layout {{
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }}
+  }}
+  .main {{ min-width: 0; }}
+  .sidebar {{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }}
+  @media (min-width: 960px) {{
+    .sidebar {{ position: sticky; top: 24px; }}
+  }}
+  .widget {{
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }}
+  .widget h3 {{
+    margin: 0 0 12px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }}
+  .widget-list {{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }}
+  .widget-list li {{
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }}
+  .widget-list li:last-child {{ margin-bottom: 0; }}
+  .widget-archive {{
+    max-height: 260px;
+    overflow-y: auto;
+  }}
+  .category-row {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }}
+  .category-row:last-child {{ margin-bottom: 0; }}
+  .category-count {{
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }}
+  .stat-number {{
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+  }}
+  .stat-label {{
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin: 2px 0 0;
+  }}
+  .stat-pair {{
+    display: flex;
+    gap: 20px;
+  }}
+  .subscribe-note {{
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }}
+  .rss-link {{
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
   }}
   header {{
     display: flex;
@@ -380,33 +464,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-style: italic;
     color: var(--muted);
   }}
-  footer {{
-    margin-top: 48px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    font-size: 0.85rem;
-    color: var(--muted);
-  }}
-  footer h3 {{
-    font-size: 0.9rem;
-    color: var(--text);
-    margin-bottom: 8px;
-  }}
-  footer ul {{
-    padding-left: 0;
-    list-style: none;
-  }}
-  footer li {{
-    margin-bottom: 4px;
-  }}
-  .stats {{
-    margin: 20px 0;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }}
 </style>
 </head>
 <body>
+<div class="layout">
+<div class="main">
 <header>
   <div>
     <h1>{header_title}</h1>
@@ -428,15 +490,42 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 {consulting_html}
 
 {closer_html}
+</div>
 
-<div class="stats">{stats_line}</div>
+<aside class="sidebar">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">{week_ai_count}</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">{week_consulting_count}</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+    </div>
+  </div>
 
-<footer>
-  <h3>Past editions</h3>
-  <ul>
-  {archive_links}
-  </ul>
-</footer>
+  <div class="widget">
+    <h3>Today's mix</h3>
+    {category_breakdown_html}
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    {archive_links}
+    </ul>
+  </div>
+</aside>
+</div>
 
 <script>
   function applyTheme(theme) {{
@@ -460,7 +549,27 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 """
 
 
-def render_html(data, date_title, archive_link_items, name, stats_line):
+def build_category_breakdown_html(data):
+    hero = data.get("hero") or {}
+    all_stories = ([hero] if hero.get("title") else []) + (data.get("ai_stories") or []) + (data.get("consulting_stories") or [])
+
+    counts = {}
+    for story in all_stories:
+        category = story.get("category") or "Other"
+        counts[category] = counts.get(category, 0) + 1
+
+    if not counts:
+        return "<p style=\"font-size:0.88rem;color:var(--muted);margin:0;\">No stories today.</p>"
+
+    rows = []
+    for category, count in sorted(counts.items(), key=lambda kv: -kv[1]):
+        rows.append(
+            f'<div class="category-row">{tag_badge(category)}<span class="category-count">{count}</span></div>'
+        )
+    return "\n".join(rows)
+
+
+def render_html(data, date_title, archive_link_items, name, week_ai_count, week_consulting_count):
     header_title_plain = f"{name}'s AI & Consulting Daily" if name else "AI & Consulting Daily"
     page_title = f"{header_title_plain} — {date_title}"
     archive_html = "\n".join(archive_link_items) if archive_link_items else "<li>No past editions yet.</li>"
@@ -477,6 +586,7 @@ def render_html(data, date_title, archive_link_items, name, stats_line):
     closer_html = f'<p class="closer">{html_lib.escape(closer)}</p>' if closer else ""
 
     read_minutes = estimate_read_minutes(data)
+    category_breakdown_html = build_category_breakdown_html(data)
 
     return PAGE_TEMPLATE.format(
         page_title=html_lib.escape(page_title),
@@ -489,7 +599,9 @@ def render_html(data, date_title, archive_link_items, name, stats_line):
         ai_html=ai_html,
         consulting_html=consulting_html,
         closer_html=closer_html,
-        stats_line=html_lib.escape(stats_line),
+        category_breakdown_html=category_breakdown_html,
+        week_ai_count=week_ai_count,
+        week_consulting_count=week_consulting_count,
         archive_links=archive_html,
     )
 
@@ -583,9 +695,7 @@ if __name__ == "__main__":
             week_ai_count += m.get("ai_count", 0)
             week_consulting_count += m.get("consulting_count", 0)
 
-    stats_line = f"This week so far: {week_ai_count} AI stories tracked · {week_consulting_count} consulting stories tracked"
-
-    page_html = render_html(data, today_str, archive_link_items, name, stats_line)
+    page_html = render_html(data, today_str, archive_link_items, name, week_ai_count, week_consulting_count)
 
     # Write today's archive copy
     archive_path = os.path.join(ARCHIVE_DIR, f"{today_slug}.html")
