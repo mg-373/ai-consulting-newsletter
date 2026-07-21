@@ -232,6 +232,38 @@
     margin-bottom: 5px;
   }
   .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
   a { color: var(--link); text-decoration: none; }
   a:hover { text-decoration: underline; }
   .closer {
@@ -252,136 +284,244 @@
   <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
-<div class="meta-line">5 min read · <a href="feed.xml">RSS feed</a></div>
+<div class="meta-line">7 min read · <a href="feed.xml">RSS feed</a></div>
 
-<p class="greeting">Morning, Mehul — here&#x27;s your quick briefing on the latest in AI and consulting.</p>
+<p class="greeting">Morning, Mehul — a turbulent Tuesday in AI, with geopolitical tensions rising and critical copyright decisions shaping the future.</p>
 
 <div class="hero-card">
   <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/us-threatens-sanctions-against-chinese-ai-models-over-ip-theft/">US Threatens Sanctions on Chinese AI Models Over Alleged IP Theft</a></h3>
-  <p class="story-summary">Treasury Secretary Scott Bessent has indicated that the U.S. could impose sanctions on Chinese open AI models, citing concerns over alleged intellectual property theft. This move marks a significant escalation in the Trump administration&#x27;s ongoing efforts to slow China&#x27;s advancements in artificial intelligence, potentially reshaping the global AI landscape and trade relations.</p>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/us-threatens-sanctions-against-chinese-ai-models-over-ip-theft/">US Threatens Sanctions Against Chinese AI Models Over IP Theft</a></h3>
+  <p class="story-summary">Treasury Secretary Scott Bessent announced the U.S. may impose sanctions on Chinese open AI models due to alleged intellectual property theft. This move expands the Trump administration&#x27;s efforts to slow China&#x27;s advancements in artificial intelligence.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Expands the Trump administration&#x27;s existing strategy to curb China&#x27;s AI progress.</li>
-<li>Aims to protect American intellectual property and technological superiority.</li>
-<li>Could escalate geopolitical tensions and impact global AI development.</li>
-<li>Signals increased policy risk for enterprises evaluating Chinese open-weight models.</li></ul>
+  <ul><li>US seeks to maintain its technological lead in AI development.</li>
+<li>Allegations of state-sponsored IP theft have long strained US-China relations.</li>
+<li>Move extends previous policies aimed at restricting China&#x27;s access to advanced tech.</li>
+<li>Chinese firms are releasing increasingly competitive open-weight AI models.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could force Chinese AI firms to accelerate domestic tech development.</li>
+<li>May pressure global companies to re-evaluate AI partnerships and supply chains.</li>
+<li>Likely to increase demand for consulting on AI compliance and risk management.</li>
+<li>Could escalate trade tensions between the US and China.</li></ul>
 </details>
 </div>
 
 <h2>🤖 AI</h2>
 <div class="story-card">
   <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/20/anthropics-landmark-1-5b-copyright-settlement-is-approved/">Anthropic’s Landmark $1.5B Copyright Settlement Approved</a></h3>
-  <p class="story-summary">A judge has approved Anthropic&#x27;s significant $1.5 billion copyright settlement, resolving a major legal case over the use of copyrighted works in AI training data. While this specific case is closed, the decision highlights the ongoing, broader issue of intellectual property rights within the AI industry.</p>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/20/anthropics-landmark-1-5b-copyright-settlement-is-approved/">Anthropic&#x27;s Landmark $1.5B Copyright Settlement Is Approved</a></h3>
+  <p class="story-summary">A federal judge has given final approval to Anthropic&#x27;s $1.5 billion class action settlement with authors who accused the company of training its AI models on copyrighted books.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Sets a significant precedent for AI developers using copyrighted content.</li>
-<li>Addresses the contentious issue of training AI models on existing works.</li>
-<li>Only 350 authors opted out, indicating broad acceptance among creators.</li>
-<li>The settlement does not fully resolve the wider debate on AI and IP.</li></ul>
+  <ul><li>AI models require vast datasets, often including copyrighted works.</li>
+<li>Authors sought compensation for unauthorized use of their intellectual property.</li>
+<li>The settlement provides a significant legal precedent for AI training data.</li>
+<li>Only a small percentage of authors opted out of the class action.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Other AI developers may face similar copyright infringement lawsuits.</li>
+<li>Could lead to new licensing models for training data.</li>
+<li>May increase the cost of developing and deploying advanced AI models.</li>
+<li>Likely to spur legal clarity around fair use in AI training.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">MarkTechPost</span></div>
+  <h3 class="story-title"><a href="https://www.marktechpost.com/2026/07/21/google-releases-gemini-3-6-flash-3-5-flash-lite-and-3-5-flash-cyber-a-cheaper-more-token-efficient-flash-tier-built-for-agentic-workloads/">Google Releases Three New Gemini Models, Focus on Efficiency and Security</a></h3>
+  <p class="story-summary">Google launched Gemini 3.6 Flash, 3.5 Flash-Lite, and Flash Cyber, focusing on cheaper, more token-efficient solutions for enterprise agentic workloads and cybersecurity, though the flagship 3.5 Pro remains unreleased.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Enterprises demand more cost-effective and faster AI models.</li>
+<li>Google aims to expand Gemini&#x27;s utility for specific agentic applications.</li>
+<li>The cybersecurity model addresses growing AI-related security concerns.</li>
+<li>Continued delay of Gemini 3.5 Pro raises questions about Google&#x27;s top-tier strategy.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could accelerate enterprise adoption of Google&#x27;s AI services.</li>
+<li>May intensify competition among AI providers for efficiency and cost.</li>
+<li>Likely to enhance AI&#x27;s role in proactive cybersecurity measures.</li>
+<li>Could lead to a wider array of specialized AI agent applications.</li></ul>
 </details>
 </div>
 <div class="story-card">
   <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/google-releases-three-new-gemini-models-but-no-3-5-pro/">Google Releases New Gemini Models, Absence of 3.5 Pro Raises Questions</a></h3>
-  <p class="story-summary">Google has launched Gemini 3.6 Flash, 3.5 Flash-Lite, and Flash Cyber, aiming to offer more efficient and cost-effective solutions for enterprise AI agents. However, the continued delay of Gemini 3.5 Pro has prompted fresh speculation about Google&#x27;s overarching AI strategy and product roadmap.</p>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/jack-dorsey-is-taking-on-slack-with-buzz-a-group-chat-platform-for-teams-and-their-ai-agents/">Jack Dorsey Takes on Slack with Buzz, a Group Chat Platform for Teams and Their AI Agents</a></h3>
+  <p class="story-summary">Jack Dorsey has launched Buzz, a new workplace group chat platform designed to seamlessly integrate humans and their AI agents into the same conversation, aiming to redefine team collaboration.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>New Flash models target lower latency and token costs for enterprises.</li>
-<li>The delayed 3.5 Pro prompts strategic questions about Google&#x27;s high-end models.</li>
-<li>Google is already training Gemini 4, hinting at future advancements.</li>
-<li>Focus on efficiency for autonomous software agents in production.</li></ul>
+  <ul><li>Existing workplace communication tools are adapting to AI integration.</li>
+<li>Growing demand for AI agents to automate tasks and enhance productivity.</li>
+<li>Dorsey&#x27;s history of disruptive social and tech platforms.</li>
+<li>Buzz aims to create a dedicated space for human-AI team interaction.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could drive deeper AI integration into daily team workflows.</li>
+<li>May pressure established platforms like Slack and Microsoft Teams to innovate.</li>
+<li>Likely to spark new design paradigms for human-AI collaboration.</li>
+<li>Could create new market segments for AI agent developers.</li></ul>
 </details>
 </div>
 <div class="story-card">
   <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/data-centers-expected-to-use-4x-more-electricity-by-2035/">Data Centers Expected to Consume 4x More Electricity by 2035</a></h3>
-  <p class="story-summary">Projections indicate that new data centers built through 2033 could consume as much electricity as India uses today, quadrupling current usage by 2035. This massive increase underscores the significant energy demands of AI and raises critical concerns about infrastructure, sustainability, and environmental impact.</p>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/data-centers-expected-to-use-4x-more-electricity-by-2035/">Data Centers Expected to Use 4x More Electricity by 2035</a></h3>
+  <p class="story-summary">New data centers built through 2033 are projected to consume as much electricity as India uses today, indicating a massive increase in energy demand driven by AI and cloud computing.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Driven by the surging demand for AI computing power and infrastructure.</li>
-<li>Highlights sustainability challenges and environmental impact of AI growth.</li>
-<li>Presents a major hurdle for scaling AI without significant energy innovation.</li>
-<li>Could lead to increased pressure on power grids globally.</li></ul>
+  <ul><li>The training and inference of large AI models are extremely energy-intensive.</li>
+<li>Global demand for cloud computing and data storage is continually rising.</li>
+<li>Concerns about environmental impact and energy grid stability are growing.</li>
+<li>Significant investments are being made in data center infrastructure.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Will intensify focus on renewable energy sources for data centers.</li>
+<li>May prompt innovation in energy-efficient AI hardware and cooling technologies.</li>
+<li>Could strain existing national power grids, necessitating infrastructure upgrades.</li>
+<li>Likely to increase operational costs for AI and cloud service providers.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/music-streamer-deezer-says-more-than-50-of-daily-uploads-are-ai-generated/">Music Streamer Deezer Says More Than 50% of Daily Uploads Are AI-Generated</a></h3>
+  <p class="story-summary">Deezer reports that over 90,000 AI-generated tracks are uploaded to its platform daily, meaning more than half of all new music now originates from artificial intelligence.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI tools have drastically lowered the barrier to music creation.</li>
+<li>Streaming platforms face a deluge of new content daily.</li>
+<li>The definition of &#x27;artist&#x27; and &#x27;music&#x27; is evolving rapidly.</li>
+<li>Platforms must grapple with quality control and copyright for AI content.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Will challenge existing music discovery and curation algorithms.</li>
+<li>Could lead to new monetization models for AI-generated music.</li>
+<li>May pressure streaming services to implement robust AI content detection.</li>
+<li>Likely to spark further debate on artist compensation and intellectual property.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">OpenAI News</span></div>
+  <h3 class="story-title"><a href="https://openai.com/index/introducing-chatgpt-small-business-program">OpenAI Introduces ChatGPT for Small Business Program</a></h3>
+  <p class="story-summary">OpenAI has launched a new program, &#x27;ChatGPT for Small Business,&#x27; aimed at helping entrepreneurs build AI skills, automate workflows, and foster growth using ChatGPT Work.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Small businesses are eager to leverage AI for efficiency and competitive advantage.</li>
+<li>OpenAI seeks to expand its market reach beyond large enterprises.</li>
+<li>The program provides resources and tools tailored for SME needs.</li>
+<li>Aims to democratize access to advanced AI capabilities.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could significantly boost AI adoption rates among small businesses.</li>
+<li>May create new opportunities for specialized AI integration consulting.</li>
+<li>Likely to increase overall productivity and innovation in the SME sector.</li>
+<li>Could intensify competition for AI tools targeting this market segment.</li></ul>
 </details>
 </div>
 <div class="story-card">
   <div class="story-meta"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;">Partnership</span><span class="source">AI News</span></div>
-  <h3 class="story-title"><a href="https://www.artificialintelligence-news.com/news/bristol-myers-squibb-nvidia-ai-system-drug-discovery/">Bristol Myers Squibb Acquires Nvidia AI System for Drug Discovery</a></h3>
-  <p class="story-summary">Bristol Myers Squibb (BMS) has announced the purchase of an Nvidia DGX SuperPOD, built on the chipmaker’s Vera Rubin architecture, to accelerate its drug discovery and development operations. BMS is reportedly the first life sciences group to acquire a Vera Rubin-based DGX SuperPOD, marking a significant investment in AI for pharmaceutical R&amp;D.</p>
+  <h3 class="story-title"><a href="https://www.artificialintelligence-news.com/news/bristol-myers-squibb-nvidia-ai-system-drug-discovery/">Bristol Myers Squibb Buys Nvidia AI System for Drug Discovery</a></h3>
+  <p class="story-summary">Bristol Myers Squibb is acquiring an Nvidia DGX SuperPOD, built on the chipmaker’s Vera Rubin architecture, to enhance its drug discovery and development operations with advanced AI capabilities.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Demonstrates AI&#x27;s increasing strategic importance in the pharmaceutical sector.</li>
-<li>Nvidia continues to solidify its leadership in providing AI infrastructure.</li>
-<li>Aims to leverage AI for faster, more efficient drug research and development.</li>
-<li>Highlights substantial enterprise investment in advanced AI hardware.</li></ul>
+  <ul><li>Pharmaceutical companies are heavily investing in AI for R&amp;D acceleration.</li>
+<li>Nvidia provides powerful hardware solutions optimized for AI workloads.</li>
+<li>The Vera Rubin architecture represents Nvidia&#x27;s latest generation of AI infrastructure.</li>
+<li>Aims to streamline complex processes in drug development.</li></ul>
 </details>
-</div>
-<div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/jack-dorsey-is-taking-on-slack-with-buzz-a-group-chat-platform-for-teams-and-their-ai-agents/">Jack Dorsey Launches Buzz, a Group Chat Platform for Teams and AI Agents</a></h3>
-  <p class="story-summary">Jack Dorsey is entering the competitive workplace communication market with Buzz, a new group chat platform designed to integrate both human and AI agents seamlessly into conversations. The platform aims to redefine team collaboration by allowing AI agents to participate directly, challenging existing solutions like Slack.</p>
-  <details class="context">
-  <summary>Why this is happening</summary>
-  <ul><li>Aims to enhance team productivity through integrated AI assistance.</li>
-<li>Positions AI agents as direct participants in workplace discussions.</li>
-<li>Enters a highly competitive market dominated by established players.</li>
-<li>Reflects the growing trend of AI integration in enterprise software.</li></ul>
-</details>
-</div>
-<div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;">Funding</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/gritt-exits-stealth-with-34-million-for-robots-to-build-solar-plants-then-everything-else/">Gritt Exits Stealth with $34 Million for Construction Robotics</a></h3>
-  <p class="story-summary">Gritt has emerged from stealth mode, securing $34 million in funding to develop robots that automate challenging tasks on construction sites, with an initial focus on building solar plants. This significant investment signals growing confidence in AI-powered robotics to address labor shortages and improve efficiency in physical industries.</p>
-  <details class="context">
-  <summary>Why this is happening</summary>
-  <ul><li>Aims to automate physically demanding and complex construction tasks.</li>
-<li>Initial focus on solar plant construction addresses energy infrastructure needs.</li>
-<li>Signifies increasing venture capital interest in AI for heavy industry.</li>
-<li>Robotics could address chronic labor shortages in construction.</li></ul>
-</details>
-</div>
-<div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/music-streamer-deezer-says-more-than-50-of-daily-uploads-are-ai-generated/">Deezer Reports Over 50% of Daily Music Uploads Are AI-Generated</a></h3>
-  <p class="story-summary">Music streaming service Deezer has revealed that more than 90,000 AI-generated tracks were uploaded daily in June, accounting for over 50% of all daily uploads to the platform. This surge highlights the massive scale at which AI is impacting content creation and poses new challenges for platforms regarding authenticity, quality control, and artist compensation.</p>
-  <details class="context">
-  <summary>Why this is happening</summary>
-  <ul><li>Reflects the rapid proliferation of AI tools for music creation.</li>
-<li>Raises concerns about content saturation and &#x27;noise&#x27; on streaming platforms.</li>
-<li>Presents challenges for human artists in terms of visibility and revenue.</li>
-<li>Platforms face new responsibilities in identifying and managing AI-generated content.</li></ul>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could significantly shorten drug development timelines for BMS.</li>
+<li>May set a precedent for other life sciences firms investing in dedicated AI hardware.</li>
+<li>Likely to increase Nvidia&#x27;s presence in the pharmaceutical sector.</li>
+<li>Could lead to breakthroughs in personalized medicine and target identification.</li></ul>
 </details>
 </div>
 
 <h2>📊 Consulting</h2>
 <div class="story-card">
   <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">McKinsey Insights &amp; Publications</span></div>
-  <h3 class="story-title"><a href="https://www.mckinsey.com/industries/private-capital/our-insights/the-second-look-an-adaptive-approach-to-reunderwriting">McKinsey: An Adaptive Approach to Private Equity Reunderwriting</a></h3>
-  <p class="story-summary">McKinsey&#x27;s latest insight emphasizes that top-performing private equity firms consistently revisit and refine their deal diligence throughout the hold period. This adaptive reunderwriting approach helps optimize exit options and equity stories, ultimately leading to higher returns for investors.</p>
+  <h3 class="story-title"><a href="https://www.mckinsey.com/industries/private-capital/our-insights/the-second-look-an-adaptive-approach-to-reunderwriting">McKinsey Highlights Adaptive Reunderwriting for PE Firms to Boost Returns</a></h3>
+  <p class="story-summary">McKinsey advises private equity firms to adopt an adaptive &#x27;second look&#x27; approach to reunderwriting throughout the hold period, continuously revisiting and refining exit options and equity stories to achieve higher returns.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Focuses on continuous value creation beyond initial deal execution.</li>
-<li>Aims to maximize returns in private capital through active management.</li>
-<li>Highlights the importance of dynamic strategy in fluctuating markets.</li>
-<li>Best practices for navigating portfolio company performance.</li></ul>
+  <ul><li>PE firms seek to maximize value creation during their investment horizon.</li>
+<li>Market conditions and company performance evolve post-acquisition.</li>
+<li>Traditional diligence often stops after the initial deal closes.</li>
+<li>An active, dynamic approach can uncover additional value.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could shift standard PE diligence practices towards continuous evaluation.</li>
+<li>May increase demand for strategic consulting services throughout the hold period.</li>
+<li>Likely to lead to higher average returns for PE portfolios.</li>
+<li>Could influence how PE firms structure their internal value creation teams.</li></ul>
 </details>
 </div>
 <div class="story-card">
   <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">McKinsey Insights &amp; Publications</span></div>
-  <h3 class="story-title"><a href="https://www.mckinsey.com/capabilities/sustainability/our-insights/cbam-how-companies-can-build-from-compliance-to-value-creation">McKinsey: CBAM – From Compliance to Value Creation for Companies</a></h3>
-  <p class="story-summary">McKinsey explores how companies can leverage the Carbon Border Adjustment Mechanism (CBAM) not just for compliance, but as a strategic tool for value creation. The insight suggests that verified emissions, while a regulatory requirement, can also be used to improve cost control, forecasting, and overall decarbonization efforts for EU importers.</p>
+  <h3 class="story-title"><a href="https://www.mckinsey.com/capabilities/sustainability/our-insights/cbam-how-companies-can-build-from-compliance-to-value-creation">McKinsey: Companies Can Turn CBAM Compliance into Value Creation</a></h3>
+  <p class="story-summary">McKinsey suggests that companies can leverage the EU&#x27;s Carbon Border Adjustment Mechanism (CBAM) not just for compliance, but also to improve cost control, forecasting, and build overall value through targeted decarbonization actions.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>CBAM is a European Union policy impacting importers and supply chains.</li>
-<li>Emphasizes turning regulatory burdens into strategic advantages.</li>
-<li>Links sustainability efforts with financial performance and operational efficiency.</li>
-<li>Offers actionable steps for mitigating risks and optimizing carbon footprints.</li></ul>
+  <ul><li>CBAM imposes tariffs on carbon-intensive imports into the EU.</li>
+<li>Companies face new compliance requirements and potential costs.</li>
+<li>Sustainability is increasingly linked to financial performance.</li>
+<li>Opportunity to integrate emissions data with operational efficiency.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Will increase demand for sustainability and supply chain consulting.</li>
+<li>Could drive greater investment in decarbonization strategies by businesses.</li>
+<li>May prompt re-evaluation of global supply chain partners and sourcing.</li>
+<li>Likely to foster innovation in carbon accounting and emissions reduction.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">Professional services</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/a4fff814-a4f9-4eb5-a774-e52dfe4d7bea?syn-25a6b1a6=1">Berenberg Alleges Accounting Manipulation Designed to Flatter Profits</a></h3>
+  <p class="story-summary">Auditor Berenberg has alleged accounting manipulation intended to inflate profits, as it signed off delayed 2025 accounts showing a significant drop in net profit from €81.6 million to €20.2 million.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Financial reporting integrity is crucial for investor confidence.</li>
+<li>Auditors play a critical role in verifying financial statements.</li>
+<li>The discrepancy highlights potential governance or oversight issues.</li>
+<li>Delayed accounts often signal underlying financial problems.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to increased scrutiny from regulators and investors.</li>
+<li>May damage the reputation of the implicated firm.</li>
+<li>Likely to prompt a review of internal accounting controls.</li>
+<li>Could impact future audit engagements and client trust.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;">Earnings</span><span class="source">Professional services</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/7622bdcb-6106-4d98-a802-addcd49243fa?syn-25a6b1a6=1">Linklaters Partners Handed Record £2.5 Million Payday</a></h3>
+  <p class="story-summary">&#x27;Magic circle&#x27; law firm Linklaters reported bumper payouts for its top ranks, with partners receiving a record £2.5 million payday, citing strong performance in Hong Kong listings and growth in the US market.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>High demand for elite legal services in key global markets.</li>
+<li>Increased activity in capital markets, particularly Hong Kong.</li>
+<li>Strategic growth and expansion into profitable US segments.</li>
+<li>Top law firms compete fiercely for talent with attractive compensation.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May set higher compensation benchmarks across the legal industry.</li>
+<li>Could encourage other law firms to expand into similar lucrative markets.</li>
+<li>Likely to attract top legal talent to firms with strong performance.</li>
+<li>Reflects the robust financial health of certain sectors within professional services.</li></ul>
 </details>
 </div>
 
-<p class="closer">For a deeper dive into AI&#x27;s evolving legal landscape, don&#x27;t miss the details on Anthropic&#x27;s landmark copyright settlement.</p>
+<p class="closer">Don&#x27;t miss the deep dive into the US&#x27;s escalating stance on Chinese AI models – it could redefine the global tech landscape.</p>
 </div>
 
 <aside class="sidebar">
@@ -393,7 +533,7 @@
         <p class="stat-label">AI stories</p>
       </div>
       <div>
-        <p class="stat-number">2</p>
+        <p class="stat-number">4</p>
         <p class="stat-label">Consulting stories</p>
       </div>
     </div>
@@ -401,11 +541,11 @@
 
   <div class="widget">
     <h3>Today's mix</h3>
-    <div class="category-row"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="category-count">3</span></div>
-<div class="category-row"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="category-count">3</span></div>
-<div class="category-row"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="category-count">2</span></div>
+    <div class="category-row"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="category-count">4</span></div>
+<div class="category-row"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="category-count">3</span></div>
+<div class="category-row"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="category-count">3</span></div>
 <div class="category-row"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;">Partnership</span><span class="category-count">1</span></div>
-<div class="category-row"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;">Funding</span><span class="category-count">1</span></div>
+<div class="category-row"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;">Earnings</span><span class="category-count">1</span></div>
   </div>
 
   <div class="widget">
