@@ -119,15 +119,31 @@ RAW CONSULTING ITEMS:
 {format_items(consulting_items)}
 """
 
-    response = requests.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-        params={"key": api_key},
-        json={"contents": [{"parts": [{"text": prompt}]}]},
-        timeout=60,
-    )
-    response.raise_for_status()
-    data = response.json()
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+    import time
+
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    last_error = None
+
+    for attempt in range(4):
+        response = requests.post(
+            url,
+            params={"key": api_key},
+            json={"contents": [{"parts": [{"text": prompt}]}]},
+            timeout=60,
+        )
+        if response.status_code == 429:
+            # Rate-limited: wait a bit and try again rather than failing outright.
+            wait_seconds = 20 * (attempt + 1)
+            print(f"Got 429 (rate limited), waiting {wait_seconds}s and retrying...")
+            last_error = response
+            time.sleep(wait_seconds)
+            continue
+        response.raise_for_status()
+        data = response.json()
+        return data["candidates"][0]["content"]["parts"][0]["text"]
+
+    # If we got here, all retries were rate-limited.
+    last_error.raise_for_status()
 
 
 # ---------------------------------------------------------------------
