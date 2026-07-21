@@ -221,17 +221,42 @@ RAW CONSULTING ITEMS:
 {format_items(consulting_items)}
 """
 
-    raw = call_gemini(prompt, api_key)
+    last_error = None
+    for attempt in range(2):
+        raw = call_gemini(prompt, api_key)
+        try:
+            return parse_json_response(raw)
+        except json.JSONDecodeError as e:
+            last_error = e
+            print(f"Attempt {attempt + 1}: failed to parse Gemini's JSON response ({e}). Raw output was:")
+            print(raw)
+            if attempt == 0:
+                print("Retrying with a fresh request to Gemini...")
 
-    # Gemini sometimes wraps JSON in ```json fences despite instructions — strip them.
-    cleaned = re.sub(r"^```json\s*|^```\s*|```\s*$", "", raw.strip(), flags=re.MULTILINE).strip()
+    raise last_error
 
-    try:
-        return json.loads(cleaned)
-    except json.JSONDecodeError as e:
-        print("Failed to parse Gemini's JSON response. Raw output was:")
-        print(raw)
-        raise e
+
+def parse_json_response(raw):
+    """Robustly extract a JSON object from an LLM response, tolerating
+    code fences, stray leading/trailing characters, or extra commentary
+    the model adds despite instructions not to."""
+    text = raw.strip()
+
+    # Strip a leading/trailing code fence if present (```json ... ``` or ``` ... ```)
+    text = re.sub(r"^```[a-zA-Z]*\s*", "", text)
+    text = re.sub(r"\s*```\s*$", "", text)
+    text = text.strip()
+
+    # Belt and braces: slice from the first '{' to the matching last '}',
+    # which discards any stray characters/commentary outside the JSON object
+    # (this is what actually failed before — a trailing stray character after
+    # the closing fence was being fed into json.loads).
+    first_brace = text.find("{")
+    last_brace = text.rfind("}")
+    if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+        text = text[first_brace:last_brace + 1]
+
+    return json.loads(text)
 
 
 # ---------------------------------------------------------------------
