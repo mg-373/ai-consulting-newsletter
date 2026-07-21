@@ -678,15 +678,20 @@ if __name__ == "__main__":
     def link_item(slug, label):
         return f'<li><a href="archive/{slug}.html">{html_lib.escape(label)}</a></li>'
 
+    # Exclude any leftover manifest for *today* — if the workflow has already run
+    # once today (e.g. manual test runs), we don't want to double count or
+    # double-list it. Today's fresh data (computed above) is the source of truth.
+    past_manifest_entries = [m for m in manifest_entries if m.get("date_slug") != today_slug]
+
     archive_link_items = [link_item(today_slug, today_str)]
-    for m in manifest_entries[:20]:
+    for m in past_manifest_entries[:20]:
         archive_link_items.append(link_item(m["date_slug"], m["date_title"]))
 
-    # Weekly stats: sum today's + last 6 days' manifest counts
+    # Weekly stats: today's fresh counts + last 6 days' manifest counts (today excluded above)
     week_cutoff = today - datetime.timedelta(days=6)
-    week_ai_count = len(data.get("ai_stories") or []) + (1 if (data.get("hero") or {}).get("category") else 0) * 0
+    week_ai_count = len(data.get("ai_stories") or [])
     week_consulting_count = len(data.get("consulting_stories") or [])
-    for m in manifest_entries:
+    for m in past_manifest_entries:
         try:
             m_date = datetime.datetime.strptime(m["date_slug"], "%Y-%m-%d").date()
         except (KeyError, ValueError):
