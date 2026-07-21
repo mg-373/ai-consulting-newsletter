@@ -3,59 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI & Consulting Daily — Tuesday, July 21, 2026</title>
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Tuesday, July 21, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
 <style>
+  :root {
+    --bg: #fafafa;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #ddd;
+    --card-bg: #ffffff;
+    --link: #0b5fff;
+  }
+  html[data-theme="dark"] {
+    --bg: #14161a;
+    --text: #eaeaea;
+    --muted: #9a9a9a;
+    --border: #2c2f36;
+    --card-bg: #1d2027;
+    --link: #6ea8ff;
+  }
+  * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 680px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 32px 20px 80px;
-    color: #1a1a1a;
+    color: var(--text);
+    background: var(--bg);
     line-height: 1.55;
-    background: #fafafa;
+    transition: background 0.2s, color 0.2s;
   }
   header {
-    border-bottom: 3px solid #1a1a1a;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid var(--text);
     padding-bottom: 14px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
+    gap: 12px;
   }
   header h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin: 0 0 4px;
   }
   header .date {
-    color: #666;
-    font-size: 0.95rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .meta-line {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+  .greeting {
+    font-size: 1.05rem;
+    margin-bottom: 28px;
   }
   h2 {
-    font-size: 1.15rem;
-    margin-top: 32px;
-    border-bottom: 1px solid #ddd;
+    font-size: 1.1rem;
+    margin-top: 36px;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 6px;
   }
-  ul {
-    padding-left: 20px;
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0 32px;
   }
-  li {
-    margin-bottom: 10px;
+  .hero-card .story-title {
+    font-size: 1.25rem;
   }
-  a {
-    color: #0b5fff;
-    text-decoration: none;
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
   }
-  a:hover {
-    text-decoration: underline;
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
   }
   footer {
     margin-top: 48px;
     padding-top: 16px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--border);
     font-size: 0.85rem;
-    color: #777;
+    color: var(--muted);
   }
   footer h3 {
     font-size: 0.9rem;
-    color: #333;
+    color: var(--text);
     margin-bottom: 8px;
   }
   footer ul {
@@ -65,33 +145,79 @@
   footer li {
     margin-bottom: 4px;
   }
+  .stats {
+    margin: 20px 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
 </style>
 </head>
 <body>
 <header>
-  <h1>AI &amp; Consulting Daily</h1>
-  <div class="date">Tuesday, July 21, 2026</div>
+  <div>
+    <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+    <div class="date">Tuesday, July 21, 2026</div>
+  </div>
+  <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
-<p>Your daily dose of the latest in AI innovation and consulting industry shifts is here.</p>
+<div class="meta-line">2 min read · <a href="feed.xml">RSS feed</a></div>
 
-<h2>AI</h2>
-<ul>
-    <li><a href="https://techcrunch.com/2026/07/21/data-centers-expected-to-use-4x-more-electricity-by-2035/"><strong>Data Centers Expected to Use 4x More Electricity by 2035</strong></a> – New reports project that AI-driven data centers built through 2033 could consume as much electricity as India currently uses, highlighting a significant future energy challenge.</li>
-    <li><a href="https://techcrunch.com/2026/07/21/google-releases-three-new-gemini-models-but-no-3-5-pro/"><strong>Google Releases Three New Gemini Models, Absent 3.5 Pro</strong></a> – Google unveiled Gemini 3.6 Flash, 3.5 Flash-Lite, and Flash Cyber, though the continued lack of a 3.5 Pro release sparks further debate about its strategic direction for its flagship AI models.</li>
-    <li><a href="https://techcrunch.com/2026/07/21/us-threatens-sanctions-against-chinese-ai-models-over-ip-theft/"><strong>US Threatens Sanctions Against Chinese AI Models Over IP Theft</strong></a> – Treasury Secretary Scott Bessent indicated the U.S. might impose sanctions on Chinese open AI models, citing alleged intellectual property theft, escalating efforts to curb China's AI development.</li>
-    <li><a href="https://techcrunch.com/2026/07/21/music-streamer-deezer-says-more-than-50-of-daily-uploads-are-ai-generated/"><strong>Deezer Reports Over 50% of Daily Uploads Are AI-Generated</strong></a> – The music streaming platform revealed that more than 90,000 AI-generated tracks are being uploaded daily, showcasing the rapid integration and impact of AI in content creation.</li>
-    <li><a href="https://techcrunch.com/2026/07/21/gritt-exits- stealth-with-34-million-for-robots-to-build-solar-plants-then-everything-else/"><strong>Gritt Exits Stealth with $34 Million for Solar Plant Construction Robots</strong></a> – The startup Gritt has raised significant funding to automate complex tasks on construction sites, starting with solar energy projects, aiming to revolutionize the industry through robotics.</li>
-    <li><a href="https://techcrunch.com/2026/07/20/anthropics-landmark-1-5b-copyright-settlement-is-approved/"><strong>Anthropic’s Landmark $1.5B Copyright Settlement Approved</strong></a> – A federal judge has finalized Anthropic's significant settlement regarding copyright infringement, resolving a key case while underscoring that the broader issue of AI training on copyrighted material remains unresolved.</li>
-    <li><a href="https://techcrunch.com/2026/07/20/trumps-latest-ai-czar-has-already-resigned/"><strong>Trump’s Latest AI Czar Resigns Amid Policy Divisions</strong></a> – The Director role for the Center for AI Standards and Innovation (CAISI) continues to see rapid turnover, highlighting ongoing instability and internal disagreements within the Trump administration regarding AI policy and strategy.</li>
-</ul>
+<p class="greeting">Morning, Mehul — here&#x27;s your quick briefing on the latest in AI and consulting!</p>
 
-<h2>Consulting</h2>
-<ul>
-    <li><a href="https://www.mckinsey.com/industries/private-capital/our-insights/the-second-look-an-adaptive-approach-to-reunderwriting"><strong>McKinsey: The Second Look: An Adaptive Approach to Reunderwriting</strong></a> – A new McKinsey insight emphasizes that leading private equity firms achieve superior returns by consistently re-evaluating and refining their deal diligence, exit options, and equity stories throughout the investment hold period.</li>
-</ul>
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/us-threatens-sanctions-against-chinese-ai-models-over-ip-theft/">US Threatens Sanctions Against Chinese AI Models Over IP Theft</a></h3>
+  <p class="story-summary">Treasury Secretary Scott Bessent indicated potential U.S. sanctions against Chinese open AI models due to alleged intellectual property theft. This move expands the administration&#x27;s efforts to slow China&#x27;s AI advancements, signaling a major escalation in the tech rivalry.</p>
+</div>
 
-<p>Worth a deeper look: The looming energy demands of AI data centers signal a critical infrastructural challenge for the next decade.</p>
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/20/anthropics-landmark-1-5b-copyright-settlement-is-approved/">Anthropic’s Landmark $1.5B Copyright Settlement Approved</a></h3>
+  <p class="story-summary">A $1.5 billion settlement for copyright infringement against Anthropic has received final approval, although it doesn&#x27;t resolve the broader issue of AI training on copyrighted material.</p>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/google-releases-three-new-gemini-models-but-no-3-5-pro/">Google Releases New Gemini Models, 3.5 Pro Still Absent</a></h3>
+  <p class="story-summary">Google launched Gemini 3.6 Flash, 3.5 Flash-Lite, and Flash Cyber, but the continued absence of a 3.5 Pro version raises questions about its current AI development strategy.</p>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/data-centers-expected-to-use-4x-more-electricity-by-2035/">Data Centers&#x27; Electricity Use Projected to Quadruple by 2035</a></h3>
+  <p class="story-summary">New data centers constructed through 2033 are forecast to consume as much electricity as India currently uses, highlighting a significant challenge for energy infrastructure and sustainability.</p>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/music-streamer-deezer-says-more-than-50-of-daily-uploads-are-ai-generated/">Deezer Reports Over Half of Daily Music Uploads are AI-Generated</a></h3>
+  <p class="story-summary">Music streaming service Deezer announced that over 90,000 AI-generated tracks are uploaded daily, accounting for more than 50% of all new content on the platform in June.</p>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/gritt-exits-stealth-with-34-million-for-robots-to-build-solar-plants-then-everything-else/">Gritt Exits Stealth with $32M to Automate Solar Plant Construction</a></h3>
+  <p class="story-summary">Gritt has emerged from stealth with $34 million in funding to develop robots that will automate challenging tasks on construction sites, beginning with solar plant installations.</p>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;">Research</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/20/google-is-working-on-a-new-ai-chip-designed-to-make-gemini-more-efficient/">Google Reportedly Developing New AI Chip for Gemini Efficiency</a></h3>
+  <p class="story-summary">Alphabet, Google&#x27;s parent company, is reportedly working on a new custom AI chip specifically designed to make its Gemini large language models run more efficiently.</p>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;">Hiring &amp; Leadership</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/20/trumps-latest-ai-czar-has-already-resigned/">Trump&#x27;s Latest AI Czar Resigns Amid Leadership Turnover</a></h3>
+  <p class="story-summary">The director role for the Center for AI Standards and Innovation (CAISI) has seen another resignation, continuing a trend of high-level turnover in the administration&#x27;s AI leadership.</p>
+</div>
+
+<h2>📊 Consulting</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;">Research</span><span class="source">McKinsey Insights &amp; Publications</span></div>
+  <h3 class="story-title"><a href="https://www.mckinsey.com/industries/private-capital/our-insights/the-second-look-an-adaptive-approach-to-reunderwriting">McKinsey: An Adaptive Approach to Private Equity Reunderwriting</a></h3>
+  <p class="story-summary">McKinsey research highlights that top-performing private equity firms continuously revisit and refine their exit options and equity stories throughout the holding period to maximize returns.</p>
+</div>
+
+<p class="closer">For its broad geopolitical implications, the potential US sanctions against Chinese AI models is today&#x27;s essential read.</p>
+
+<div class="stats">This week so far: 7 AI stories tracked · 1 consulting stories tracked</div>
 
 <footer>
   <h3>Past editions</h3>
@@ -99,5 +225,23 @@
   <li><a href="archive/2026-07-21.html">Tuesday, July 21, 2026</a></li>
   </ul>
 </footer>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+</script>
 </body>
 </html>
