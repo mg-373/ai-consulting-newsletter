@@ -144,25 +144,38 @@ def fetch_recent_items(feed_urls, cutoff):
 def call_gemini(prompt, api_key):
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     last_response = None
+    retryable_codes = {429, 500, 502, 503, 504}
 
-    for attempt in range(4):
-        response = requests.post(
-            url,
-            params={"key": api_key},
-            json={"contents": [{"parts": [{"text": prompt}]}]},
-            timeout=60,
-        )
-        if response.status_code == 429:
-            wait_seconds = 20 * (attempt + 1)
-            print(f"Got 429 (rate limited), waiting {wait_seconds}s and retrying...")
+    for attempt in range(5):
+        try:
+            response = requests.post(
+                url,
+                params={"key": api_key},
+                json={"contents": [{"parts": [{"text": prompt}]}]},
+                timeout=60,
+            )
+        except requests.exceptions.RequestException as e:
+            # Network-level hiccup (timeout, connection reset, etc.) — also worth retrying.
+            wait_seconds = 15 * (attempt + 1)
+            print(f"Request failed ({e}), waiting {wait_seconds}s and retrying...")
+            time.sleep(wait_seconds)
+            continue
+
+        if response.status_code in retryable_codes:
+            wait_seconds = 15 * (attempt + 1)
+            print(f"Got {response.status_code} (temporary issue on Google's side), "
+                  f"waiting {wait_seconds}s and retrying...")
             last_response = response
             time.sleep(wait_seconds)
             continue
+
         response.raise_for_status()
         data = response.json()
         return data["candidates"][0]["content"]["parts"][0]["text"]
 
-    last_response.raise_for_status()
+    if last_response is not None:
+        last_response.raise_for_status()
+    raise RuntimeError("Gemini request failed repeatedly (network errors), giving up.")
 
 
 def build_newsletter_data(ai_items, consulting_items, today_str, name, topics):
