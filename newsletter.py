@@ -309,7 +309,7 @@ def parse_json_response(raw):
 def tag_badge(category):
     color = CATEGORY_COLORS.get(category, CATEGORY_COLORS["Other"])
     safe_category = html_lib.escape(category or "Other")
-    return f'<span class="tag" style="background:{color}22;color:{color};border:1px solid {color}55;">{safe_category}</span>'
+    return f'<span class="tag" style="background:{color}22;color:{color};border:1px solid {color}55;--glow:{color};">{safe_category}</span>'
 
 
 def story_card(story, is_hero=False):
@@ -381,6 +381,9 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     --border: #ddd;
     --card-bg: #ffffff;
     --link: #0b5fff;
+    --shadow: rgba(20, 20, 30, 0.10);
+    --grad-a: rgba(11, 95, 255, 0.06);
+    --grad-b: rgba(122, 63, 214, 0.06);
   }}
   html[data-theme="dark"] {{
     --bg: #14161a;
@@ -389,8 +392,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     --border: #2c2f36;
     --card-bg: #1d2027;
     --link: #6ea8ff;
+    --shadow: rgba(0, 0, 0, 0.45);
+    --grad-a: rgba(110, 168, 255, 0.08);
+    --grad-b: rgba(160, 110, 255, 0.08);
   }}
   * {{ box-sizing: border-box; }}
+  html {{
+    background: var(--bg);
+  }}
   body {{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     margin: 0;
@@ -398,6 +407,28 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     background: var(--bg);
     line-height: 1.55;
     transition: background 0.2s, color 0.2s;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }}
+  body::before {{
+    content: "";
+    position: fixed;
+    inset: -20%;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 20% 20%, var(--grad-a), transparent 45%),
+      radial-gradient(circle at 80% 60%, var(--grad-b), transparent 45%);
+    background-size: 140% 140%;
+    animation: driftGradient 30s ease-in-out infinite alternate;
+    pointer-events: none;
+  }}
+  @keyframes driftGradient {{
+    0% {{ background-position: 0% 0%, 100% 100%; }}
+    100% {{ background-position: 30% 20%, 70% 80%; }}
+  }}
+  @media (prefers-reduced-motion: reduce) {{
+    body::before {{ animation: none; }}
   }}
   .layout {{
     max-width: 1120px;
@@ -427,6 +458,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }}
+  .widget:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
   }}
   .widget h3 {{
     margin: 0 0 12px;
@@ -457,6 +493,29 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-size: 0.88rem;
   }}
   .category-row:last-child {{ margin-bottom: 0; }}
+  .bar-track {{
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }}
+  .bar-fill {{
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }}
+  @keyframes fillBar {{
+    from {{ width: 0%; }}
+    to {{ width: var(--bar-pct, 0%); }}
+  }}
+  @media (prefers-reduced-motion: reduce) {{
+    .bar-fill {{ animation: none; width: var(--bar-pct, 0%); }}
+  }}
   .category-count {{
     color: var(--muted);
     font-variant-numeric: tabular-nums;
@@ -533,6 +592,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     border-radius: 12px;
     padding: 20px;
     margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }}
+  .hero-card:hover {{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
   }}
   .hero-card .story-title {{
     font-size: 1.25rem;
@@ -543,6 +607,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     border-radius: 10px;
     padding: 14px 16px;
     margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }}
+  .story-card:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
   }}
   .story-meta {{
     display: flex;
@@ -557,6 +626,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }}
+  @keyframes tagGlow {{
+    0%, 100% {{ box-shadow: 0 0 0 rgba(0,0,0,0); }}
+    50% {{ box-shadow: 0 0 7px var(--glow); }}
+  }}
+  @media (prefers-reduced-motion: reduce) {{
+    .tag {{ animation: none; }}
   }}
   .source {{
     color: var(--muted);
@@ -639,6 +716,76 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-style: italic;
     color: var(--muted);
   }}
+  .widget-chat {{
+    display: flex;
+    flex-direction: column;
+  }}
+  .chat-messages {{
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }}
+  .chat-msg {{
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }}
+  .chat-msg.user {{
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }}
+  .chat-msg.assistant {{
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }}
+  .chat-input-row {{
+    display: flex;
+    gap: 6px;
+  }}
+  #chat-input {{
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }}
+  #chat-input:focus {{
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }}
+  #chat-send {{
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }}
+  #chat-send:hover {{ opacity: 0.85; }}
+  #chat-send:disabled, #chat-input:disabled {{ opacity: 0.6; cursor: default; }}
+  .chat-disclaimer {{
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }}
 </style>
 </head>
 <body>
@@ -668,6 +815,8 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 </div>
 
 <aside class="sidebar">
+  {chat_widget_html}
+
   <div class="widget">
     <h3>This week</h3>
     <div class="stat-pair">
@@ -718,10 +867,117 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     applyTheme(saved || (prefersDark ? 'dark' : 'light'));
   }})();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = {chat_endpoint_js};
+  const CHAT_CONTEXT = {chat_context_js};
+  let chatHistory = [];
+
+  function escapeHtml(str) {{
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }}
+
+  function appendChatMessage(role, text) {{
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }}
+
+  async function sendChatMessage() {{
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\\n\\nTODAY'S STORIES:\\n" +
+        CHAT_CONTEXT + "\\n\\nReader's question: " + question
+      : question;
+
+    chatHistory.push({{ role: 'user', parts: [{{ text: messageText }}] }});
+
+    try {{
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ contents: chatHistory }})
+        }}
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({{ role: 'model', parts: [{{ text: reply }}] }});
+      if (thinkingEl) {{
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\\n/g, '<br>');
+      }}
+    }} catch (err) {{
+      if (thinkingEl) {{
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }}
+      chatHistory.pop();
+    }} finally {{
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }}
+  }}
+
+  document.addEventListener('DOMContentLoaded', function() {{
+    const input = document.getElementById('chat-input');
+    if (input) {{
+      input.addEventListener('keydown', function(e) {{
+        if (e.key === 'Enter') {{
+          e.preventDefault();
+          sendChatMessage();
+        }}
+      }});
+    }}
+  }});
 </script>
 </body>
 </html>
 """
+
+
+CHAT_WIDGET_HTML = """<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>"""
+
+CHAT_DISABLED_HTML = ""  # No CHAT_WORKER_URL set — assistant widget is simply omitted.
 
 
 def build_category_breakdown_html(data):
@@ -736,15 +992,56 @@ def build_category_breakdown_html(data):
     if not counts:
         return "<p style=\"font-size:0.88rem;color:var(--muted);margin:0;\">No stories today.</p>"
 
+    max_count = max(counts.values())
     rows = []
     for category, count in sorted(counts.items(), key=lambda kv: -kv[1]):
-        rows.append(
-            f'<div class="category-row">{tag_badge(category)}<span class="category-count">{count}</span></div>'
-        )
+        color = CATEGORY_COLORS.get(category, CATEGORY_COLORS["Other"])
+        pct = round((count / max_count) * 100)
+        rows.append(f"""<div class="category-row">
+  {tag_badge(category)}<span class="category-count">{count}</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:{color};--bar-pct:{pct}%;"></div>
+</div>""")
     return "\n".join(rows)
 
 
-def render_html(data, date_title, archive_link_items, name, week_ai_count, week_consulting_count):
+def build_chat_context_text(data, date_title):
+    """A compact plain-text version of today's newsletter for the chat
+    assistant to use as context — includes context/knock-on bullets so
+    it can go deeper than the page itself, but skips HTML/formatting."""
+    lines = [f"Edition date: {date_title}", ""]
+
+    hero = data.get("hero") or {}
+    if hero.get("title"):
+        lines.append(f"TOP STORY: {hero.get('title')} (source: {hero.get('source', '')})")
+        lines.append(f"Summary: {hero.get('summary', '')}")
+        for b in hero.get("context") or []:
+            lines.append(f"Background: {b}")
+        for b in hero.get("knock_on_effects") or []:
+            lines.append(f"Possible knock-on effect: {b}")
+        lines.append("")
+
+    def add_section(title, stories):
+        if not stories:
+            return
+        lines.append(f"{title}:")
+        for s in stories:
+            lines.append(f"- {s.get('title', '')} (source: {s.get('source', '')})")
+            lines.append(f"  Summary: {s.get('summary', '')}")
+            for b in s.get("context") or []:
+                lines.append(f"  Background: {b}")
+            for b in s.get("knock_on_effects") or []:
+                lines.append(f"  Possible knock-on effect: {b}")
+        lines.append("")
+
+    add_section("AI STORIES", data.get("ai_stories") or [])
+    add_section("CONSULTING STORIES", data.get("consulting_stories") or [])
+
+    return "\n".join(lines)
+
+
+def render_html(data, date_title, archive_link_items, name, week_ai_count, week_consulting_count, chat_worker_url):
     header_title_plain = f"{name}'s AI & Consulting Daily" if name else "AI & Consulting Daily"
     page_title = f"{header_title_plain} — {date_title}"
     archive_html = "\n".join(archive_link_items) if archive_link_items else "<li>No past editions yet.</li>"
@@ -763,6 +1060,16 @@ def render_html(data, date_title, archive_link_items, name, week_ai_count, week_
     read_minutes = estimate_read_minutes(data)
     category_breakdown_html = build_category_breakdown_html(data)
 
+    chat_context_text = build_chat_context_text(data, date_title)
+    # json.dumps produces a safely-escaped JS string literal (handles quotes,
+    # newlines, unicode, etc.) — this is embedded directly into a <script> tag.
+    # Note: the Worker URL itself is not a secret (the Worker enforces access
+    # via CORS/origin checking, not by hiding this URL) — only the real
+    # Gemini key, which lives only inside the Worker, needs to stay private.
+    chat_endpoint_js = json.dumps(chat_worker_url or "")
+    chat_context_js = json.dumps(chat_context_text)
+    chat_enabled = bool(chat_worker_url)
+
     return PAGE_TEMPLATE.format(
         page_title=html_lib.escape(page_title),
         header_title=html_lib.escape(header_title_plain),
@@ -778,6 +1085,9 @@ def render_html(data, date_title, archive_link_items, name, week_ai_count, week_
         week_ai_count=week_ai_count,
         week_consulting_count=week_consulting_count,
         archive_links=archive_html,
+        chat_endpoint_js=chat_endpoint_js,
+        chat_context_js=chat_context_js,
+        chat_widget_html=CHAT_WIDGET_HTML if chat_enabled else CHAT_DISABLED_HTML,
     )
 
 
@@ -822,6 +1132,7 @@ if __name__ == "__main__":
 
     name = os.environ.get("YOUR_NAME", "").strip()
     topics = os.environ.get("TOPICS", "").strip()
+    chat_worker_url = os.environ.get("CHAT_WORKER_URL", "").strip()
 
     run_start_time = datetime.datetime.now(datetime.timezone.utc)
     today = datetime.date.today()
@@ -879,7 +1190,7 @@ if __name__ == "__main__":
             week_ai_count += m.get("ai_count", 0)
             week_consulting_count += m.get("consulting_count", 0)
 
-    page_html = render_html(data, today_str, archive_link_items, name, week_ai_count, week_consulting_count)
+    page_html = render_html(data, today_str, archive_link_items, name, week_ai_count, week_consulting_count, chat_worker_url)
 
     # Write today's archive copy
     archive_path = os.path.join(ARCHIVE_DIR, f"{today_slug}.html")
