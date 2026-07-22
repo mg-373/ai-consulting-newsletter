@@ -30,6 +30,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           YOUR_NAME: ${{ secrets.YOUR_NAME }}
+          TOPICS: ${{ secrets.TOPICS }}
+          CHAT_WORKER_URL: ${{ secrets.CHAT_WORKER_URL }}
         run: python newsletter.py
 
       - name: Commit and push the updated page
