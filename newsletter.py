@@ -58,6 +58,12 @@ CONSULTING_FEEDS = [
 
 DOCS_DIR = "docs"
 ARCHIVE_DIR = os.path.join(DOCS_DIR, "archive")
+STATE_PATH = os.path.join(DOCS_DIR, "last_run_state.json")
+
+# Safety net: if the workflow hasn't run successfully in a while (e.g. it was
+# broken for a few days), don't pull an enormous backlog — cap how far back
+# we'll ever look.
+MAX_LOOKBACK_HOURS = 72
 
 # Category tags Gemini can choose from, each with its own colour.
 CATEGORY_COLORS = {
@@ -73,13 +79,38 @@ CATEGORY_COLORS = {
 }
 
 
+def load_last_run_cutoff():
+    """Return the UTC datetime of the last successful run, or None if
+    this is the first ever run. Also enforces MAX_LOOKBACK_HOURS so a
+    long outage doesn't dump days of backlog into one edition."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    floor_cutoff = now - datetime.timedelta(hours=MAX_LOOKBACK_HOURS)
+
+    if not os.path.exists(STATE_PATH):
+        # First run ever — just look back 24 hours as a sensible default.
+        return now - datetime.timedelta(hours=24)
+
+    try:
+        with open(STATE_PATH, "r", encoding="utf-8") as f:
+            state = json.load(f)
+        last_run = datetime.datetime.fromisoformat(state["last_run_utc"])
+        return max(last_run, floor_cutoff)
+    except Exception as e:
+        print(f"Could not read last run state ({e}), defaulting to 24h lookback.")
+        return now - datetime.timedelta(hours=24)
+
+
+def save_last_run_state(run_time):
+    with open(STATE_PATH, "w", encoding="utf-8") as f:
+        json.dump({"last_run_utc": run_time.isoformat()}, f)
+
+
 # ---------------------------------------------------------------------
 # 2. FETCH RECENT ITEMS
 # ---------------------------------------------------------------------
-def fetch_recent_items(feed_urls, hours=24):
-    """Return a list of dicts for items published within the last
-    `hours` hours. Silently skips broken feeds."""
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=hours)
+def fetch_recent_items(feed_urls, cutoff):
+    """Return a list of dicts for items published after `cutoff` (a
+    timezone-aware UTC datetime). Silently skips broken feeds."""
     items = []
 
     for url in feed_urls:
@@ -779,16 +810,20 @@ if __name__ == "__main__":
     name = os.environ.get("YOUR_NAME", "").strip()
     topics = os.environ.get("TOPICS", "").strip()
 
+    run_start_time = datetime.datetime.now(datetime.timezone.utc)
     today = datetime.date.today()
     today_str = today.strftime("%A, %B %d, %Y")
     today_slug = today.strftime("%Y-%m-%d")
 
+    cutoff = load_last_run_cutoff()
+    print(f"Fetching items published since {cutoff.isoformat()} (last successful run)...")
+
     print("Fetching AI feeds...")
-    ai_items = fetch_recent_items(AI_FEEDS)
+    ai_items = fetch_recent_items(AI_FEEDS, cutoff)
     print(f"Found {len(ai_items)} AI items")
 
     print("Fetching consulting feeds...")
-    consulting_items = fetch_recent_items(CONSULTING_FEEDS)
+    consulting_items = fetch_recent_items(CONSULTING_FEEDS, cutoff)
     print(f"Found {len(consulting_items)} consulting items")
 
     print("Asking Gemini to structure the newsletter...")
@@ -864,5 +899,10 @@ if __name__ == "__main__":
     rss_xml = build_rss_feed(rss_entries, site_title)
     with open(os.path.join(DOCS_DIR, "feed.xml"), "w", encoding="utf-8") as f:
         f.write(rss_xml)
+
+    # Only mark this run as "successful" now that everything above completed —
+    # if anything failed earlier, the timestamp stays at its last good value,
+    # so next time we correctly catch up on everything missed in between.
+    save_last_run_state(run_start_time)
 
     print("Done! Wrote", index_path, archive_path, "and feed.xml")
