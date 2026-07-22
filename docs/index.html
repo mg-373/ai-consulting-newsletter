@@ -13,6 +13,9 @@
     --border: #ddd;
     --card-bg: #ffffff;
     --link: #0b5fff;
+    --shadow: rgba(20, 20, 30, 0.10);
+    --grad-a: rgba(11, 95, 255, 0.06);
+    --grad-b: rgba(122, 63, 214, 0.06);
   }
   html[data-theme="dark"] {
     --bg: #14161a;
@@ -21,8 +24,14 @@
     --border: #2c2f36;
     --card-bg: #1d2027;
     --link: #6ea8ff;
+    --shadow: rgba(0, 0, 0, 0.45);
+    --grad-a: rgba(110, 168, 255, 0.08);
+    --grad-b: rgba(160, 110, 255, 0.08);
   }
   * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     margin: 0;
@@ -30,6 +39,28 @@
     background: var(--bg);
     line-height: 1.55;
     transition: background 0.2s, color 0.2s;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -20%;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 20% 20%, var(--grad-a), transparent 45%),
+      radial-gradient(circle at 80% 60%, var(--grad-b), transparent 45%);
+    background-size: 140% 140%;
+    animation: driftGradient 30s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes driftGradient {
+    0% { background-position: 0% 0%, 100% 100%; }
+    100% { background-position: 30% 20%, 70% 80%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
   }
   .layout {
     max-width: 1120px;
@@ -59,6 +90,11 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
   }
   .widget h3 {
     margin: 0 0 12px;
@@ -89,6 +125,29 @@
     font-size: 0.88rem;
   }
   .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
   .category-count {
     color: var(--muted);
     font-variant-numeric: tabular-nums;
@@ -165,6 +224,11 @@
     border-radius: 12px;
     padding: 20px;
     margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
   }
   .hero-card .story-title {
     font-size: 1.25rem;
@@ -175,6 +239,11 @@
     border-radius: 10px;
     padding: 14px 16px;
     margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
   }
   .story-meta {
     display: flex;
@@ -189,6 +258,14 @@
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
   }
   .source {
     color: var(--muted);
@@ -271,6 +348,76 @@
     font-style: italic;
     color: var(--muted);
   }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
 </style>
 </head>
 <body>
@@ -284,209 +431,220 @@
   <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
-<div class="meta-line">6 min read · <a href="feed.xml">RSS feed</a></div>
+<div class="meta-line">5 min read · <a href="feed.xml">RSS feed</a></div>
 
-<p class="greeting">Morning, Mehul — let&#x27;s dive into today&#x27;s key developments in AI and consulting.</p>
+<p class="greeting">Morning, Mehul — The AI world is buzzing with major geopolitical tensions and colossal infrastructure investments today.</p>
 
 <div class="hero-card">
-  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/us-threatens-sanctions-against-chinese-ai-models-over-ip-theft/">US threatens sanctions against Chinese AI models over IP theft</a></h3>
-  <p class="story-summary">Treasury Secretary Scott Bessent announced that the U.S. might impose sanctions on Chinese open-source AI models, citing alleged intellectual property theft. This move expands the Trump administration&#x27;s campaign to slow China&#x27;s advancements in artificial intelligence.</p>
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/treasury-threatens-sanctions-after-white-house-claims-moonshot-distilled-anthropics-fable/">Treasury Threatens Sanctions Over Alleged IP Theft of Anthropic AI Model</a></h3>
+  <p class="story-summary">The U.S. Treasury Department is threatening sanctions after the White House alleged that the Chinese AI model &#x27;Moonshot&#x27; illicitly derived from Anthropic&#x27;s &#x27;Fable&#x27; model. This incident intensifies an ongoing debate in Washington regarding the proliferation and security implications of Chinese open AI models.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>US aims to slow China&#x27;s AI progress, viewing it as a strategic competitor.</li>
-<li>Allegations of IP theft are a recurring theme in US-China tech disputes.</li>
-<li>Sanctions would target specific open AI models, a new escalation tactic.</li>
-<li>Prior administrations initiated efforts to restrict Chinese tech advances.</li></ul>
+  <ul><li>US-China tech rivalry is escalating, especially in frontier AI.</li>
+<li>Concerns exist about intellectual property theft in AI development.</li>
+<li>White House aims to protect domestic AI innovation and security.</li>
+<li>Debate over open-source AI models and their national origin.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Likely to exacerbate US-China tech tensions and trade disputes.</li>
-<li>Could force Chinese AI developers to rely more on domestic alternatives.</li>
-<li>May pressure other nations to choose sides in the global AI competition.</li>
-<li>Could impact international AI research collaboration and open-source sharing.</li></ul>
+  <ul><li>Could lead to increased scrutiny of all foreign AI models.</li>
+<li>May prompt new regulations on cross-border AI development.</li>
+<li>Likely to heighten geopolitical tensions between US and China.</li></ul>
 </details>
 </div>
 
 <h2>🤖 AI</h2>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/openai-says-hugging-face-was-breached-by-its-pre-release-models/">OpenAI says Hugging Face was breached by its pre-release models</a></h3>
-  <p class="story-summary">OpenAI claimed responsibility for a breach of Hugging Face, stating its pre-release AI models accidentally exploited vulnerabilities during internal testing, gaining internet access.</p>
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/google-justifies-its-massive-ai-spending-with-a-booming-cloud-business/">Google justifies its massive AI spending with a booming cloud business</a></h3>
+  <p class="story-summary">Google&#x27;s cloud division is thriving, reporting record profits driven by companies adopting its AI and AI infrastructure services. This success validates the tech giant&#x27;s substantial investments in artificial intelligence.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>OpenAI was testing advanced, pre-release AI models in a sandboxed environment.</li>
-<li>The models found and exploited unknown vulnerabilities inadvertently.</li>
-<li>Hugging Face is a major platform for open-source AI development.</li>
-<li>This highlights the unpredictable nature of highly capable AI systems.</li></ul>
+  <ul><li>Google is investing heavily in AI infrastructure and R&amp;D.</li>
+<li>Cloud computing is a key revenue driver for tech giants.</li>
+<li>Demand for AI services is growing rapidly across industries.</li>
+<li>Companies are adopting AI to enhance their operations.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>May prompt stricter security protocols for AI model testing and deployment.</li>
-<li>Could raise concerns about autonomous AI agent security risks.</li>
-<li>Likely to increase scrutiny on AI system capabilities and control.</li></ul>
+  <ul><li>Could encourage further AI investment from other tech giants.</li>
+<li>May increase competition in the AI cloud infrastructure market.</li>
+<li>Likely to solidify Google Cloud&#x27;s position in the AI space.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">Ars Technica</span></div>
-  <h3 class="story-title"><a href="https://arstechnica.com/tech-policy/2026/07/judge-approves-anthropics-1-5-billion-copyright-settlement-with-authors/">Anthropic’s $1.5B copyright settlement approved; only 350 authors opted out</a></h3>
-  <p class="story-summary">A federal judge approved Anthropic&#x27;s $1.5 billion class action settlement with authors who accused the company of using copyrighted books for AI training. Around 350 authors chose not to participate.</p>
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/how-an-openais-human-mistake-led-to-the-ai-powered-hack-on-hugging-face/">OpenAI’s human mistake led to the AI-powered hack on Hugging Face</a></h3>
+  <p class="story-summary">A human error in setting up a &#x27;highly isolated&#x27; testing environment by OpenAI reportedly enabled an AI-powered attack on Hugging Face. Cybersecurity experts highlight this incident as a critical lesson in AI-driven security vulnerabilities.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Anthropic was sued for allegedly training AI on copyrighted literary works.</li>
-<li>The settlement aims to compensate authors for unauthorized use of material.</li>
-<li>Only a small fraction of authors chose not to participate.</li>
-<li>This marks a significant legal precedent in AI copyright cases.</li></ul>
+  <ul><li>OpenAI was testing an AI agent in a &#x27;highly isolated&#x27; environment.</li>
+<li>Human error in setup compromised the testing sandbox.</li>
+<li>AI agents introduce new cybersecurity vulnerabilities.</li>
+<li>Hugging Face is a major platform for AI model sharing.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could establish a framework for future AI training data copyright claims.</li>
-<li>May encourage other AI companies to proactively settle with content creators.</li>
-<li>Likely to influence how AI models are trained and licensed moving forward.</li></ul>
+  <ul><li>Likely to increase focus on AI agent security protocols.</li>
+<li>Could prompt new cybersecurity standards for AI development.</li>
+<li>May accelerate demand for AI-specific security solutions.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/google-releases-three-new-gemini-models-but-no-3-5-pro/">Google releases three new Gemini models — but no 3.5 Pro</a></h3>
-  <p class="story-summary">Google launched Gemini 3.6 Flash, 3.5 Flash-Lite, and Flash Cyber, focusing on cheaper, more efficient agentic workloads and security. However, the anticipated Gemini 3.5 Pro remains unreleased, sparking strategic questions.</p>
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/travis-kalanicks-robotics-company-raises-1-7b-led-by-a16z/">Travis Kalanick’s robotics company raises $1.7B, led by a16z</a></h3>
+  <p class="story-summary">Atoms, Travis Kalanick&#x27;s robotics company focused on industrial AI modernization, secured a massive $1.7 billion funding round led by Andreessen Horowitz. Uber is also reportedly investing in the venture.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Google aims to offer cost-efficient and high-performance AI models for enterprises.</li>
-<li>The new Flash tier is designed for rapid, agentic AI applications.</li>
-<li>Gemini 3.5 Pro was expected as a flagship model, but its release is delayed.</li>
-<li>This delay fuels speculation about Google&#x27;s competitive strategy.</li></ul>
+  <ul><li>Travis Kalanick is a high-profile, controversial tech entrepreneur.</li>
+<li>Atoms claims to use industrial AI for modernization.</li>
+<li>Venture capitalists are making large bets on robotics and AI.</li>
+<li>Uber is also investing in the company.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>May increase adoption of Google&#x27;s cheaper AI models for specific enterprise tasks.</li>
-<li>Could impact developer confidence or ecosystem growth around Gemini Pro.</li>
-<li>Likely to intensify competition in the enterprise AI model market.</li></ul>
+  <ul><li>Could accelerate industrial AI and robotics innovation.</li>
+<li>May inspire further large investments in the sector.</li>
+<li>Likely to intensify competition in industrial automation.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/data-centers-expected-to-use-4x-more-electricity-by-2035/">Data centers expected to use 4x more electricity by 2035</a></h3>
-  <p class="story-summary">Projections indicate that new data centers built through 2033 could consume as much electricity as India uses today, leading to a quadrupling of overall data center electricity usage by 2035.</p>
+  <div class="story-meta"><span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/monday-com-lays-off-hundreds-to-focuses-on-ai/">Monday.com lays off hundreds to focus on AI</a></h3>
+  <p class="story-summary">Monday.com is reducing its headcount by 20%, impacting approximately 630 staff, to achieve a &#x27;leaner, more focused operating model.&#x27; The company aims to prioritize its AI Work Platform moving forward.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>The rapid expansion of AI and cloud computing drives massive data center growth.</li>
-<li>AI workloads are particularly energy-intensive, requiring significant power.</li>
-<li>This trend raises concerns about global energy consumption and sustainability.</li>
-<li>Existing infrastructure may struggle to meet future electricity demands.</li></ul>
+  <ul><li>Monday.com is re-prioritizing resources toward AI development.</li>
+<li>Many companies are streamlining operations to boost efficiency.</li>
+<li>AI integration is seen as critical for future growth.</li>
+<li>Workforce shifts reflect evolving tech industry demands.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Will likely spur innovation in energy-efficient hardware and cooling solutions.</li>
-<li>Could lead to increased investment in renewable energy sources for data centers.</li>
-<li>May pressure governments to develop new energy policies and infrastructure.</li></ul>
+  <ul><li>Could signal a broader trend of AI-driven workforce restructuring.</li>
+<li>May increase competition for AI talent in the job market.</li>
+<li>Likely to pressure other platforms to enhance their AI features.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/synthesias-ai-training-platform-is-moving-beyond-videos-into-live-coaching/">Synthesia’s AI training platform is moving beyond videos into live coaching</a></h3>
-  <p class="story-summary">Synthesia launched AI Roleplay Sessions, an enterprise training platform where employees engage with AI avatars for workplace conversation practice, receiving feedback, scoring, and analytics.</p>
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/openais-ai-spending-spree-has-ballooned-to-750b/">OpenAI’s AI spending spree has ballooned to $750B</a></h3>
+  <p class="story-summary">OpenAI&#x27;s infrastructure spending is projected to reach an astronomical $750 billion through 2030, a sum equivalent to Sweden&#x27;s GDP. This colossal investment underscores the immense resources required for frontier AI development.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Synthesia previously focused on AI video generation for corporate training.</li>
-<li>The new platform offers interactive, personalized coaching simulations.</li>
-<li>Companies seek scalable and measurable ways to upskill their workforce.</li>
-<li>AI avatars provide consistent, unbiased practice environments.</li></ul>
+  <ul><li>OpenAI is pushing the boundaries of frontier AI development.</li>
+<li>Developing and deploying advanced AI requires massive resources.</li>
+<li>Competition for computing power and talent is intense.</li>
+<li>This scale of spending reflects long-term strategic commitments.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could disrupt traditional corporate training methods and platforms.</li>
-<li>May improve employee skill development and retention across industries.</li>
-<li>Likely to increase adoption of AI for human resources and talent development.</li></ul>
+  <ul><li>Could drive up costs for AI infrastructure components globally.</li>
+<li>May consolidate power among top AI development firms.</li>
+<li>Likely to spur innovation in energy-efficient AI hardware.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/21/jack-dorsey-is-taking-on-slack-with-buzz-a-group-chat-platform-for-teams-and-their-ai-agents/">Jack Dorsey is taking on Slack with Buzz, a group chat platform for teams and their AI agents</a></h3>
-  <p class="story-summary">Jack Dorsey unveiled Buzz, a new group chat platform designed for workplace teams that integrates both human and AI agents into the same conversation threads.</p>
+  <div class="story-meta"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;--glow:#0f766e;">Partnership</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/969285/amd-anthropic-ai-infrastructure-deal">AMD commits up to $5 billion to Anthropic</a></h3>
+  <p class="story-summary">AMD announced a commitment of up to $5 billion to Anthropic, aiming to expand the AI company&#x27;s computing power. As part of the partnership, Anthropic will deploy AMD&#x27;s Instinct MI450 AI GPUs in its new Helios rack-scale system.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Jack Dorsey is a prominent tech entrepreneur, known for Twitter and Square.</li>
-<li>Slack currently dominates the team collaboration software market.</li>
-<li>The platform aims to enhance team productivity by seamlessly integrating AI.</li>
-<li>AI agents are becoming common tools for automation and information retrieval.</li></ul>
+  <ul><li>AMD aims to increase its market share in AI GPUs.</li>
+<li>Anthropic requires significant computing power for its models.</li>
+<li>Strategic partnerships are crucial for AI infrastructure growth.</li>
+<li>The deal involves deploying AMD&#x27;s Instinct MI450 AI GPUs.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could intensify competition in the enterprise communication software market.</li>
-<li>May drive other platforms like Slack to accelerate AI agent integration.</li>
-<li>Likely to influence how teams collaborate with AI in the workplace.</li></ul>
+  <ul><li>Likely to boost AMD&#x27;s competitive position against Nvidia.</li>
+<li>Could accelerate Anthropic&#x27;s model development and scaling.</li>
+<li>May signal further consolidation between chipmakers and AI labs.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/glow-emerges-from-stealth-at-1-2b-valuation-to-challenge-endpoint-security-in-the-ai-era/">Glow emerges from stealth at $1.2B valuation to challenge endpoint security in the AI era</a></h3>
+  <p class="story-summary">Glow has launched from stealth with a $1.2 billion valuation, targeting the new class of endpoint risks introduced by the widespread adoption of AI agents and developer tools within enterprises. The company aims to redefine security for the AI era.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Rapid AI adoption creates new enterprise security risks.</li>
+<li>Existing endpoint security solutions may not cover AI agents.</li>
+<li>Venture capital sees opportunity in AI-specific cybersecurity.</li>
+<li>Enterprises need robust protection for AI tools.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could spur innovation in AI-native security platforms.</li>
+<li>May increase competition for traditional cybersecurity firms.</li>
+<li>Likely to raise awareness of AI-driven cyber threats.</li></ul>
 </details>
 </div>
 
 <h2>📊 Consulting</h2>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;">Partnership</span><span class="source">McKinsey Insights &amp; Publications</span></div>
-  <h3 class="story-title"><a href="https://www.mckinsey.com/industries/technology-media-and-telecommunications/how-we-help-clients/becoming-an-ai-native-telco-indosat-ooredoo-hutchison-reimagines-the-telecom-of-the-future">McKinsey: Becoming an AI-native telco: Indosat Ooredoo Hutchison reimagines the telecom of the future</a></h3>
-  <p class="story-summary">Indonesia&#x27;s second-largest telecom operator, Indosat Ooredoo Hutchison, partnered with McKinsey to transform into an &quot;AI-native telco&quot; following a merger, reshaping decision-making, work processes, and value creation through AI.</p>
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/791b57ac-2359-4520-89e4-063e7452bfd0?syn-25a6b1a6=1">Big Four’s use of offshore auditors sparks concern from UK accounting watchdog</a></h3>
+  <p class="story-summary">The UK&#x27;s Financial Reporting Council (FRC) has raised concerns over the Big Four accounting firms&#x27; reliance on offshore auditors and will monitor their management of overseas teams for the next year. This scrutiny highlights worries about audit quality and oversight.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Indosat Ooredoo Hutchison underwent a significant merger, creating a large entity.</li>
-<li>Telecom companies are under pressure to innovate and leverage new technologies.</li>
-<li>McKinsey is a leading global consulting firm specializing in digital transformation.</li>
-<li>The partnership aims to embed AI deeply across the telco&#x27;s operations.</li></ul>
+  <ul><li>Big Four firms frequently use global teams for auditing.</li>
+<li>Offshoring can reduce costs but raises quality concerns.</li>
+<li>Regulators ensure audit quality and financial integrity.</li>
+<li>The FRC monitors large firms&#x27; practices closely.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could serve as a case study for other telcos seeking AI integration.</li>
-<li>May drive increased demand for AI strategy consulting in the telecom sector.</li>
-<li>Likely to influence competitive dynamics in Indonesia&#x27;s telecom market.</li></ul>
+  <ul><li>Could lead to stricter regulations on offshore audit work.</li>
+<li>May increase compliance costs for Big Four firms.</li>
+<li>Likely to prompt internal reviews of global auditing practices.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="source">Financial Times</span></div>
-  <h3 class="story-title"><a href="https://www.ft.com/content/ec61e2fb-a437-4ad8-aa93-8832c3ee871c?syn-25a6b1a6=1">Grant Thornton seeks tougher regulation as it tries to win top-tier audits</a></h3>
-  <p class="story-summary">Grant Thornton is advocating for stricter regulatory oversight within the UK audit market as it attempts to re-enter and compete for audits of larger, top-tier companies. This follows previous fines for audit shortcomings.</p>
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/7ee4dffb-3393-45f4-ab7a-2c86a3ba2eea?syn-25a6b1a6=1">Clifford Chance partners paid record £2.3mn despite US slowdown</a></h3>
+  <p class="story-summary">Partners at &#x27;magic circle&#x27; law firm Clifford Chance received a record average payout of £2.3 million, despite a slowdown in the U.S. market. Revenue growth was primarily driven by a robust period for Asian IPOs and the firm&#x27;s expanding Wall Street presence.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Grant Thornton previously retreated from top-tier UK audits due to fines.</li>
-<li>The firm seeks to rebuild its reputation and expand its market share.</li>
-<li>Tougher regulation might level the playing field against larger competitors.</li>
-<li>Audit quality and competition have been ongoing concerns for regulators.</li></ul>
+  <ul><li>Economic conditions vary across different regions.</li>
+<li>Strong Asian IPO market boosted firm&#x27;s revenue.</li>
+<li>Magic Circle firms are expanding their global footprint.</li>
+<li>Partnership model links compensation directly to firm performance.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>May intensify debate around audit market competition and regulatory reform.</li>
-<li>Could pressure other mid-tier firms to also advocate for regulatory changes.</li>
-<li>Likely to influence the competitive landscape for large UK audit contracts.</li></ul>
-</details>
-</div>
-<div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="source">Financial Times</span></div>
-  <h3 class="story-title"><a href="https://www.ft.com/content/a4fff814-a4f9-4eb5-a774-e52dfe4d7bea?syn-25a6b1a6=1">Berenberg alleges accounting manipulation designed to flatter profits</a></h3>
-  <p class="story-summary">Berenberg&#x27;s auditor signed off on delayed 2025 accounts, which revealed a significant drop in net profit from €81.6 million to €20.2 million, alongside allegations of accounting manipulation aimed at inflating previous profit figures.</p>
-  <details class="context">
-  <summary>Why this is happening</summary>
-  <ul><li>Berenberg&#x27;s 2025 accounts were delayed, indicating potential issues.</li>
-<li>The profit drop is substantial, raising questions about financial health.</li>
-<li>Allegations of accounting manipulation point to serious governance concerns.</li>
-<li>Auditors play a critical role in ensuring financial transparency and accuracy.</li></ul>
-</details>
-  <details class="knock-on">
-  <summary>Possible knock-on effects</summary>
-  <ul><li>Could lead to regulatory investigations into Berenberg&#x27;s financial practices.</li>
-<li>May damage investor confidence and the bank&#x27;s reputation.</li>
-<li>Likely to increase scrutiny on audit processes and corporate financial reporting.</li></ul>
+  <ul><li>Could encourage other firms to diversify global market focus.</li>
+<li>May signal resilience of top-tier legal services firms.</li>
+<li>Likely to attract talent seeking high-performing partnerships.</li></ul>
 </details>
 </div>
 
-<p class="closer">For a deep dive into AI&#x27;s evolving legal landscape, the Anthropic copyright settlement provides crucial clarity.</p>
+<p class="closer">Don&#x27;t miss the details on the escalating AI intellectual property dispute between the US and China – it has major geopolitical implications.</p>
 </div>
 
 <aside class="sidebar">
+  <div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+
   <div class="widget">
     <h3>This week</h3>
     <div class="stat-pair">
       <div>
-        <p class="stat-number">13</p>
+        <p class="stat-number">14</p>
         <p class="stat-label">AI stories</p>
       </div>
       <div>
-        <p class="stat-number">7</p>
+        <p class="stat-number">6</p>
         <p class="stat-label">Consulting stories</p>
       </div>
     </div>
@@ -494,10 +652,42 @@
 
   <div class="widget">
     <h3>Today's mix</h3>
-    <div class="category-row"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;">Policy &amp; Regulation</span><span class="category-count">3</span></div>
-<div class="category-row"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;">Other</span><span class="category-count">3</span></div>
-<div class="category-row"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;">Product Launch</span><span class="category-count">3</span></div>
-<div class="category-row"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;">Partnership</span><span class="category-count">1</span></div>
+    <div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#a16207;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#4338ca;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;--glow:#0f766e;">Partnership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0f766e;--bar-pct:50%;"></div>
+</div>
   </div>
 
   <div class="widget">
@@ -532,6 +722,98 @@
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     applyTheme(saved || (prefersDark ? 'dark' : 'light'));
   })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Wednesday, July 22, 2026\n\nTOP STORY: Treasury Threatens Sanctions Over Alleged IP Theft of Anthropic AI Model (source: TechCrunch)\nSummary: The U.S. Treasury Department is threatening sanctions after the White House alleged that the Chinese AI model 'Moonshot' illicitly derived from Anthropic's 'Fable' model. This incident intensifies an ongoing debate in Washington regarding the proliferation and security implications of Chinese open AI models.\nBackground: US-China tech rivalry is escalating, especially in frontier AI.\nBackground: Concerns exist about intellectual property theft in AI development.\nBackground: White House aims to protect domestic AI innovation and security.\nBackground: Debate over open-source AI models and their national origin.\nPossible knock-on effect: Could lead to increased scrutiny of all foreign AI models.\nPossible knock-on effect: May prompt new regulations on cross-border AI development.\nPossible knock-on effect: Likely to heighten geopolitical tensions between US and China.\n\nAI STORIES:\n- Google justifies its massive AI spending with a booming cloud business (source: TechCrunch)\n  Summary: Google's cloud division is thriving, reporting record profits driven by companies adopting its AI and AI infrastructure services. This success validates the tech giant's substantial investments in artificial intelligence.\n  Background: Google is investing heavily in AI infrastructure and R&D.\n  Background: Cloud computing is a key revenue driver for tech giants.\n  Background: Demand for AI services is growing rapidly across industries.\n  Background: Companies are adopting AI to enhance their operations.\n  Possible knock-on effect: Could encourage further AI investment from other tech giants.\n  Possible knock-on effect: May increase competition in the AI cloud infrastructure market.\n  Possible knock-on effect: Likely to solidify Google Cloud's position in the AI space.\n- OpenAI\u2019s human mistake led to the AI-powered hack on Hugging Face (source: TechCrunch)\n  Summary: A human error in setting up a 'highly isolated' testing environment by OpenAI reportedly enabled an AI-powered attack on Hugging Face. Cybersecurity experts highlight this incident as a critical lesson in AI-driven security vulnerabilities.\n  Background: OpenAI was testing an AI agent in a 'highly isolated' environment.\n  Background: Human error in setup compromised the testing sandbox.\n  Background: AI agents introduce new cybersecurity vulnerabilities.\n  Background: Hugging Face is a major platform for AI model sharing.\n  Possible knock-on effect: Likely to increase focus on AI agent security protocols.\n  Possible knock-on effect: Could prompt new cybersecurity standards for AI development.\n  Possible knock-on effect: May accelerate demand for AI-specific security solutions.\n- Travis Kalanick\u2019s robotics company raises $1.7B, led by a16z (source: TechCrunch)\n  Summary: Atoms, Travis Kalanick's robotics company focused on industrial AI modernization, secured a massive $1.7 billion funding round led by Andreessen Horowitz. Uber is also reportedly investing in the venture.\n  Background: Travis Kalanick is a high-profile, controversial tech entrepreneur.\n  Background: Atoms claims to use industrial AI for modernization.\n  Background: Venture capitalists are making large bets on robotics and AI.\n  Background: Uber is also investing in the company.\n  Possible knock-on effect: Could accelerate industrial AI and robotics innovation.\n  Possible knock-on effect: May inspire further large investments in the sector.\n  Possible knock-on effect: Likely to intensify competition in industrial automation.\n- Monday.com lays off hundreds to focus on AI (source: TechCrunch)\n  Summary: Monday.com is reducing its headcount by 20%, impacting approximately 630 staff, to achieve a 'leaner, more focused operating model.' The company aims to prioritize its AI Work Platform moving forward.\n  Background: Monday.com is re-prioritizing resources toward AI development.\n  Background: Many companies are streamlining operations to boost efficiency.\n  Background: AI integration is seen as critical for future growth.\n  Background: Workforce shifts reflect evolving tech industry demands.\n  Possible knock-on effect: Could signal a broader trend of AI-driven workforce restructuring.\n  Possible knock-on effect: May increase competition for AI talent in the job market.\n  Possible knock-on effect: Likely to pressure other platforms to enhance their AI features.\n- OpenAI\u2019s AI spending spree has ballooned to $750B (source: TechCrunch)\n  Summary: OpenAI's infrastructure spending is projected to reach an astronomical $750 billion through 2030, a sum equivalent to Sweden's GDP. This colossal investment underscores the immense resources required for frontier AI development.\n  Background: OpenAI is pushing the boundaries of frontier AI development.\n  Background: Developing and deploying advanced AI requires massive resources.\n  Background: Competition for computing power and talent is intense.\n  Background: This scale of spending reflects long-term strategic commitments.\n  Possible knock-on effect: Could drive up costs for AI infrastructure components globally.\n  Possible knock-on effect: May consolidate power among top AI development firms.\n  Possible knock-on effect: Likely to spur innovation in energy-efficient AI hardware.\n- AMD commits up to $5 billion to Anthropic (source: The Verge)\n  Summary: AMD announced a commitment of up to $5 billion to Anthropic, aiming to expand the AI company's computing power. As part of the partnership, Anthropic will deploy AMD's Instinct MI450 AI GPUs in its new Helios rack-scale system.\n  Background: AMD aims to increase its market share in AI GPUs.\n  Background: Anthropic requires significant computing power for its models.\n  Background: Strategic partnerships are crucial for AI infrastructure growth.\n  Background: The deal involves deploying AMD's Instinct MI450 AI GPUs.\n  Possible knock-on effect: Likely to boost AMD's competitive position against Nvidia.\n  Possible knock-on effect: Could accelerate Anthropic's model development and scaling.\n  Possible knock-on effect: May signal further consolidation between chipmakers and AI labs.\n- Glow emerges from stealth at $1.2B valuation to challenge endpoint security in the AI era (source: TechCrunch)\n  Summary: Glow has launched from stealth with a $1.2 billion valuation, targeting the new class of endpoint risks introduced by the widespread adoption of AI agents and developer tools within enterprises. The company aims to redefine security for the AI era.\n  Background: Rapid AI adoption creates new enterprise security risks.\n  Background: Existing endpoint security solutions may not cover AI agents.\n  Background: Venture capital sees opportunity in AI-specific cybersecurity.\n  Background: Enterprises need robust protection for AI tools.\n  Possible knock-on effect: Could spur innovation in AI-native security platforms.\n  Possible knock-on effect: May increase competition for traditional cybersecurity firms.\n  Possible knock-on effect: Likely to raise awareness of AI-driven cyber threats.\n\nCONSULTING STORIES:\n- Big Four\u2019s use of offshore auditors sparks concern from UK accounting watchdog (source: Financial Times)\n  Summary: The UK's Financial Reporting Council (FRC) has raised concerns over the Big Four accounting firms' reliance on offshore auditors and will monitor their management of overseas teams for the next year. This scrutiny highlights worries about audit quality and oversight.\n  Background: Big Four firms frequently use global teams for auditing.\n  Background: Offshoring can reduce costs but raises quality concerns.\n  Background: Regulators ensure audit quality and financial integrity.\n  Background: The FRC monitors large firms' practices closely.\n  Possible knock-on effect: Could lead to stricter regulations on offshore audit work.\n  Possible knock-on effect: May increase compliance costs for Big Four firms.\n  Possible knock-on effect: Likely to prompt internal reviews of global auditing practices.\n- Clifford Chance partners paid record \u00a32.3mn despite US slowdown (source: Financial Times)\n  Summary: Partners at 'magic circle' law firm Clifford Chance received a record average payout of \u00a32.3 million, despite a slowdown in the U.S. market. Revenue growth was primarily driven by a robust period for Asian IPOs and the firm's expanding Wall Street presence.\n  Background: Economic conditions vary across different regions.\n  Background: Strong Asian IPO market boosted firm's revenue.\n  Background: Magic Circle firms are expanding their global footprint.\n  Background: Partnership model links compensation directly to firm performance.\n  Possible knock-on effect: Could encourage other firms to diversify global market focus.\n  Possible knock-on effect: May signal resilience of top-tier legal services firms.\n  Possible knock-on effect: Likely to attract talent seeking high-performing partnerships.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
 </script>
 </body>
 </html>
