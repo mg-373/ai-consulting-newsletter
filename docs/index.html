@@ -5,62 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mehul&#x27;s AI &amp; Consulting Daily — Thursday, July 23, 2026</title>
 <link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fafafa;
-    --text: #1a1a1a;
-    --muted: #666;
-    --border: #ddd;
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
     --card-bg: #ffffff;
-    --link: #0b5fff;
-    --shadow: rgba(20, 20, 30, 0.10);
-    --grad-a: rgba(11, 95, 255, 0.06);
-    --grad-b: rgba(122, 63, 214, 0.06);
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
   }
   html[data-theme="dark"] {
-    --bg: #14161a;
-    --text: #eaeaea;
-    --muted: #9a9a9a;
-    --border: #2c2f36;
-    --card-bg: #1d2027;
-    --link: #6ea8ff;
-    --shadow: rgba(0, 0, 0, 0.45);
-    --grad-a: rgba(110, 168, 255, 0.08);
-    --grad-b: rgba(160, 110, 255, 0.08);
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
   }
   * { box-sizing: border-box; }
   html {
     background: var(--bg);
   }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: var(--font-body);
     margin: 0;
     color: var(--text);
-    background: var(--bg);
-    line-height: 1.55;
-    transition: background 0.2s, color 0.2s;
-    position: relative;
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
     min-height: 100vh;
-    overflow-x: hidden;
-  }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: -20%;
-    z-index: -1;
-    background:
-      radial-gradient(circle at 20% 20%, var(--grad-a), transparent 45%),
-      radial-gradient(circle at 80% 60%, var(--grad-b), transparent 45%);
-    background-size: 140% 140%;
-    animation: driftGradient 30s ease-in-out infinite alternate;
-    pointer-events: none;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
   }
   @keyframes driftGradient {
-    0% { background-position: 0% 0%, 100% 100%; }
-    100% { background-position: 30% 20%, 70% 80%; }
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
   }
   @media (prefers-reduced-motion: reduce) {
-    body::before { animation: none; }
+    body { animation: none; }
   }
   .layout {
     max-width: 1120px;
@@ -68,27 +79,46 @@
     padding: 32px 24px 80px;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 28px;
   }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
   @media (min-width: 960px) {
     .layout {
       grid-template-columns: minmax(0, 700px) 300px;
       align-items: start;
     }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
   }
-  .main { min-width: 0; }
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  @media (min-width: 960px) {
-    .sidebar { position: sticky; top: 24px; }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
   }
   .widget {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px 18px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
@@ -97,10 +127,11 @@
     box-shadow: 0 6px 16px var(--shadow);
   }
   .widget h3 {
+    font-family: var(--font-mono);
     margin: 0 0 12px;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     color: var(--muted);
   }
   .widget-list {
@@ -150,11 +181,14 @@
   }
   .category-count {
     color: var(--muted);
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
   }
   .stat-number {
-    font-size: 1.35rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
     margin: 0;
   }
   .stat-label {
@@ -181,21 +215,62 @@
     font-weight: 600;
   }
   header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    border-bottom: 3px solid var(--text);
-    padding-bottom: 14px;
-    margin-bottom: 20px;
     gap: 12px;
   }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
   header h1 {
-    font-size: 1.4rem;
-    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
   }
   header .date {
+    font-family: var(--font-mono);
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   #theme-toggle {
     border: 1px solid var(--border);
@@ -206,27 +281,36 @@
     font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
   }
   .meta-line {
+    font-family: var(--font-mono);
     color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 24px;
+    font-size: 0.82rem;
+    margin-bottom: 26px;
   }
   .greeting {
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     margin-bottom: 28px;
   }
   h2 {
-    font-size: 1.1rem;
-    margin-top: 36px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 6px;
+    padding-bottom: 8px;
   }
   .hero-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
     margin: 16px 0 32px;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
@@ -235,12 +319,14 @@
     box-shadow: 0 10px 28px var(--shadow);
   }
   .hero-card .story-title {
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
   }
   .story-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 14px 16px;
     margin-bottom: 12px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -256,7 +342,8 @@
     margin-bottom: 6px;
   }
   .tag {
-    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
     font-weight: 600;
     padding: 2px 9px;
     border-radius: 20px;
@@ -434,37 +521,142 @@
 <div class="layout">
 <div class="main">
 <header>
-  <div>
-    <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
-    <div class="date">Thursday, July 23, 2026</div>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Thursday, July 23, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
   </div>
-  <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
-<div class="meta-line">2 min read · <a href="feed.xml">RSS feed</a></div>
+<div class="meta-line">8 min read · <a href="feed.xml">RSS feed</a></div>
 
-<p class="greeting">Morning, Mehul — here&#x27;s your essential briefing on AI, Consulting, and global affairs for today.</p>
+<p class="greeting">Morning, Mehul — The AI infrastructure race heats up with a massive deal, while tensions in the Middle East drive oil prices sky-high.</p>
 
 <div class="hero-card">
-  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source"></span></div>
-  <h3 class="story-title">No Hero Story Available from AI or Consulting Today</h3>
-  <p class="story-summary">Unfortunately, there were no notable developments reported in the AI or Consulting sectors in the last 24 hours that qualify as a hero story, as per our selection criteria. We will continue to monitor these industries closely.</p>
+  <div class="story-meta"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;--glow:#0f766e;">Partnership</span><span class="source">AI News</span></div>
+  <h3 class="story-title"><a href="https://www.artificialintelligence-news.com/news/amd-anthropic-ai-infrastructure-deal/">AMD to Invest Up To $5 Billion in Anthropic for AI Infrastructure Deal</a></h3>
+  <p class="story-summary">AMD has committed to investing up to $5 billion in AI developer Anthropic as part of a broader infrastructure agreement worth tens of billions of dollars. This strategic partnership will see Anthropic deploy AMD&#x27;s Instinct MI450-series accelerators for its AI systems, signaling a major boost for AMD&#x27;s presence in the competitive AI chip market and Anthropic&#x27;s scaling capabilities.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>No notable AI or Consulting news was reported in the last 24 hours.</li>
-<li>Prevents the selection of a designated &#x27;hero&#x27; story from these categories.</li>
-<li>Highlights a quiet news cycle for these specific sectors.</li></ul>
+  <ul><li>The AI industry requires immense computing power, driving demand for specialized chips.</li>
+<li>AMD is aggressively competing with Nvidia in the high-performance AI accelerator market.</li>
+<li>Anthropic needs significant infrastructure to train and deploy its large language models.</li>
+<li>Such large investments are common in the rapidly escalating AI &quot;arms race.&quot;</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>No immediate impact on market sentiment for AI/Consulting.</li>
-<li>May indicate a temporary period of consolidation or quiet innovation.</li>
-<li>Readers might seek updates from adjacent tech or business sectors.</li></ul>
+  <ul><li>Could solidify AMD as a stronger contender against Nvidia in the AI chip market.</li>
+<li>May accelerate Anthropic&#x27;s development and deployment of advanced AI models.</li>
+<li>Likely to drive further large-scale infrastructure deals between chipmakers and AI labs.</li></ul>
 </details>
 </div>
 
 <h2>🤖 AI</h2>
-<p>No notable AI stories in the last 24 hours.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/23/ai-chip-startup-etched-defies-skeptics-hits-10-3b-valuation-from-big-name-investors/">AI Chip Startup Etched Defies Skeptics, Hits $10.3B Valuation</a></h3>
+  <p class="story-summary">AI chip startup Etched, founded by three Harvard dropouts, has achieved a $10.3 billion valuation after securing significant investment. The company claims its new chips and memory components can speed up AI model inference without requiring traditional GPUs.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Demand for AI inference acceleration is high, but GPUs are expensive and often in short supply.</li>
+<li>Startups are seeking alternative, more efficient hardware architectures for AI workloads.</li>
+<li>Etched&#x27;s valuation indicates strong investor confidence in its disruptive technology approach.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could increase competition in the AI chip market beyond traditional GPU manufacturers.</li>
+<li>May encourage further investment in specialized AI hardware solutions.</li>
+<li>Likely to challenge existing paradigms for AI inference efficiency and cost.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">Ars Technica</span></div>
+  <h3 class="story-title"><a href="https://arstechnica.com/google/2026/07/google-just-had-its-first-negative-cash-flow-quarter-ever-due-to-massive-ai-spending/">Google Reports First Negative Cash Flow Quarter Due to Massive AI Spending</a></h3>
+  <p class="story-summary">Google has reported its first negative cash flow quarter in history, attributed to its enormous investments in artificial intelligence infrastructure and development. Despite strong overall quarterly revenue, the company&#x27;s escalating AI expenditures significantly impacted its financials.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Major tech companies are in an intense &quot;AI arms race,&quot; investing heavily in resources.</li>
+<li>Rapid AI investment can strain even highly profitable companies&#x27; short-term cash flow.</li>
+<li>Google is pushing hard to compete with rivals in AI model development and deployment.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May lead to closer scrutiny of AI investment efficiency and returns across the tech industry.</li>
+<li>Could pressure Google to monetize its AI products more aggressively.</li>
+<li>Might cause other tech giants to re-evaluate their AI spending strategies.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/969939/lawmakers-ai-kill-switch-proposal">Lawmakers Prepare Bill Requiring AI ‘Kill Switch’ for National Security</a></h3>
+  <p class="story-summary">Bipartisan lawmakers, including Reps. Ted Lieu (D-CA) and Nathaniel Moran (R-TX), are set to introduce an &quot;AI Kill Switch Act.&quot; This proposed legislation would empower the Department of Homeland Security to order AI companies to shut down or throttle their systems in national security emergencies.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Concerns about powerful AI systems posing national security risks are growing.</li>
+<li>Governments worldwide are exploring regulatory frameworks for advanced AI technologies.</li>
+<li>The bill aims to provide a mechanism for emergency control over potentially dangerous AI.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could spark debate over government authority, corporate autonomy, and technical feasibility.</li>
+<li>May influence how AI models are designed and deployed, with safety mechanisms prioritized.</li>
+<li>Likely to set a precedent for future AI regulatory interventions.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/970115/openai-chatgpt-health-launch-claims">OpenAI Rolls Out ChatGPT Health to All US Users with Bold Claims</a></h3>
+  <p class="story-summary">OpenAI has launched ChatGPT Health for all US users, enabling integration with personal health data from services like Apple Health and MyFitnessPal. The company&#x27;s VP of health product claimed their models are &quot;capable of reasoning at levels that are better than clinician level,&quot; a statement that draws scrutiny.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI is increasingly being applied to healthcare for diagnostics and information access.</li>
+<li>Integration of personal health data raises significant privacy and data security concerns.</li>
+<li>Claims of &quot;clinician-level&quot; performance in AI often require robust validation.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to wider adoption of AI tools for personal health management, if trust is established.</li>
+<li>May intensify regulatory oversight on AI applications in sensitive sectors like healthcare.</li>
+<li>Is likely to prompt further debate and research into AI efficacy in clinical reasoning.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/970065/anthropic-voice-mode-claude-opus-sonnet-haiku-ai">Anthropic Upgrades Claude Voice Mode to Opus and Sonnet, Expanding Integration</a></h3>
+  <p class="story-summary">Anthropic has enhanced its Claude AI chatbot&#x27;s voice mode, making its more powerful Opus and Sonnet models available in addition to the faster Haiku. This upgrade also extends Claude&#x27;s voice capabilities into third-party applications like Gmail, Slack, and Canva for improved productivity.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Voice interfaces are a key battleground for AI assistants, demanding advanced NLP capabilities.</li>
+<li>Expanding to more capable models improves functionality for complex tasks.</li>
+<li>Deeper integration into popular apps increases user accessibility and utility.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May boost Claude&#x27;s competitiveness against other multimodal AI assistants.</li>
+<li>Could drive further innovation in voice-controlled productivity tools.</li>
+<li>Is likely to increase user adoption of AI for daily tasks across platforms.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/business/2026/jul/23/customers-prefer-ai-chatbots-says-chris-oshea-british-gas-centrica-boss">British Gas Owner Axes 1,300 Call Centre Jobs, States &#x27;Customers Prefer AI Chatbots&#x27;</a></h3>
+  <p class="story-summary">Centrica, the owner of British Gas, announced plans to cut 1,300 call center jobs, with its CEO stating that &quot;most households would rather speak with an AI chatbot&quot; than human staff. This move reflects a strategic shift towards AI-powered customer service.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Companies are increasingly exploring AI to automate customer service for efficiency.</li>
+<li>The impact of AI on employment, particularly in service sectors, is a growing concern.</li>
+<li>Such statements highlight a company&#x27;s justification for AI-driven job displacement.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May accelerate the trend of AI adoption in customer service across various industries.</li>
+<li>Could intensify public and labor union debates about AI&#x27;s role in job displacement.</li>
+<li>Is likely to pressure companies to demonstrate AI-driven support efficacy and satisfaction.</li></ul>
+</details>
+</div>
 
 <h2>📊 Consulting</h2>
 <p>No notable consulting stories in the last 24 hours.</p>
@@ -472,46 +664,97 @@
 <h2>🌍 Israel-Iran-US Conflict</h2>
 <p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">The Guardian</span></div>
-  <h3 class="story-title"><a href="https://www.theguardian.com/world/live/2026/jul/23/us-iran-war-live-updates-strikes-houthis-red-sea-saudi-nuclear-deal-middle-east-crisis-latest-news">US Intensifies Strikes on Iran, Houthis Claim New Red Sea Tanker Attacks</a></h3>
-  <p class="story-summary">The US military conducted its 12th consecutive night of strikes against targets in Iran, including an Iran-Iraq border crossing, stating it aims to degrade Tehran&#x27;s ability to threaten ships. Concurrently, Yemen&#x27;s Houthi rebels claimed responsibility for new attacks on Red Sea tankers, alleging they violated their blockade.</p>
+  <div class="story-meta"><span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cj03r59z73po?at_medium=RSS&amp;at_campaign=rss">US Signs Landmark Civilian Nuclear Deal with Saudi Arabia; Trump Adds Condition</a></h3>
+  <p class="story-summary">The US Department of Energy announced a &quot;peaceful&quot; civilian nuclear cooperation agreement with Saudi Arabia, granting US firms access to the Saudi nuclear program. President Trump stated the deal is contingent on Saudi Arabia joining the Abraham Accords.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>US military states strikes aim to degrade Tehran&#x27;s naval threat capability.</li>
-<li>Houthis claim tanker attacks enforce their blockade in the Red Sea.</li>
-<li>Escalation follows ongoing regional tensions and previous maritime incidents.</li>
-<li>US actions come amidst broader Middle East instability.</li></ul>
+  <ul><li>Saudi Arabia seeks to diversify its energy sources and develop its nuclear energy program.</li>
+<li>The US aims to assert influence in the Middle East and ensure non-proliferation standards.</li>
+<li>The Abraham Accords are normalization agreements between Israel and Arab nations.</li>
+<li>Trump&#x27;s condition adds a significant geopolitical layer to the agreement.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Increased risk of direct US-Iran confrontation and regional destabilization.</li>
-<li>Potential for further disruptions to global shipping and trade routes.</li>
-<li>May complicate diplomatic efforts for de-escalation in the wider region.</li></ul>
+  <ul><li>Could significantly alter the geopolitical landscape of the Middle East.</li>
+<li>May raise concerns about nuclear proliferation capabilities in the region.</li>
+<li>Likely to intensify debate in the US regarding the implications of the deal.</li></ul>
 </details>
 </div>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="source">The Guardian</span></div>
-  <h3 class="story-title"><a href="https://www.theguardian.com/business/2026/jul/23/easyjet-profits-plunge-fuel-costs-soar-iran-war">EasyJet Profits Plunge 70% Amid Soaring Fuel Costs Due to Iran War</a></h3>
-  <p class="story-summary">Budget airline EasyJet reported a 70% drop in profits, attributing the significant decline primarily to soaring fuel costs exacerbated by the ongoing conflict in Iran. The company also noted passengers booking later, adding to financial pressures.</p>
+  <div class="story-meta"><span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cx2djnzrqk2o?at_medium=RSS&amp;at_campaign=rss">Oil Prices Surge Past $100 Amid Escalating Middle East Conflict</a></h3>
+  <p class="story-summary">Brent crude oil prices surpassed $100 a barrel for the first time since May, rising over 6% on Thursday, as the conflict in the Middle East intensified. The increase reflects market fears over disruptions to vital shipping routes and oil supplies due to recent attacks.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Geopolitical conflicts often lead to increased oil prices and supply chain disruptions.</li>
-<li>Airlines are particularly vulnerable to fuel price volatility due to high operating costs.</li>
-<li>The ongoing &quot;Iran war&quot; refers to wider regional instability impacting markets.</li></ul>
+  <ul><li>The Middle East is a critical region for global oil production and shipping routes.</li>
+<li>Houthi attacks on maritime targets disrupt global trade and cause supply concerns.</li>
+<li>Geopolitical instability often leads to higher oil prices due to perceived supply risks.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could pressure other airlines facing similar operational cost increases.</li>
-<li>May lead to higher ticket prices for consumers across the industry.</li>
-<li>Highlights the broader economic fallout of Middle East instability.</li></ul>
+  <ul><li>Could fuel global inflation and potentially dampen economic growth worldwide.</li>
+<li>May prompt governments to seek alternative energy sources or strategic oil reserves.</li>
+<li>Is likely to increase pressure for de-escalation of the conflict to stabilize energy markets.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cpw9xzx9r4ko?at_medium=RSS&amp;at_campaign=rss">Houthi Attacks on Saudi Tankers Lead to More US Strikes on Iran-Backed Group</a></h3>
+  <p class="story-summary">Yemen&#x27;s Iran-backed Houthi group attacked Saudi oil tankers in the Red Sea, claiming a &quot;maritime embargo&quot; against Saudi Arabia. In response, the US launched additional strikes against Houthi targets, further escalating regional military action, BBC News reports.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Houthis have repeatedly targeted shipping in strategic waterways, impacting trade.</li>
+<li>The US and its allies aim to protect international shipping and deter Houthi attacks.</li>
+<li>Iran supports the Houthi movement, complicating regional dynamics and international efforts.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could further disrupt global shipping and supply chains, increasing insurance costs.</li>
+<li>May draw more regional and international actors directly into the conflict.</li>
+<li>Is likely to deepen humanitarian crises in Yemen, already severely impacted by conflict.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/world/live/2026/jul/23/us-iran-war-live-updates-strikes-houthis-red-sea-saudi-nuclear-deal-middle-east-crisis-latest-news">Trump Nears Decision on &#x27;Massive Attack&#x27; Against Iran; UN Warns Crisis &#x27;Getting Out of Control&#x27;</a></h3>
+  <p class="story-summary">US President Donald Trump said he is close to deciding on a &quot;massive attack&quot; against Iran, following Houthi strikes and rising oil prices. UN Secretary-General António Guterres warned the Middle East crisis is &quot;getting out of control&quot; and being pushed to the &quot;edge of the unimaginable,&quot; The Guardian reports.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Tensions between the US and Iran have been high for years, exacerbated by recent events.</li>
+<li>Trump&#x27;s administration has previously used military force and sanctions against Iran.</li>
+<li>The UN consistently calls for de-escalation and diplomatic solutions to regional crises.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to a direct military confrontation between the US and Iran.</li>
+<li>May trigger retaliatory actions from Iran and its proxies across the Middle East.</li>
+<li>Is likely to destabilize global markets and increase humanitarian concerns.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/7/23/far-right-israeli-incursion-heightens-tensions-at-al-aqsa-ahead-of-election">Far-Right Israeli Minister Joins Provocative Incursion at Al-Aqsa Mosque Compound</a></h3>
+  <p class="story-summary">Israel&#x27;s far-right Minister of National Security, Itamar Ben-Gvir, joined thousands of Jewish extremists in a provocative incursion at Jerusalem&#x27;s Al-Aqsa Mosque compound. Escorted by armed police, participants reportedly prayed, waved Israeli flags, and sang the national anthem at the highly sensitive holy site, Al Jazeera reports.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Al-Aqsa Mosque compound is a major flashpoint for Israeli-Palestinian tensions.</li>
+<li>Jewish visits to the site, especially by political figures, are seen as provocative.</li>
+<li>The status quo generally prohibits non-Muslim prayer on the compound.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could further inflame Israeli-Palestinian tensions and provoke retaliatory actions.</li>
+<li>May undermine diplomatic efforts for de-escalation in the broader Middle East.</li>
+<li>Is likely to draw condemnation from international bodies and Muslim-majority nations.</li></ul>
 </details>
 </div>
 
-
+<p class="closer">For a deeper dive into how AI&#x27;s insatiable demand for computing power is reshaping the tech giants, Google&#x27;s surprising financial results are a must-read.</p>
 </div>
 
-<aside class="sidebar">
-  <div class="widget widget-chat">
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
   <h3>Ask about today's news</h3>
   <div id="chat-messages" class="chat-messages">
     <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
@@ -522,12 +765,14 @@
   </div>
   <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
 </div>
+</aside>
 
+<aside class="sidebar-stats">
   <div class="widget">
     <h3>This week</h3>
     <div class="stat-pair">
       <div>
-        <p class="stat-number">14</p>
+        <p class="stat-number">20</p>
         <p class="stat-label">AI stories</p>
       </div>
       <div>
@@ -535,7 +780,7 @@
         <p class="stat-label">Consulting stories</p>
       </div>
       <div>
-        <p class="stat-number">2</p>
+        <p class="stat-number">5</p>
         <p class="stat-label">Conflict updates</p>
       </div>
     </div>
@@ -544,22 +789,58 @@
   <div class="widget">
     <h3>Today's mix</h3>
     <div class="category-row">
-  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">1</span>
-</div>
-<div class="bar-track">
-  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
-</div>
-<div class="category-row">
-  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">1</span>
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">3</span>
 </div>
 <div class="bar-track">
   <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:100%;"></div>
 </div>
 <div class="category-row">
+  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;--glow:#0f766e;">Partnership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0f766e;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#a16207;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#4338ca;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#1d4ed8;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
   <span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="category-count">1</span>
 </div>
 <div class="bar-track">
-  <div class="bar-fill" style="--bar-color:#92400e;--bar-pct:100%;"></div>
+  <div class="bar-fill" style="--bar-color:#92400e;--bar-pct:33%;"></div>
 </div>
   </div>
 
@@ -599,7 +880,7 @@
 
   // --- AI assistant (answers questions using today's stories as context) ---
   const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
-  const CHAT_CONTEXT = "Edition date: Thursday, July 23, 2026\n\nTOP STORY: No Hero Story Available from AI or Consulting Today (source: )\nSummary: Unfortunately, there were no notable developments reported in the AI or Consulting sectors in the last 24 hours that qualify as a hero story, as per our selection criteria. We will continue to monitor these industries closely.\nBackground: No notable AI or Consulting news was reported in the last 24 hours.\nBackground: Prevents the selection of a designated 'hero' story from these categories.\nBackground: Highlights a quiet news cycle for these specific sectors.\nPossible knock-on effect: No immediate impact on market sentiment for AI/Consulting.\nPossible knock-on effect: May indicate a temporary period of consolidation or quiet innovation.\nPossible knock-on effect: Readers might seek updates from adjacent tech or business sectors.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- US Intensifies Strikes on Iran, Houthis Claim New Red Sea Tanker Attacks (source: The Guardian)\n  Summary: The US military conducted its 12th consecutive night of strikes against targets in Iran, including an Iran-Iraq border crossing, stating it aims to degrade Tehran's ability to threaten ships. Concurrently, Yemen's Houthi rebels claimed responsibility for new attacks on Red Sea tankers, alleging they violated their blockade.\n  Background: US military states strikes aim to degrade Tehran's naval threat capability.\n  Background: Houthis claim tanker attacks enforce their blockade in the Red Sea.\n  Background: Escalation follows ongoing regional tensions and previous maritime incidents.\n  Background: US actions come amidst broader Middle East instability.\n  Possible knock-on effect: Increased risk of direct US-Iran confrontation and regional destabilization.\n  Possible knock-on effect: Potential for further disruptions to global shipping and trade routes.\n  Possible knock-on effect: May complicate diplomatic efforts for de-escalation in the wider region.\n- EasyJet Profits Plunge 70% Amid Soaring Fuel Costs Due to Iran War (source: The Guardian)\n  Summary: Budget airline EasyJet reported a 70% drop in profits, attributing the significant decline primarily to soaring fuel costs exacerbated by the ongoing conflict in Iran. The company also noted passengers booking later, adding to financial pressures.\n  Background: Geopolitical conflicts often lead to increased oil prices and supply chain disruptions.\n  Background: Airlines are particularly vulnerable to fuel price volatility due to high operating costs.\n  Background: The ongoing \"Iran war\" refers to wider regional instability impacting markets.\n  Possible knock-on effect: Could pressure other airlines facing similar operational cost increases.\n  Possible knock-on effect: May lead to higher ticket prices for consumers across the industry.\n  Possible knock-on effect: Highlights the broader economic fallout of Middle East instability.\n";
+  const CHAT_CONTEXT = "Edition date: Thursday, July 23, 2026\n\nTOP STORY: AMD to Invest Up To $5 Billion in Anthropic for AI Infrastructure Deal (source: AI News)\nSummary: AMD has committed to investing up to $5 billion in AI developer Anthropic as part of a broader infrastructure agreement worth tens of billions of dollars. This strategic partnership will see Anthropic deploy AMD's Instinct MI450-series accelerators for its AI systems, signaling a major boost for AMD's presence in the competitive AI chip market and Anthropic's scaling capabilities.\nBackground: The AI industry requires immense computing power, driving demand for specialized chips.\nBackground: AMD is aggressively competing with Nvidia in the high-performance AI accelerator market.\nBackground: Anthropic needs significant infrastructure to train and deploy its large language models.\nBackground: Such large investments are common in the rapidly escalating AI \"arms race.\"\nPossible knock-on effect: Could solidify AMD as a stronger contender against Nvidia in the AI chip market.\nPossible knock-on effect: May accelerate Anthropic's development and deployment of advanced AI models.\nPossible knock-on effect: Likely to drive further large-scale infrastructure deals between chipmakers and AI labs.\n\nAI STORIES:\n- AI Chip Startup Etched Defies Skeptics, Hits $10.3B Valuation (source: TechCrunch)\n  Summary: AI chip startup Etched, founded by three Harvard dropouts, has achieved a $10.3 billion valuation after securing significant investment. The company claims its new chips and memory components can speed up AI model inference without requiring traditional GPUs.\n  Background: Demand for AI inference acceleration is high, but GPUs are expensive and often in short supply.\n  Background: Startups are seeking alternative, more efficient hardware architectures for AI workloads.\n  Background: Etched's valuation indicates strong investor confidence in its disruptive technology approach.\n  Possible knock-on effect: Could increase competition in the AI chip market beyond traditional GPU manufacturers.\n  Possible knock-on effect: May encourage further investment in specialized AI hardware solutions.\n  Possible knock-on effect: Likely to challenge existing paradigms for AI inference efficiency and cost.\n- Google Reports First Negative Cash Flow Quarter Due to Massive AI Spending (source: Ars Technica)\n  Summary: Google has reported its first negative cash flow quarter in history, attributed to its enormous investments in artificial intelligence infrastructure and development. Despite strong overall quarterly revenue, the company's escalating AI expenditures significantly impacted its financials.\n  Background: Major tech companies are in an intense \"AI arms race,\" investing heavily in resources.\n  Background: Rapid AI investment can strain even highly profitable companies' short-term cash flow.\n  Background: Google is pushing hard to compete with rivals in AI model development and deployment.\n  Possible knock-on effect: May lead to closer scrutiny of AI investment efficiency and returns across the tech industry.\n  Possible knock-on effect: Could pressure Google to monetize its AI products more aggressively.\n  Possible knock-on effect: Might cause other tech giants to re-evaluate their AI spending strategies.\n- Lawmakers Prepare Bill Requiring AI \u2018Kill Switch\u2019 for National Security (source: The Verge)\n  Summary: Bipartisan lawmakers, including Reps. Ted Lieu (D-CA) and Nathaniel Moran (R-TX), are set to introduce an \"AI Kill Switch Act.\" This proposed legislation would empower the Department of Homeland Security to order AI companies to shut down or throttle their systems in national security emergencies.\n  Background: Concerns about powerful AI systems posing national security risks are growing.\n  Background: Governments worldwide are exploring regulatory frameworks for advanced AI technologies.\n  Background: The bill aims to provide a mechanism for emergency control over potentially dangerous AI.\n  Possible knock-on effect: Could spark debate over government authority, corporate autonomy, and technical feasibility.\n  Possible knock-on effect: May influence how AI models are designed and deployed, with safety mechanisms prioritized.\n  Possible knock-on effect: Likely to set a precedent for future AI regulatory interventions.\n- OpenAI Rolls Out ChatGPT Health to All US Users with Bold Claims (source: The Verge)\n  Summary: OpenAI has launched ChatGPT Health for all US users, enabling integration with personal health data from services like Apple Health and MyFitnessPal. The company's VP of health product claimed their models are \"capable of reasoning at levels that are better than clinician level,\" a statement that draws scrutiny.\n  Background: AI is increasingly being applied to healthcare for diagnostics and information access.\n  Background: Integration of personal health data raises significant privacy and data security concerns.\n  Background: Claims of \"clinician-level\" performance in AI often require robust validation.\n  Possible knock-on effect: Could lead to wider adoption of AI tools for personal health management, if trust is established.\n  Possible knock-on effect: May intensify regulatory oversight on AI applications in sensitive sectors like healthcare.\n  Possible knock-on effect: Is likely to prompt further debate and research into AI efficacy in clinical reasoning.\n- Anthropic Upgrades Claude Voice Mode to Opus and Sonnet, Expanding Integration (source: The Verge)\n  Summary: Anthropic has enhanced its Claude AI chatbot's voice mode, making its more powerful Opus and Sonnet models available in addition to the faster Haiku. This upgrade also extends Claude's voice capabilities into third-party applications like Gmail, Slack, and Canva for improved productivity.\n  Background: Voice interfaces are a key battleground for AI assistants, demanding advanced NLP capabilities.\n  Background: Expanding to more capable models improves functionality for complex tasks.\n  Background: Deeper integration into popular apps increases user accessibility and utility.\n  Possible knock-on effect: May boost Claude's competitiveness against other multimodal AI assistants.\n  Possible knock-on effect: Could drive further innovation in voice-controlled productivity tools.\n  Possible knock-on effect: Is likely to increase user adoption of AI for daily tasks across platforms.\n- British Gas Owner Axes 1,300 Call Centre Jobs, States 'Customers Prefer AI Chatbots' (source: The Guardian)\n  Summary: Centrica, the owner of British Gas, announced plans to cut 1,300 call center jobs, with its CEO stating that \"most households would rather speak with an AI chatbot\" than human staff. This move reflects a strategic shift towards AI-powered customer service.\n  Background: Companies are increasingly exploring AI to automate customer service for efficiency.\n  Background: The impact of AI on employment, particularly in service sectors, is a growing concern.\n  Background: Such statements highlight a company's justification for AI-driven job displacement.\n  Possible knock-on effect: May accelerate the trend of AI adoption in customer service across various industries.\n  Possible knock-on effect: Could intensify public and labor union debates about AI's role in job displacement.\n  Possible knock-on effect: Is likely to pressure companies to demonstrate AI-driven support efficacy and satisfaction.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- US Signs Landmark Civilian Nuclear Deal with Saudi Arabia; Trump Adds Condition (source: BBC News)\n  Summary: The US Department of Energy announced a \"peaceful\" civilian nuclear cooperation agreement with Saudi Arabia, granting US firms access to the Saudi nuclear program. President Trump stated the deal is contingent on Saudi Arabia joining the Abraham Accords.\n  Background: Saudi Arabia seeks to diversify its energy sources and develop its nuclear energy program.\n  Background: The US aims to assert influence in the Middle East and ensure non-proliferation standards.\n  Background: The Abraham Accords are normalization agreements between Israel and Arab nations.\n  Background: Trump's condition adds a significant geopolitical layer to the agreement.\n  Possible knock-on effect: Could significantly alter the geopolitical landscape of the Middle East.\n  Possible knock-on effect: May raise concerns about nuclear proliferation capabilities in the region.\n  Possible knock-on effect: Likely to intensify debate in the US regarding the implications of the deal.\n- Oil Prices Surge Past $100 Amid Escalating Middle East Conflict (source: BBC News)\n  Summary: Brent crude oil prices surpassed $100 a barrel for the first time since May, rising over 6% on Thursday, as the conflict in the Middle East intensified. The increase reflects market fears over disruptions to vital shipping routes and oil supplies due to recent attacks.\n  Background: The Middle East is a critical region for global oil production and shipping routes.\n  Background: Houthi attacks on maritime targets disrupt global trade and cause supply concerns.\n  Background: Geopolitical instability often leads to higher oil prices due to perceived supply risks.\n  Possible knock-on effect: Could fuel global inflation and potentially dampen economic growth worldwide.\n  Possible knock-on effect: May prompt governments to seek alternative energy sources or strategic oil reserves.\n  Possible knock-on effect: Is likely to increase pressure for de-escalation of the conflict to stabilize energy markets.\n- Houthi Attacks on Saudi Tankers Lead to More US Strikes on Iran-Backed Group (source: BBC News)\n  Summary: Yemen's Iran-backed Houthi group attacked Saudi oil tankers in the Red Sea, claiming a \"maritime embargo\" against Saudi Arabia. In response, the US launched additional strikes against Houthi targets, further escalating regional military action, BBC News reports.\n  Background: The Houthis have repeatedly targeted shipping in strategic waterways, impacting trade.\n  Background: The US and its allies aim to protect international shipping and deter Houthi attacks.\n  Background: Iran supports the Houthi movement, complicating regional dynamics and international efforts.\n  Possible knock-on effect: Could further disrupt global shipping and supply chains, increasing insurance costs.\n  Possible knock-on effect: May draw more regional and international actors directly into the conflict.\n  Possible knock-on effect: Is likely to deepen humanitarian crises in Yemen, already severely impacted by conflict.\n- Trump Nears Decision on 'Massive Attack' Against Iran; UN Warns Crisis 'Getting Out of Control' (source: The Guardian)\n  Summary: US President Donald Trump said he is close to deciding on a \"massive attack\" against Iran, following Houthi strikes and rising oil prices. UN Secretary-General Ant\u00f3nio Guterres warned the Middle East crisis is \"getting out of control\" and being pushed to the \"edge of the unimaginable,\" The Guardian reports.\n  Background: Tensions between the US and Iran have been high for years, exacerbated by recent events.\n  Background: Trump's administration has previously used military force and sanctions against Iran.\n  Background: The UN consistently calls for de-escalation and diplomatic solutions to regional crises.\n  Possible knock-on effect: Could lead to a direct military confrontation between the US and Iran.\n  Possible knock-on effect: May trigger retaliatory actions from Iran and its proxies across the Middle East.\n  Possible knock-on effect: Is likely to destabilize global markets and increase humanitarian concerns.\n- Far-Right Israeli Minister Joins Provocative Incursion at Al-Aqsa Mosque Compound (source: Al Jazeera)\n  Summary: Israel's far-right Minister of National Security, Itamar Ben-Gvir, joined thousands of Jewish extremists in a provocative incursion at Jerusalem's Al-Aqsa Mosque compound. Escorted by armed police, participants reportedly prayed, waved Israeli flags, and sang the national anthem at the highly sensitive holy site, Al Jazeera reports.\n  Background: The Al-Aqsa Mosque compound is a major flashpoint for Israeli-Palestinian tensions.\n  Background: Jewish visits to the site, especially by political figures, are seen as provocative.\n  Background: The status quo generally prohibits non-Muslim prayer on the compound.\n  Possible knock-on effect: Could further inflame Israeli-Palestinian tensions and provoke retaliatory actions.\n  Possible knock-on effect: May undermine diplomatic efforts for de-escalation in the broader Middle East.\n  Possible knock-on effect: Is likely to draw condemnation from international bodies and Muslim-majority nations.\n";
   let chatHistory = [];
 
   function escapeHtml(str) {
