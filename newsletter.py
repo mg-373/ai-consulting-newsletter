@@ -56,6 +56,16 @@ CONSULTING_FEEDS = [
     "https://www.managementtoday.co.uk/rss",
 ]
 
+# Deliberately spans different editorial vantage points (UK public broadcaster,
+# Qatar-based regional outlet, Israel-based outlet, independent UK paper) so
+# coverage isn't filtered through only one narrative.
+CONFLICT_FEEDS = [
+    "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml",
+    "https://www.aljazeera.com/xml/rss/all.xml",
+    "https://www.timesofisrael.com/feed/",
+    "https://www.theguardian.com/world/rss",
+]
+
 DOCS_DIR = "docs"
 ARCHIVE_DIR = os.path.join(DOCS_DIR, "archive")
 STATE_PATH = os.path.join(DOCS_DIR, "last_run_state.json")
@@ -75,6 +85,10 @@ CATEGORY_COLORS = {
     "Partnership": "#0f766e",
     "Earnings": "#a16207",
     "Hiring & Leadership": "#4338ca",
+    "Military Action": "#991b1b",
+    "Diplomacy & Talks": "#1d4ed8",
+    "Sanctions & Economy": "#92400e",
+    "Humanitarian Impact": "#78350f",
     "Other": "#525252",
 }
 
@@ -178,7 +192,7 @@ def call_gemini(prompt, api_key):
     raise RuntimeError("Gemini request failed repeatedly (network errors), giving up.")
 
 
-def build_newsletter_data(ai_items, consulting_items, today_str, name, topics):
+def build_newsletter_data(ai_items, consulting_items, conflict_items, today_str, name, topics):
     api_key = os.environ["GEMINI_API_KEY"]
     category_list = ", ".join(f'"{c}"' for c in CATEGORY_COLORS)
 
@@ -206,11 +220,16 @@ def build_newsletter_data(ai_items, consulting_items, today_str, name, topics):
     )
 
     prompt = f"""You are writing a daily newsletter called "AI & Consulting Daily" for {today_str}.
-You are given raw headlines/snippets from the last 24 hours, split into AI news and
-Consulting industry news.
+You are given raw headlines/snippets from the last 24 hours, covering three topics: AI news,
+Consulting industry news, and developments in the Israel-Iran-US conflict.
 
 {greeting_instruction}
 {topics_instruction}
+
+The hero story (single most important story of the day) should be chosen from AI or
+Consulting only — the conflict section is reported separately below and should not be
+selected as the hero, since it deserves its own dedicated, careful treatment rather than
+competing for the top spot.
 
 Respond with ONLY valid JSON (no markdown fences, no commentary before or after),
 matching exactly this shape:
@@ -218,7 +237,7 @@ matching exactly this shape:
 {{
   "greeting": "one short punchy sentence to open the newsletter",
   "hero": {{
-    "title": "the single most important story across both topics",
+    "title": "the single most important AI or Consulting story",
     "summary": "2-3 sentences explaining it and why it matters",
     "link": "url or empty string",
     "source": "publication name",
@@ -232,13 +251,18 @@ matching exactly this shape:
   "consulting_stories": [
     {{"title": "...", "summary": "1-2 sentences", "link": "url or empty string", "source": "...", "category": "one of: {category_list}", "context": ["2-4 short bullets"], "knock_on_effects": ["2-3 short bullets"]}}
   ],
-  "closer": "one sentence recommending the single best story to read in full, or empty string if nothing stands out"
+  "conflict_stories": [
+    {{"title": "...", "summary": "1-2 sentences, strictly factual", "link": "url or empty string", "source": "...", "category": "one of: {category_list}", "context": ["2-4 short bullets"], "knock_on_effects": ["2-3 short bullets on broader implications"]}}
+  ],
+  "closer": "one sentence recommending the single best AI or Consulting story to read in full, or empty string if nothing stands out"
 }}
 
 Rules:
 - Do NOT include the hero story again inside ai_stories or consulting_stories.
 - Include 4-7 stories in ai_stories and 4-7 in consulting_stories (fewer is fine if
   there genuinely isn't more real material — never pad with filler).
+- Include up to 5 stories in conflict_stories — only genuinely significant
+  developments, not every minor update. Empty array if nothing substantive happened.
 - Do not invent facts. Only use what's provided below.
 - If a whole section has no real items, return an empty array for it.
 - Keep summaries concise — this must be readable in under 3 minutes total.
@@ -250,19 +274,39 @@ Rules:
   rather than picking a side. Stay factual — do not speculate beyond what a
   well-informed, neutral analyst could reasonably infer from the story itself.
 - For "knock_on_effects" on every story: write 2-3 short bullets (each under 20
-  words) on plausible secondary or downstream effects — who or what else this
-  could affect next (competitors, regulators, job markets, adjacent industries,
-  consumers, share prices, etc.). Clearly signal these are plausible/likely
-  outcomes, not confirmed facts (e.g. "could pressure...", "may prompt...",
-  "likely to..."). Never state a knock-on effect as if it has already happened.
-  If a story is too minor or self-contained for meaningful knock-on effects,
-  return an empty array rather than inventing weak ones.
+  words) on plausible secondary or downstream effects. Clearly signal these are
+  plausible/likely outcomes, not confirmed facts (e.g. "could pressure...", "may
+  prompt...", "likely to..."). Never state a knock-on effect as if it has already
+  happened. If a story is too minor for meaningful knock-on effects, return an
+  empty array rather than inventing weak ones.
+
+ADDITIONAL RULES SPECIFIC TO conflict_stories — follow these strictly:
+- Report only what named sources actually state; attribute claims to their source
+  (e.g. "Israeli officials said...", "Iranian state media reported...", "the AP
+  reports...") rather than stating contested claims as settled fact.
+- Where casualty figures, attributions of responsibility, or accounts of events are
+  disputed or unverified, say so explicitly and give the differing figures/accounts
+  rather than picking one.
+- Do not use loaded, one-sided, or emotive language for any party. Describe actions
+  factually (what was reported to have happened) rather than characterizing motives.
+- "context" bullets should explain the background neutrally (e.g. relevant history,
+  stated positions of each side) without endorsing any party's framing.
+- "knock_on_effects" here should focus on genuine implications — diplomatic,
+  economic, regional security, or humanitarian — phrased as possibilities, not
+  predictions of fact.
+- Do not include graphic descriptions of violence, injuries, or casualties beyond
+  what is necessary for factual reporting (e.g. reported death tolls are fine;
+  graphic physical detail is not).
+- If sources conflict, sit with that ambiguity rather than resolving it yourself.
 
 RAW AI ITEMS:
 {format_items(ai_items)}
 
 RAW CONSULTING ITEMS:
 {format_items(consulting_items)}
+
+RAW CONFLICT ITEMS:
+{format_items(conflict_items)}
 """
 
     last_error = None
@@ -352,7 +396,7 @@ def estimate_read_minutes(data):
     text_parts.append(hero.get("summary", ""))
     text_parts.extend(hero.get("context") or [])
     text_parts.extend(hero.get("knock_on_effects") or [])
-    for story in data.get("ai_stories", []) + data.get("consulting_stories", []):
+    for story in data.get("ai_stories", []) + data.get("consulting_stories", []) + data.get("conflict_stories", []):
         text_parts.append(story.get("title", ""))
         text_parts.append(story.get("summary", ""))
         text_parts.extend(story.get("context") or [])
@@ -521,18 +565,22 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-variant-numeric: tabular-nums;
   }}
   .stat-number {{
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     font-weight: 700;
     margin: 0;
   }}
   .stat-label {{
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: 0.74rem;
     margin: 2px 0 0;
   }}
   .stat-pair {{
     display: flex;
-    gap: 20px;
+    gap: 12px;
+  }}
+  .stat-pair > div {{
+    flex: 1;
+    min-width: 0;
   }}
   .subscribe-note {{
     font-size: 0.85rem;
@@ -716,6 +764,12 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-style: italic;
     color: var(--muted);
   }}
+  .section-note {{
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }}
   .widget-chat {{
     display: flex;
     flex-direction: column;
@@ -811,6 +865,8 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <h2>📊 Consulting</h2>
 {consulting_html}
 
+{conflict_section_html}
+
 {closer_html}
 </div>
 
@@ -827,6 +883,10 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
       <div>
         <p class="stat-number">{week_consulting_count}</p>
         <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">{week_conflict_count}</p>
+        <p class="stat-label">Conflict updates</p>
       </div>
     </div>
   </div>
@@ -982,7 +1042,7 @@ CHAT_DISABLED_HTML = ""  # No CHAT_WORKER_URL set — assistant widget is simply
 
 def build_category_breakdown_html(data):
     hero = data.get("hero") or {}
-    all_stories = ([hero] if hero.get("title") else []) + (data.get("ai_stories") or []) + (data.get("consulting_stories") or [])
+    all_stories = ([hero] if hero.get("title") else []) + (data.get("ai_stories") or []) + (data.get("consulting_stories") or []) + (data.get("conflict_stories") or [])
 
     counts = {}
     for story in all_stories:
@@ -1037,11 +1097,12 @@ def build_chat_context_text(data, date_title):
 
     add_section("AI STORIES", data.get("ai_stories") or [])
     add_section("CONSULTING STORIES", data.get("consulting_stories") or [])
+    add_section("ISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact)", data.get("conflict_stories") or [])
 
     return "\n".join(lines)
 
 
-def render_html(data, date_title, archive_link_items, name, week_ai_count, week_consulting_count, chat_worker_url):
+def render_html(data, date_title, archive_link_items, name, week_ai_count, week_consulting_count, week_conflict_count, chat_worker_url):
     header_title_plain = f"{name}'s AI & Consulting Daily" if name else "AI & Consulting Daily"
     page_title = f"{header_title_plain} — {date_title}"
     archive_html = "\n".join(archive_link_items) if archive_link_items else "<li>No past editions yet.</li>"
@@ -1051,8 +1112,17 @@ def render_html(data, date_title, archive_link_items, name, week_ai_count, week_
 
     ai_stories = data.get("ai_stories") or []
     consulting_stories = data.get("consulting_stories") or []
+    conflict_stories = data.get("conflict_stories") or []
     ai_html = "\n".join(story_card(s) for s in ai_stories) or "<p>No notable AI stories in the last 24 hours.</p>"
     consulting_html = "\n".join(story_card(s) for s in consulting_stories) or "<p>No notable consulting stories in the last 24 hours.</p>"
+
+    if conflict_stories:
+        conflict_html = "\n".join(story_card(s) for s in conflict_stories)
+        conflict_section_html = f"""<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+{conflict_html}"""
+    else:
+        conflict_section_html = ""
 
     closer = data.get("closer", "")
     closer_html = f'<p class="closer">{html_lib.escape(closer)}</p>' if closer else ""
@@ -1080,10 +1150,12 @@ def render_html(data, date_title, archive_link_items, name, week_ai_count, week_
         hero_html=hero_html,
         ai_html=ai_html,
         consulting_html=consulting_html,
+        conflict_section_html=conflict_section_html,
         closer_html=closer_html,
         category_breakdown_html=category_breakdown_html,
         week_ai_count=week_ai_count,
         week_consulting_count=week_consulting_count,
+        week_conflict_count=week_conflict_count,
         archive_links=archive_html,
         chat_endpoint_js=chat_endpoint_js,
         chat_context_js=chat_context_js,
@@ -1150,8 +1222,12 @@ if __name__ == "__main__":
     consulting_items = fetch_recent_items(CONSULTING_FEEDS, cutoff)
     print(f"Found {len(consulting_items)} consulting items")
 
+    print("Fetching conflict feeds...")
+    conflict_items = fetch_recent_items(CONFLICT_FEEDS, cutoff)
+    print(f"Found {len(conflict_items)} conflict items")
+
     print("Asking Gemini to structure the newsletter...")
-    data = build_newsletter_data(ai_items, consulting_items, today_str, name, topics)
+    data = build_newsletter_data(ai_items, consulting_items, conflict_items, today_str, name, topics)
 
     # Gather existing manifest entries (before writing today's), newest first
     existing_manifests = sorted(
@@ -1181,6 +1257,7 @@ if __name__ == "__main__":
     week_cutoff = today - datetime.timedelta(days=6)
     week_ai_count = len(data.get("ai_stories") or [])
     week_consulting_count = len(data.get("consulting_stories") or [])
+    week_conflict_count = len(data.get("conflict_stories") or [])
     for m in past_manifest_entries:
         try:
             m_date = datetime.datetime.strptime(m["date_slug"], "%Y-%m-%d").date()
@@ -1189,8 +1266,9 @@ if __name__ == "__main__":
         if m_date >= week_cutoff:
             week_ai_count += m.get("ai_count", 0)
             week_consulting_count += m.get("consulting_count", 0)
+            week_conflict_count += m.get("conflict_count", 0)
 
-    page_html = render_html(data, today_str, archive_link_items, name, week_ai_count, week_consulting_count, chat_worker_url)
+    page_html = render_html(data, today_str, archive_link_items, name, week_ai_count, week_consulting_count, week_conflict_count, chat_worker_url)
 
     # Write today's archive copy
     archive_path = os.path.join(ARCHIVE_DIR, f"{today_slug}.html")
@@ -1205,6 +1283,7 @@ if __name__ == "__main__":
         "hero_title": hero_title,
         "ai_count": len(data.get("ai_stories") or []),
         "consulting_count": len(data.get("consulting_stories") or []),
+        "conflict_count": len(data.get("conflict_stories") or []),
     }
     manifest_path = os.path.join(ARCHIVE_DIR, f"{today_slug}.json")
     with open(manifest_path, "w", encoding="utf-8") as f:
