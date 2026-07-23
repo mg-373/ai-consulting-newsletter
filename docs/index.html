@@ -153,18 +153,22 @@
     font-variant-numeric: tabular-nums;
   }
   .stat-number {
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     font-weight: 700;
     margin: 0;
   }
   .stat-label {
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: 0.74rem;
     margin: 2px 0 0;
   }
   .stat-pair {
     display: flex;
-    gap: 20px;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
   }
   .subscribe-note {
     font-size: 0.85rem;
@@ -348,6 +352,12 @@
     font-style: italic;
     color: var(--muted);
   }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
   .widget-chat {
     display: flex;
     flex-direction: column;
@@ -431,88 +441,73 @@
   <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
-<div class="meta-line">3 min read · <a href="feed.xml">RSS feed</a></div>
+<div class="meta-line">2 min read · <a href="feed.xml">RSS feed</a></div>
 
-<p class="greeting">Morning, Mehul — here&#x27;s your Thursday AI &amp; Consulting download.</p>
+<p class="greeting">Morning, Mehul — here&#x27;s your essential briefing on AI, Consulting, and global affairs for today.</p>
 
 <div class="hero-card">
-  <div class="story-meta"><span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;--glow:#0f766e;">Partnership</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/servicenow-bets-40m-on-indian-firm-businessnext-at-700m-valuation-to-deepen-banking-ai-push/">ServiceNow Invests $40M in Indian Banking AI Firm BusinessNext for Global Push</a></h3>
-  <p class="story-summary">ServiceNow has committed $40 million to BusinessNext, an Indian banking software specialist, valuing the firm at $700 million. This strategic investment aims to expand ServiceNow&#x27;s financial services offerings globally, leveraging BusinessNext&#x27;s AI-powered solutions. The partnership signals a deepened focus on automating and enhancing banking operations through advanced AI.</p>
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source"></span></div>
+  <h3 class="story-title">No Hero Story Available from AI or Consulting Today</h3>
+  <p class="story-summary">Unfortunately, there were no notable developments reported in the AI or Consulting sectors in the last 24 hours that qualify as a hero story, as per our selection criteria. We will continue to monitor these industries closely.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>ServiceNow seeks to expand its footprint in the lucrative financial services sector.</li>
-<li>Indian tech firms offer specialized AI solutions and access to diverse markets.</li>
-<li>The banking industry is actively adopting AI for efficiency and customer experience.</li>
-<li>Strategic investments help established players quickly gain new capabilities.</li></ul>
+  <ul><li>No notable AI or Consulting news was reported in the last 24 hours.</li>
+<li>Prevents the selection of a designated &#x27;hero&#x27; story from these categories.</li>
+<li>Highlights a quiet news cycle for these specific sectors.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could intensify competition in the financial AI software market.</li>
-<li>May encourage other major tech firms to invest in niche AI specialists.</li>
-<li>Likely to accelerate AI adoption within global banking operations.</li></ul>
+  <ul><li>No immediate impact on market sentiment for AI/Consulting.</li>
+<li>May indicate a temporary period of consolidation or quiet innovation.</li>
+<li>Readers might seek updates from adjacent tech or business sectors.</li></ul>
 </details>
 </div>
 
 <h2>🤖 AI</h2>
-<div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">TechCrunch</span></div>
-  <h3 class="story-title"><a href="https://techcrunch.com/2026/07/22/after-shocking-quarter-ibm-insists-that-ai-isnt-killing-the-mainframe/">IBM Reassures Investors AI Isn&#x27;t Killing Mainframe Sales After Stock Tumble</a></h3>
-  <p class="story-summary">IBM&#x27;s stock dropped sharply last week following warnings of poor mainframe sales, prompting the CEO to explain that corporate AI investments are temporarily diverting hardware budgets. IBM maintains that AI&#x27;s impact is a short-term budget shift, not a long-term threat to its core mainframe business.</p>
-  <details class="context">
-  <summary>Why this is happening</summary>
-  <ul><li>IBM&#x27;s Q2 earnings warning led to a significant stock market reaction.</li>
-<li>Mainframes are a legacy but critical part of many enterprise infrastructures.</li>
-<li>Companies are reallocating IT budgets towards emerging AI initiatives.</li>
-<li>IBM seeks to reassure investors about the long-term viability of its core products.</li></ul>
-</details>
-  <details class="knock-on">
-  <summary>Possible knock-on effects</summary>
-  <ul><li>Could pressure IBM to demonstrate clearer AI integration with its legacy systems.</li>
-<li>May prompt other legacy hardware vendors to address AI&#x27;s budget impact.</li>
-<li>Likely to fuel further debate on AI&#x27;s disruptive effect on traditional IT spending.</li></ul>
-</details>
-</div>
-<div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">MarkTechPost</span></div>
-  <h3 class="story-title"><a href="https://www.marktechpost.com/2026/07/22/anthropic-releases-claude-security-plugin-for-claude-code-in-beta-a-multi-agent-vulnerability-scanner-that-runs-in-your-terminal/">Anthropic Unveils Claude Security Plugin for Code, Offering Multi-Agent Vulnerability Scanning</a></h3>
-  <p class="story-summary">Anthropic has launched the Claude Security plugin for Claude Code in beta, a multi-agent vulnerability scanner. It allows developers to scan repositories within a Claude Code session and generate patch files for identified issues, emphasizing the tool&#x27;s versatility for enhancing code security.</p>
-  <details class="context">
-  <summary>Why this is happening</summary>
-  <ul><li>Software security remains a critical concern for developers and enterprises.</li>
-<li>AI models are increasingly used to automate and enhance development tasks.</li>
-<li>Anthropic aims to expand Claude&#x27;s utility beyond code generation to security.</li>
-<li>Multi-agent systems offer robust and comprehensive analysis capabilities.</li></ul>
-</details>
-  <details class="knock-on">
-  <summary>Possible knock-on effects</summary>
-  <ul><li>Could improve the speed and efficiency of identifying code vulnerabilities.</li>
-<li>May increase demand for AI-powered security tools in developer workflows.</li>
-<li>Likely to drive competitors to develop similar AI-native security features.</li></ul>
-</details>
-</div>
+<p>No notable AI stories in the last 24 hours.</p>
 
 <h2>📊 Consulting</h2>
+<p>No notable consulting stories in the last 24 hours.</p>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
 <div class="story-card">
-  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">McKinsey Insights &amp; Publications</span></div>
-  <h3 class="story-title"><a href="https://www.mckinsey.com/mgi/our-research/the-global-balance-sheet-2026-imbalance-and-divergence">McKinsey Report Highlights Global Economic Imbalance and Divergence in 2026</a></h3>
-  <p class="story-summary">McKinsey Global Institute&#x27;s latest report, &quot;The global balance sheet 2026,&quot; analyzes global wealth and debt dynamics, identifying significant imbalances and diverging trends across economies. The research provides a comprehensive overview of financial health worldwide, influencing strategic decisions for businesses and governments.</p>
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/world/live/2026/jul/23/us-iran-war-live-updates-strikes-houthis-red-sea-saudi-nuclear-deal-middle-east-crisis-latest-news">US Intensifies Strikes on Iran, Houthis Claim New Red Sea Tanker Attacks</a></h3>
+  <p class="story-summary">The US military conducted its 12th consecutive night of strikes against targets in Iran, including an Iran-Iraq border crossing, stating it aims to degrade Tehran&#x27;s ability to threaten ships. Concurrently, Yemen&#x27;s Houthi rebels claimed responsibility for new attacks on Red Sea tankers, alleging they violated their blockade.</p>
   <details class="context">
   <summary>Why this is happening</summary>
-  <ul><li>Global economic conditions continue to be volatile and complex.</li>
-<li>Consulting firms provide research to inform clients and establish thought leadership.</li>
-<li>&quot;Imbalance and divergence&quot; suggest growing wealth gaps and uneven recovery.</li>
-<li>Understanding macro trends is crucial for strategic planning across sectors.</li></ul>
+  <ul><li>US military states strikes aim to degrade Tehran&#x27;s naval threat capability.</li>
+<li>Houthis claim tanker attacks enforce their blockade in the Red Sea.</li>
+<li>Escalation follows ongoing regional tensions and previous maritime incidents.</li>
+<li>US actions come amidst broader Middle East instability.</li></ul>
 </details>
   <details class="knock-on">
   <summary>Possible knock-on effects</summary>
-  <ul><li>Could influence investment strategies and capital allocation decisions globally.</li>
-<li>May prompt governments to re-evaluate fiscal and monetary policies.</li>
-<li>Likely to drive client demand for strategic advice on managing economic risks.</li></ul>
+  <ul><li>Increased risk of direct US-Iran confrontation and regional destabilization.</li>
+<li>Potential for further disruptions to global shipping and trade routes.</li>
+<li>May complicate diplomatic efforts for de-escalation in the wider region.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/business/2026/jul/23/easyjet-profits-plunge-fuel-costs-soar-iran-war">EasyJet Profits Plunge 70% Amid Soaring Fuel Costs Due to Iran War</a></h3>
+  <p class="story-summary">Budget airline EasyJet reported a 70% drop in profits, attributing the significant decline primarily to soaring fuel costs exacerbated by the ongoing conflict in Iran. The company also noted passengers booking later, adding to financial pressures.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Geopolitical conflicts often lead to increased oil prices and supply chain disruptions.</li>
+<li>Airlines are particularly vulnerable to fuel price volatility due to high operating costs.</li>
+<li>The ongoing &quot;Iran war&quot; refers to wider regional instability impacting markets.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could pressure other airlines facing similar operational cost increases.</li>
+<li>May lead to higher ticket prices for consumers across the industry.</li>
+<li>Highlights the broader economic fallout of Middle East instability.</li></ul>
 </details>
 </div>
 
-<p class="closer">Don&#x27;t miss the ServiceNow investment story; it&#x27;s a big move in AI for financial services.</p>
+
 </div>
 
 <aside class="sidebar">
@@ -532,12 +527,16 @@
     <h3>This week</h3>
     <div class="stat-pair">
       <div>
-        <p class="stat-number">16</p>
+        <p class="stat-number">14</p>
         <p class="stat-label">AI stories</p>
       </div>
       <div>
-        <p class="stat-number">7</p>
+        <p class="stat-number">6</p>
         <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">2</p>
+        <p class="stat-label">Conflict updates</p>
       </div>
     </div>
   </div>
@@ -545,28 +544,22 @@
   <div class="widget">
     <h3>Today's mix</h3>
     <div class="category-row">
-  <span class="tag" style="background:#0f766e22;color:#0f766e;border:1px solid #0f766e55;--glow:#0f766e;">Partnership</span><span class="category-count">1</span>
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">1</span>
 </div>
 <div class="bar-track">
-  <div class="bar-fill" style="--bar-color:#0f766e;--bar-pct:100%;"></div>
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
 </div>
 <div class="category-row">
-  <span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="category-count">1</span>
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">1</span>
 </div>
 <div class="bar-track">
-  <div class="bar-fill" style="--bar-color:#a16207;--bar-pct:100%;"></div>
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:100%;"></div>
 </div>
 <div class="category-row">
-  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">1</span>
+  <span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="category-count">1</span>
 </div>
 <div class="bar-track">
-  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:100%;"></div>
-</div>
-<div class="category-row">
-  <span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="category-count">1</span>
-</div>
-<div class="bar-track">
-  <div class="bar-fill" style="--bar-color:#7a3fd6;--bar-pct:100%;"></div>
+  <div class="bar-fill" style="--bar-color:#92400e;--bar-pct:100%;"></div>
 </div>
   </div>
 
@@ -606,7 +599,7 @@
 
   // --- AI assistant (answers questions using today's stories as context) ---
   const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
-  const CHAT_CONTEXT = "Edition date: Thursday, July 23, 2026\n\nTOP STORY: ServiceNow Invests $40M in Indian Banking AI Firm BusinessNext for Global Push (source: TechCrunch)\nSummary: ServiceNow has committed $40 million to BusinessNext, an Indian banking software specialist, valuing the firm at $700 million. This strategic investment aims to expand ServiceNow's financial services offerings globally, leveraging BusinessNext's AI-powered solutions. The partnership signals a deepened focus on automating and enhancing banking operations through advanced AI.\nBackground: ServiceNow seeks to expand its footprint in the lucrative financial services sector.\nBackground: Indian tech firms offer specialized AI solutions and access to diverse markets.\nBackground: The banking industry is actively adopting AI for efficiency and customer experience.\nBackground: Strategic investments help established players quickly gain new capabilities.\nPossible knock-on effect: Could intensify competition in the financial AI software market.\nPossible knock-on effect: May encourage other major tech firms to invest in niche AI specialists.\nPossible knock-on effect: Likely to accelerate AI adoption within global banking operations.\n\nAI STORIES:\n- IBM Reassures Investors AI Isn't Killing Mainframe Sales After Stock Tumble (source: TechCrunch)\n  Summary: IBM's stock dropped sharply last week following warnings of poor mainframe sales, prompting the CEO to explain that corporate AI investments are temporarily diverting hardware budgets. IBM maintains that AI's impact is a short-term budget shift, not a long-term threat to its core mainframe business.\n  Background: IBM's Q2 earnings warning led to a significant stock market reaction.\n  Background: Mainframes are a legacy but critical part of many enterprise infrastructures.\n  Background: Companies are reallocating IT budgets towards emerging AI initiatives.\n  Background: IBM seeks to reassure investors about the long-term viability of its core products.\n  Possible knock-on effect: Could pressure IBM to demonstrate clearer AI integration with its legacy systems.\n  Possible knock-on effect: May prompt other legacy hardware vendors to address AI's budget impact.\n  Possible knock-on effect: Likely to fuel further debate on AI's disruptive effect on traditional IT spending.\n- Anthropic Unveils Claude Security Plugin for Code, Offering Multi-Agent Vulnerability Scanning (source: MarkTechPost)\n  Summary: Anthropic has launched the Claude Security plugin for Claude Code in beta, a multi-agent vulnerability scanner. It allows developers to scan repositories within a Claude Code session and generate patch files for identified issues, emphasizing the tool's versatility for enhancing code security.\n  Background: Software security remains a critical concern for developers and enterprises.\n  Background: AI models are increasingly used to automate and enhance development tasks.\n  Background: Anthropic aims to expand Claude's utility beyond code generation to security.\n  Background: Multi-agent systems offer robust and comprehensive analysis capabilities.\n  Possible knock-on effect: Could improve the speed and efficiency of identifying code vulnerabilities.\n  Possible knock-on effect: May increase demand for AI-powered security tools in developer workflows.\n  Possible knock-on effect: Likely to drive competitors to develop similar AI-native security features.\n\nCONSULTING STORIES:\n- McKinsey Report Highlights Global Economic Imbalance and Divergence in 2026 (source: McKinsey Insights & Publications)\n  Summary: McKinsey Global Institute's latest report, \"The global balance sheet 2026,\" analyzes global wealth and debt dynamics, identifying significant imbalances and diverging trends across economies. The research provides a comprehensive overview of financial health worldwide, influencing strategic decisions for businesses and governments.\n  Background: Global economic conditions continue to be volatile and complex.\n  Background: Consulting firms provide research to inform clients and establish thought leadership.\n  Background: \"Imbalance and divergence\" suggest growing wealth gaps and uneven recovery.\n  Background: Understanding macro trends is crucial for strategic planning across sectors.\n  Possible knock-on effect: Could influence investment strategies and capital allocation decisions globally.\n  Possible knock-on effect: May prompt governments to re-evaluate fiscal and monetary policies.\n  Possible knock-on effect: Likely to drive client demand for strategic advice on managing economic risks.\n";
+  const CHAT_CONTEXT = "Edition date: Thursday, July 23, 2026\n\nTOP STORY: No Hero Story Available from AI or Consulting Today (source: )\nSummary: Unfortunately, there were no notable developments reported in the AI or Consulting sectors in the last 24 hours that qualify as a hero story, as per our selection criteria. We will continue to monitor these industries closely.\nBackground: No notable AI or Consulting news was reported in the last 24 hours.\nBackground: Prevents the selection of a designated 'hero' story from these categories.\nBackground: Highlights a quiet news cycle for these specific sectors.\nPossible knock-on effect: No immediate impact on market sentiment for AI/Consulting.\nPossible knock-on effect: May indicate a temporary period of consolidation or quiet innovation.\nPossible knock-on effect: Readers might seek updates from adjacent tech or business sectors.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- US Intensifies Strikes on Iran, Houthis Claim New Red Sea Tanker Attacks (source: The Guardian)\n  Summary: The US military conducted its 12th consecutive night of strikes against targets in Iran, including an Iran-Iraq border crossing, stating it aims to degrade Tehran's ability to threaten ships. Concurrently, Yemen's Houthi rebels claimed responsibility for new attacks on Red Sea tankers, alleging they violated their blockade.\n  Background: US military states strikes aim to degrade Tehran's naval threat capability.\n  Background: Houthis claim tanker attacks enforce their blockade in the Red Sea.\n  Background: Escalation follows ongoing regional tensions and previous maritime incidents.\n  Background: US actions come amidst broader Middle East instability.\n  Possible knock-on effect: Increased risk of direct US-Iran confrontation and regional destabilization.\n  Possible knock-on effect: Potential for further disruptions to global shipping and trade routes.\n  Possible knock-on effect: May complicate diplomatic efforts for de-escalation in the wider region.\n- EasyJet Profits Plunge 70% Amid Soaring Fuel Costs Due to Iran War (source: The Guardian)\n  Summary: Budget airline EasyJet reported a 70% drop in profits, attributing the significant decline primarily to soaring fuel costs exacerbated by the ongoing conflict in Iran. The company also noted passengers booking later, adding to financial pressures.\n  Background: Geopolitical conflicts often lead to increased oil prices and supply chain disruptions.\n  Background: Airlines are particularly vulnerable to fuel price volatility due to high operating costs.\n  Background: The ongoing \"Iran war\" refers to wider regional instability impacting markets.\n  Possible knock-on effect: Could pressure other airlines facing similar operational cost increases.\n  Possible knock-on effect: May lead to higher ticket prices for consumers across the industry.\n  Possible knock-on effect: Highlights the broader economic fallout of Middle East instability.\n";
   let chatHistory = [];
 
   function escapeHtml(str) {
