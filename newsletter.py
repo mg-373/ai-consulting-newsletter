@@ -417,62 +417,73 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{page_title}</title>
 <link rel="alternate" type="application/rss+xml" title="{header_title_plain} RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {{
-    --bg: #fafafa;
-    --text: #1a1a1a;
-    --muted: #666;
-    --border: #ddd;
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
     --card-bg: #ffffff;
-    --link: #0b5fff;
-    --shadow: rgba(20, 20, 30, 0.10);
-    --grad-a: rgba(11, 95, 255, 0.06);
-    --grad-b: rgba(122, 63, 214, 0.06);
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
   }}
   html[data-theme="dark"] {{
-    --bg: #14161a;
-    --text: #eaeaea;
-    --muted: #9a9a9a;
-    --border: #2c2f36;
-    --card-bg: #1d2027;
-    --link: #6ea8ff;
-    --shadow: rgba(0, 0, 0, 0.45);
-    --grad-a: rgba(110, 168, 255, 0.08);
-    --grad-b: rgba(160, 110, 255, 0.08);
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
   }}
   * {{ box-sizing: border-box; }}
   html {{
     background: var(--bg);
   }}
   body {{
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: var(--font-body);
     margin: 0;
     color: var(--text);
-    background: var(--bg);
-    line-height: 1.55;
-    transition: background 0.2s, color 0.2s;
-    position: relative;
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
     min-height: 100vh;
-    overflow-x: hidden;
-  }}
-  body::before {{
-    content: "";
-    position: fixed;
-    inset: -20%;
-    z-index: -1;
-    background:
-      radial-gradient(circle at 20% 20%, var(--grad-a), transparent 45%),
-      radial-gradient(circle at 80% 60%, var(--grad-b), transparent 45%);
-    background-size: 140% 140%;
-    animation: driftGradient 30s ease-in-out infinite alternate;
-    pointer-events: none;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
   }}
   @keyframes driftGradient {{
-    0% {{ background-position: 0% 0%, 100% 100%; }}
-    100% {{ background-position: 30% 20%, 70% 80%; }}
+    0%   {{ background-position: 0% 10%, 100% 0%, 40% 100%; }}
+    50%  {{ background-position: 25% 45%, 70% 40%, 60% 65%; }}
+    100% {{ background-position: 55% 75%, 40% 80%, 20% 30%; }}
   }}
   @media (prefers-reduced-motion: reduce) {{
-    body::before {{ animation: none; }}
+    body {{ animation: none; }}
   }}
   .layout {{
     max-width: 1120px;
@@ -480,27 +491,46 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     padding: 32px 24px 80px;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 28px;
   }}
+  .main {{ min-width: 0; grid-column: 1; grid-row: 1; }}
+  .sidebar-chat, .sidebar-stats {{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }}
+  .sidebar-chat {{ grid-row: 2; }}
+  .sidebar-stats {{ grid-row: 3; }}
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
   @media (min-width: 960px) {{
     .layout {{
       grid-template-columns: minmax(0, 700px) 300px;
       align-items: start;
     }}
+    .main {{ grid-column: 1; grid-row: 1; }}
+    .sidebar-chat {{ grid-column: 2; grid-row: 1; position: sticky; top: 24px; }}
+    .sidebar-stats {{ grid-column: 2; grid-row: 2; }}
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats {{ grid-row: 1; }}
   }}
-  .main {{ min-width: 0; }}
-  .sidebar {{
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }}
-  @media (min-width: 960px) {{
-    .sidebar {{ position: sticky; top: 24px; }}
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {{
+    .layout:has(.sidebar-chat) {{
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }}
+    .layout:has(.sidebar-chat) .sidebar-chat {{ grid-column: 1; grid-row: 1; position: sticky; top: 24px; }}
+    .layout:has(.sidebar-chat) .main {{ grid-column: 2; grid-row: 1; }}
+    .layout:has(.sidebar-chat) .sidebar-stats {{ grid-column: 3; grid-row: 1; position: sticky; top: 24px; }}
+    .layout:has(.sidebar-chat) .chat-messages {{ max-height: 480px; }}
   }}
   .widget {{
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px 18px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }}
@@ -509,10 +539,11 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     box-shadow: 0 6px 16px var(--shadow);
   }}
   .widget h3 {{
+    font-family: var(--font-mono);
     margin: 0 0 12px;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     color: var(--muted);
   }}
   .widget-list {{
@@ -562,11 +593,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   }}
   .category-count {{
     color: var(--muted);
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
   }}
   .stat-number {{
-    font-size: 1.35rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
     margin: 0;
   }}
   .stat-label {{
@@ -593,21 +627,62 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-weight: 600;
   }}
   header {{
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }}
+  header::after {{
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }}
+  .header-top {{
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    border-bottom: 3px solid var(--text);
-    padding-bottom: 14px;
-    margin-bottom: 20px;
     gap: 12px;
   }}
+  .eyebrow {{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }}
+  .eyebrow .dot {{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }}
+  @keyframes pulseDot {{
+    0%, 100% {{ opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }}
+    50% {{ opacity: 0.65; box-shadow: 0 0 0 5px transparent; }}
+  }}
+  @media (prefers-reduced-motion: reduce) {{
+    .eyebrow .dot {{ animation: none; }}
+  }}
   header h1 {{
-    font-size: 1.4rem;
-    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
   }}
   header .date {{
+    font-family: var(--font-mono);
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }}
   #theme-toggle {{
     border: 1px solid var(--border);
@@ -618,27 +693,36 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }}
+  #theme-toggle:hover {{
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
   }}
   .meta-line {{
+    font-family: var(--font-mono);
     color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 24px;
+    font-size: 0.82rem;
+    margin-bottom: 26px;
   }}
   .greeting {{
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     margin-bottom: 28px;
   }}
   h2 {{
-    font-size: 1.1rem;
-    margin-top: 36px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 6px;
+    padding-bottom: 8px;
   }}
   .hero-card {{
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
     margin: 16px 0 32px;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }}
@@ -647,12 +731,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     box-shadow: 0 10px 28px var(--shadow);
   }}
   .hero-card .story-title {{
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
   }}
   .story-card {{
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 14px 16px;
     margin-bottom: 12px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -668,7 +754,8 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 6px;
   }}
   .tag {{
-    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
     font-weight: 600;
     padding: 2px 9px;
     border-radius: 20px;
@@ -846,11 +933,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <div class="layout">
 <div class="main">
 <header>
-  <div>
-    <h1>{header_title}</h1>
-    <div class="date">{date_title}</div>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>{header_title}</h1>
+      <div class="date">{date_title}</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
   </div>
-  <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
 </header>
 
 <div class="meta-line">{read_minutes} min read · <a href="feed.xml">RSS feed</a></div>
@@ -870,9 +960,9 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 {closer_html}
 </div>
 
-<aside class="sidebar">
-  {chat_widget_html}
+{chat_widget_html}
 
+<aside class="sidebar-stats">
   <div class="widget">
     <h3>This week</h3>
     <div class="stat-pair">
@@ -1025,7 +1115,8 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 """
 
 
-CHAT_WIDGET_HTML = """<div class="widget widget-chat">
+CHAT_WIDGET_HTML = """<aside class="sidebar-chat">
+<div class="widget widget-chat">
   <h3>Ask about today's news</h3>
   <div id="chat-messages" class="chat-messages">
     <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
@@ -1035,9 +1126,10 @@ CHAT_WIDGET_HTML = """<div class="widget widget-chat">
     <button id="chat-send" onclick="sendChatMessage()">Ask</button>
   </div>
   <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
-</div>"""
+</div>
+</aside>"""
 
-CHAT_DISABLED_HTML = ""  # No CHAT_WORKER_URL set — assistant widget is simply omitted.
+CHAT_DISABLED_HTML = ""  # No CHAT_WORKER_URL set — assistant widget (and its whole column) is simply omitted.
 
 
 def build_category_breakdown_html(data):
