@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Thursday, November 12, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Thursday, November 12, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">8 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your essential AI and Consulting rundown for Thursday.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="source">TechCrunch, The Verge, Al Jazeera, The Guardian</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/11/nvidias-stock-drops-as-board-reportedly-preps-to-oust-ceo-jensen-huang/">Nvidia CEO Jensen Huang Faces Ouster Amid Espionage &amp; Ethics Scandal</a></h3>
+  <p class="story-summary">Nvidia CEO Jensen Huang is reportedly facing removal by the board following an admission of an affair with an alleged Chinese spy and a new accusation of an affair with an Nvidia executive. The crisis has national security implications for the U.S.-China AI race and has caused Nvidia&#x27;s stock to drop sharply.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Huang admitted an affair with a woman accused of being a Chinese intelligence agent.</li>
+<li>The U.S. and China are in a critical race for AI infrastructure and chip dominance.</li>
+<li>Nvidia is a dominant player in the global AI chip market, vital for national security.</li>
+<li>A second alleged affair with an Nvidia executive has also emerged.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to significant leadership restructuring at Nvidia.</li>
+<li>May prompt increased scrutiny on corporate espionage risks in tech.</li>
+<li>Likely to impact investor confidence and Nvidia&#x27;s market valuation.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/11/openais-quarterly-revenue-reportedly-crosses-10b-for-the-first-time/">OpenAI&#x27;s Quarterly Revenue Reportedly Surpasses $10 Billion</a></h3>
+  <p class="story-summary">OpenAI has reportedly crossed $10 billion in quarterly revenue for the first time, a nearly 50% jump from the previous quarter&#x27;s $6.7 billion, signaling rapid demand for its AI models.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>OpenAI is a leading developer of generative AI models and services.</li>
+<li>The company has been aggressively expanding its enterprise offerings.</li>
+<li>Global demand for AI solutions is fueling significant investment and growth.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could further accelerate OpenAI&#x27;s market dominance and R&amp;D efforts.</li>
+<li>May intensify competition in the enterprise AI software space.</li>
+<li>Likely to attract more investment into the broader AI ecosystem.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/11/with-720m-round-britains-fractile-gets-a-leg-up-in-the-race-for-ai-chips/">Britain&#x27;s Fractile Secures $720M Funding for AI Chip Development</a></h3>
+  <p class="story-summary">British AI chip startup Fractile has raised a $720 million funding round, positioning it as one of the top-funded contenders in the competitive race to develop purpose-built AI chips.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Global demand for specialized AI hardware, especially chips, is soaring.</li>
+<li>Nvidia currently dominates the AI chip market, driving competition.</li>
+<li>Many startups are emerging to challenge established players with new architectures.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could boost the UK&#x27;s position in the global AI hardware landscape.</li>
+<li>May increase competition and innovation in custom AI chip design.</li>
+<li>Likely to provide alternatives to current chip suppliers for AI developers.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/">New York&#x27;s Sweeping AI Safety Law Takes Effect, Requiring Developer Oversight</a></h3>
+  <p class="story-summary">New York State&#x27;s comprehensive AI safety law has taken effect, mandating major AI developers like OpenAI and Anthropic to register, disclose safety practices, and report critical incidents or face fines.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Concerns about AI safety, ethics, and potential misuse are growing globally.</li>
+<li>Regulatory bodies are increasingly seeking to establish frameworks for AI governance.</li>
+<li>New York aims to set a precedent for state-level AI regulation in the U.S.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could increase compliance costs and operational complexities for AI developers.</li>
+<li>May lead to greater transparency in AI model development and deployment.</li>
+<li>Likely to influence other states and nations considering AI regulation.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/video/why-the-data-center-you-dread-might-never-even-be-built/">Data Center Boom Faces Headwinds from Local Opposition and Power Scarcity</a></h3>
+  <p class="story-summary">The rapid expansion of data centers, crucial for AI infrastructure, is encountering significant obstacles including widespread local opposition, permitting delays, and a struggle for sufficient electricity supply, potentially preventing many announced projects from being built.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI models require massive computational power, driving data center demand.</li>
+<li>Data centers are energy-intensive and can face environmental concerns.</li>
+<li>Local communities often raise concerns about noise, land use, and power grids.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could slow down the overall growth and deployment of AI technologies.</li>
+<li>May lead to higher costs for AI compute resources due to scarcity.</li>
+<li>Likely to drive innovation in energy-efficient AI hardware and software.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">Ars Technica</span></div>
+  <h3 class="story-title"><a href="https://arstechnica.com/ai/2026/11/taiwans-chipmaking-giant-tsmc-to-invest-1b-in-anthropic-openai/">TSMC Invests $1 Billion in OpenAI and Anthropic Amid AI Trade Shifts</a></h3>
+  <p class="story-summary">Taiwan&#x27;s Semiconductor Manufacturing Company (TSMC) is set to invest $1 billion into leading AI firms Anthropic and OpenAI, highlighting the trend of circular financing within the AI boom and strategic integration.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>TSMC is the world&#x27;s largest contract chip manufacturer, vital for AI hardware.</li>
+<li>OpenAI and Anthropic are major developers of large language models.</li>
+<li>The investment signals a deeper integration between chipmakers and AI software firms.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could strengthen the strategic ties between chip supply and AI demand.</li>
+<li>May help stabilize TSMC&#x27;s position amid global AI trade uncertainties.</li>
+<li>Likely to accelerate specific AI research and development efforts at OpenAI and Anthropic.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/1031524/google-deepmind-alphagenome-2-genetic-ai-model">Google DeepMind Unveils AlphaGenome 2 for Deeper Insights into Disease at Cellular Level</a></h3>
+  <p class="story-summary">Google DeepMind has launched AlphaGenome 2, an advanced AI model designed to analyze how DNA changes impact different cells, offering scientists a more detailed understanding of disease causes and potential new treatments.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Understanding genetic variants and their cellular effects is crucial for medical breakthroughs.</li>
+<li>Traditional research in this area is complex and resource-intensive.</li>
+<li>AI offers powerful tools for analyzing vast biological datasets and accelerating discovery.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could significantly accelerate drug discovery and personalized medicine.</li>
+<li>May open new avenues for understanding and treating genetic diseases.</li>
+<li>Likely to drive further AI adoption in biomedical research and development.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Security</span><span class="source">Ars Technica</span></div>
+  <h3 class="story-title"><a href="https://arstechnica.com/security/2026/11/grok-build-coding-agent-leaks-oodles-of-confidential-info-some-belonging-to-spacexsi/">Grok Build AI Coding Agent Leaks Confidential Information, Including SpaceXSI Data</a></h3>
+  <p class="story-summary">A security flaw in the Grok Build AI coding agent has reportedly exposed thousands of applications, leading to the leak of confidential information, including data belonging to SpaceXSI, after a researcher discovered 35,000 open Grok Build apps.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI coding agents are increasingly used for development, raising security concerns.</li>
+<li>Confidential data exposure can have severe consequences for businesses.</li>
+<li>The incident highlights the importance of robust security in AI applications.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to increased scrutiny and demand for secure AI agent development.</li>
+<li>May prompt companies to re-evaluate their use of third-party AI coding tools.</li>
+<li>Likely to result in new security protocols and audits for AI-powered platforms.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/7088e087-c688-485a-8e8d-efb6b75bc571?syn-25a6b1a6=1">Weil Partners Approve Plan to Dissolve Law Firm After Century of Operation</a></h3>
+  <p class="story-summary">Weil, a nearly century-old law firm, is set to dissolve after its partners approved a plan following a series of defections that plunged the firm into crisis.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Law firm dissolution is rare, especially for a firm of Weil&#x27;s age and stature.</li>
+<li>Partner defections can destabilize a firm by impacting client relationships and revenue.</li>
+<li>The legal industry is competitive, with firms facing pressures to retain talent.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to a significant reshuffling of talent and clients across other firms.</li>
+<li>May raise questions about succession planning and partner loyalty in the legal sector.</li>
+<li>Likely to impact other professional services firms regarding stability and competitive pressure.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">McKinsey Insights &amp; Publications</span></div>
+  <h3 class="story-title"><a href="https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/programmatic-m-and-a-in-australia-the-most-reliable-way-to-unlock-value">McKinsey Highlights Programmatic M&amp;A as Key to Unlocking Value in Australia</a></h3>
+  <p class="story-summary">A new McKinsey report reveals that programmatic M&amp;A strategies, while adopted by fewer than one in 20 Australian-listed companies, delivered the highest excess shareholder returns over the past decade.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>M&amp;A activity is a key driver of corporate growth and restructuring strategies.</li>
+<li>Programmatic M&amp;A involves a series of smaller, strategic acquisitions over time.</li>
+<li>Many companies still pursue large, transformational deals, often with mixed results.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could encourage more Australian companies to adopt programmatic M&amp;A approaches.</li>
+<li>May increase demand for strategic M&amp;A advisory services from consulting firms.</li>
+<li>Likely to shift M&amp;A strategies towards more continuous and smaller-scale deals.</li></ul>
+</details>
+</div>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/12/iran-war-live-tehran-warns-of-wider-retaliation-israel-kills-in-gaza?traffic_source=rss">Israeli Strikes Reportedly Hit Gaza&#x27;s Nasser Hospital, Casualties Reported</a></h3>
+  <p class="story-summary">Al Jazeera reports an Israeli strike on Nasser Hospital in Gaza killed at least six people in the intensive care unit. Al Jazeera also reported strikes hit the Nasser Medical Complex, killing nine across Gaza.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Nasser Hospital is a major medical facility in Khan Younis, Gaza.</li>
+<li>Hospitals and medical infrastructure are protected under international humanitarian law.</li>
+<li>Gaza&#x27;s healthcare system has been severely strained by ongoing conflict.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could exacerbate the humanitarian crisis and medical emergencies in Gaza.</li>
+<li>May draw international condemnation and calls for de-escalation.</li>
+<li>Likely to complicate aid efforts and access to essential medical care.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/c3rryrryk59zo?at_medium=RSS&amp;at_campaign=rss">US Alleges Three Iran-Backed Suspects Plotted Attacks, Including RAF Fairford Incident</a></h3>
+  <p class="story-summary">The U.S. Department of Justice states three Iran-backed suspects were involved in a series of plots, including a significant incident near the UK airbase RAF Fairford, used by U.S. armed forces.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The U.S. and Iran have a long history of geopolitical tensions and proxy conflicts.</li>
+<li>RAF Fairford is a key operational base for U.S. military activities in Europe.</li>
+<li>Accusations of state-sponsored plots heighten international security concerns.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to increased counter-terrorism measures and intelligence sharing by Western allies.</li>
+<li>May further strain U.S.-Iran relations and regional stability.</li>
+<li>Likely to prompt a review of security protocols at strategic military installations.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="source">The Guardian, BBC News, Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/world/2026/nov/11/trump-planning-military-assault-or-tighter-sanctions-iranian-officials">Iran Warns of European Retaliation; Israel Prepares as Trump Downplays US Attacks</a></h3>
+  <p class="story-summary">Iranian officials reportedly believe the U.S. is planning further military strikes or tighter sanctions, prompting Tehran to warn of retaliation against Europe if attacked. Meanwhile, President Trump stated that further U.S. attacks on Iran are &#x27;highly unlikely.&#x27;</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Tensions between the U.S. and Iran remain high amidst ongoing regional conflicts.</li>
+<li>Iran has consistently vowed retaliation for any perceived aggression.</li>
+<li>U.S. administrations have often balanced pressure with de-escalation rhetoric.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could increase uncertainty for energy markets and global shipping routes.</li>
+<li>May intensify diplomatic efforts to prevent a wider regional conflict.</li>
+<li>Likely to keep regional military forces on high alert, risking miscalculation.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/11/strait-of-hormuz-will-never-return-to-pre-war-status-ghalibaf?traffic_source=rss">Iran&#x27;s Parliament Speaker Says Hormuz Strait Will &#x27;Never Return&#x27; to Pre-War Status</a></h3>
+  <p class="story-summary">Iran&#x27;s Parliament Speaker and top negotiator, Mohammad Bagher Ghalibaf, stated that the Strait of Hormuz will &#x27;never return&#x27; to its pre-war status, implying lasting changes to the crucial global shipping lane.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Strait of Hormuz is a vital chokepoint for global oil and gas shipments.</li>
+<li>Iran has previously threatened to disrupt shipping in the Strait during tensions.</li>
+<li>Any changes to its status could have significant international economic repercussions.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to sustained elevated oil and gas prices globally.</li>
+<li>May prompt international efforts to ensure freedom of navigation.</li>
+<li>Likely to increase geopolitical competition and military presence in the Persian Gulf.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cw4g1g4ll5m1o?at_medium=RSS&amp;at_campaign=rss">Board of Peace Criticizes Israeli Aid Response After Gaza Floods as &#x27;Insufficient&#x27;</a></h3>
+  <p class="story-summary">The &#x27;Board of Peace,&#x27; formed by former President Trump, criticized Israel&#x27;s aid response following Gaza floods as &#x27;insufficient,&#x27; while also blaming Hamas for civilian suffering.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Gaza experienced severe flooding, exacerbating existing humanitarian challenges.</li>
+<li>Aid agencies have consistently warned about dire conditions and lack of supplies.</li>
+<li>The Board of Peace&#x27;s criticism of Israel marks a notable shift from its typical stance.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could increase international pressure on Israel to facilitate more aid into Gaza.</li>
+<li>May highlight the urgent need for humanitarian assistance and infrastructure repair.</li>
+<li>Likely to draw further attention to the plight of civilians in the affected region.</li></ul>
+</details>
+</div>
+
+<p class="closer">For a deep dive into the intersection of technology and national security, the evolving Nvidia CEO saga is today&#x27;s must-read.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">40</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">5</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">29</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#7a3fd6;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#4338ca;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#a16207;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Security</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#1d4ed8;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#92400e;--bar-pct:50%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#78350f;--bar-pct:50%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+<li><a href="archive/2026-11-06.html">Friday, November 06, 2026</a></li>
+<li><a href="archive/2026-11-05.html">Thursday, November 05, 2026</a></li>
+<li><a href="archive/2026-11-04.html">Wednesday, November 04, 2026</a></li>
+<li><a href="archive/2026-11-03.html">Tuesday, November 03, 2026</a></li>
+<li><a href="archive/2026-11-02.html">Monday, November 02, 2026</a></li>
+<li><a href="archive/2026-10-31.html">Saturday, October 31, 2026</a></li>
+<li><a href="archive/2026-10-30.html">Friday, October 30, 2026</a></li>
+<li><a href="archive/2026-10-29.html">Thursday, October 29, 2026</a></li>
+<li><a href="archive/2026-10-28.html">Wednesday, October 28, 2026</a></li>
+<li><a href="archive/2026-10-27.html">Tuesday, October 27, 2026</a></li>
+<li><a href="archive/2026-10-25.html">Sunday, October 25, 2026</a></li>
+<li><a href="archive/2026-10-24.html">Saturday, October 24, 2026</a></li>
+<li><a href="archive/2026-10-23.html">Friday, October 23, 2026</a></li>
+<li><a href="archive/2026-10-22.html">Thursday, October 22, 2026</a></li>
+<li><a href="archive/2026-10-21.html">Wednesday, October 21, 2026</a></li>
+<li><a href="archive/2026-10-20.html">Tuesday, October 20, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Thursday, November 12, 2026\n\nTOP STORY: Nvidia CEO Jensen Huang Faces Ouster Amid Espionage & Ethics Scandal (source: TechCrunch, The Verge, Al Jazeera, The Guardian)\nSummary: Nvidia CEO Jensen Huang is reportedly facing removal by the board following an admission of an affair with an alleged Chinese spy and a new accusation of an affair with an Nvidia executive. The crisis has national security implications for the U.S.-China AI race and has caused Nvidia's stock to drop sharply.\nBackground: Huang admitted an affair with a woman accused of being a Chinese intelligence agent.\nBackground: The U.S. and China are in a critical race for AI infrastructure and chip dominance.\nBackground: Nvidia is a dominant player in the global AI chip market, vital for national security.\nBackground: A second alleged affair with an Nvidia executive has also emerged.\nPossible knock-on effect: Could lead to significant leadership restructuring at Nvidia.\nPossible knock-on effect: May prompt increased scrutiny on corporate espionage risks in tech.\nPossible knock-on effect: Likely to impact investor confidence and Nvidia's market valuation.\n\nAI STORIES:\n- OpenAI's Quarterly Revenue Reportedly Surpasses $10 Billion (source: TechCrunch)\n  Summary: OpenAI has reportedly crossed $10 billion in quarterly revenue for the first time, a nearly 50% jump from the previous quarter's $6.7 billion, signaling rapid demand for its AI models.\n  Background: OpenAI is a leading developer of generative AI models and services.\n  Background: The company has been aggressively expanding its enterprise offerings.\n  Background: Global demand for AI solutions is fueling significant investment and growth.\n  Possible knock-on effect: Could further accelerate OpenAI's market dominance and R&D efforts.\n  Possible knock-on effect: May intensify competition in the enterprise AI software space.\n  Possible knock-on effect: Likely to attract more investment into the broader AI ecosystem.\n- Britain's Fractile Secures $720M Funding for AI Chip Development (source: TechCrunch)\n  Summary: British AI chip startup Fractile has raised a $720 million funding round, positioning it as one of the top-funded contenders in the competitive race to develop purpose-built AI chips.\n  Background: Global demand for specialized AI hardware, especially chips, is soaring.\n  Background: Nvidia currently dominates the AI chip market, driving competition.\n  Background: Many startups are emerging to challenge established players with new architectures.\n  Possible knock-on effect: Could boost the UK's position in the global AI hardware landscape.\n  Possible knock-on effect: May increase competition and innovation in custom AI chip design.\n  Possible knock-on effect: Likely to provide alternatives to current chip suppliers for AI developers.\n- New York's Sweeping AI Safety Law Takes Effect, Requiring Developer Oversight (source: TechCrunch)\n  Summary: New York State's comprehensive AI safety law has taken effect, mandating major AI developers like OpenAI and Anthropic to register, disclose safety practices, and report critical incidents or face fines.\n  Background: Concerns about AI safety, ethics, and potential misuse are growing globally.\n  Background: Regulatory bodies are increasingly seeking to establish frameworks for AI governance.\n  Background: New York aims to set a precedent for state-level AI regulation in the U.S.\n  Possible knock-on effect: Could increase compliance costs and operational complexities for AI developers.\n  Possible knock-on effect: May lead to greater transparency in AI model development and deployment.\n  Possible knock-on effect: Likely to influence other states and nations considering AI regulation.\n- Data Center Boom Faces Headwinds from Local Opposition and Power Scarcity (source: TechCrunch)\n  Summary: The rapid expansion of data centers, crucial for AI infrastructure, is encountering significant obstacles including widespread local opposition, permitting delays, and a struggle for sufficient electricity supply, potentially preventing many announced projects from being built.\n  Background: AI models require massive computational power, driving data center demand.\n  Background: Data centers are energy-intensive and can face environmental concerns.\n  Background: Local communities often raise concerns about noise, land use, and power grids.\n  Possible knock-on effect: Could slow down the overall growth and deployment of AI technologies.\n  Possible knock-on effect: May lead to higher costs for AI compute resources due to scarcity.\n  Possible knock-on effect: Likely to drive innovation in energy-efficient AI hardware and software.\n- TSMC Invests $1 Billion in OpenAI and Anthropic Amid AI Trade Shifts (source: Ars Technica)\n  Summary: Taiwan's Semiconductor Manufacturing Company (TSMC) is set to invest $1 billion into leading AI firms Anthropic and OpenAI, highlighting the trend of circular financing within the AI boom and strategic integration.\n  Background: TSMC is the world's largest contract chip manufacturer, vital for AI hardware.\n  Background: OpenAI and Anthropic are major developers of large language models.\n  Background: The investment signals a deeper integration between chipmakers and AI software firms.\n  Possible knock-on effect: Could strengthen the strategic ties between chip supply and AI demand.\n  Possible knock-on effect: May help stabilize TSMC's position amid global AI trade uncertainties.\n  Possible knock-on effect: Likely to accelerate specific AI research and development efforts at OpenAI and Anthropic.\n- Google DeepMind Unveils AlphaGenome 2 for Deeper Insights into Disease at Cellular Level (source: The Verge)\n  Summary: Google DeepMind has launched AlphaGenome 2, an advanced AI model designed to analyze how DNA changes impact different cells, offering scientists a more detailed understanding of disease causes and potential new treatments.\n  Background: Understanding genetic variants and their cellular effects is crucial for medical breakthroughs.\n  Background: Traditional research in this area is complex and resource-intensive.\n  Background: AI offers powerful tools for analyzing vast biological datasets and accelerating discovery.\n  Possible knock-on effect: Could significantly accelerate drug discovery and personalized medicine.\n  Possible knock-on effect: May open new avenues for understanding and treating genetic diseases.\n  Possible knock-on effect: Likely to drive further AI adoption in biomedical research and development.\n- Grok Build AI Coding Agent Leaks Confidential Information, Including SpaceXSI Data (source: Ars Technica)\n  Summary: A security flaw in the Grok Build AI coding agent has reportedly exposed thousands of applications, leading to the leak of confidential information, including data belonging to SpaceXSI, after a researcher discovered 35,000 open Grok Build apps.\n  Background: AI coding agents are increasingly used for development, raising security concerns.\n  Background: Confidential data exposure can have severe consequences for businesses.\n  Background: The incident highlights the importance of robust security in AI applications.\n  Possible knock-on effect: Could lead to increased scrutiny and demand for secure AI agent development.\n  Possible knock-on effect: May prompt companies to re-evaluate their use of third-party AI coding tools.\n  Possible knock-on effect: Likely to result in new security protocols and audits for AI-powered platforms.\n\nCONSULTING STORIES:\n- Weil Partners Approve Plan to Dissolve Law Firm After Century of Operation (source: Financial Times)\n  Summary: Weil, a nearly century-old law firm, is set to dissolve after its partners approved a plan following a series of defections that plunged the firm into crisis.\n  Background: Law firm dissolution is rare, especially for a firm of Weil's age and stature.\n  Background: Partner defections can destabilize a firm by impacting client relationships and revenue.\n  Background: The legal industry is competitive, with firms facing pressures to retain talent.\n  Possible knock-on effect: Could lead to a significant reshuffling of talent and clients across other firms.\n  Possible knock-on effect: May raise questions about succession planning and partner loyalty in the legal sector.\n  Possible knock-on effect: Likely to impact other professional services firms regarding stability and competitive pressure.\n- McKinsey Highlights Programmatic M&A as Key to Unlocking Value in Australia (source: McKinsey Insights & Publications)\n  Summary: A new McKinsey report reveals that programmatic M&A strategies, while adopted by fewer than one in 20 Australian-listed companies, delivered the highest excess shareholder returns over the past decade.\n  Background: M&A activity is a key driver of corporate growth and restructuring strategies.\n  Background: Programmatic M&A involves a series of smaller, strategic acquisitions over time.\n  Background: Many companies still pursue large, transformational deals, often with mixed results.\n  Possible knock-on effect: Could encourage more Australian companies to adopt programmatic M&A approaches.\n  Possible knock-on effect: May increase demand for strategic M&A advisory services from consulting firms.\n  Possible knock-on effect: Likely to shift M&A strategies towards more continuous and smaller-scale deals.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- Israeli Strikes Reportedly Hit Gaza's Nasser Hospital, Casualties Reported (source: Al Jazeera)\n  Summary: Al Jazeera reports an Israeli strike on Nasser Hospital in Gaza killed at least six people in the intensive care unit. Al Jazeera also reported strikes hit the Nasser Medical Complex, killing nine across Gaza.\n  Background: Nasser Hospital is a major medical facility in Khan Younis, Gaza.\n  Background: Hospitals and medical infrastructure are protected under international humanitarian law.\n  Background: Gaza's healthcare system has been severely strained by ongoing conflict.\n  Possible knock-on effect: Could exacerbate the humanitarian crisis and medical emergencies in Gaza.\n  Possible knock-on effect: May draw international condemnation and calls for de-escalation.\n  Possible knock-on effect: Likely to complicate aid efforts and access to essential medical care.\n- US Alleges Three Iran-Backed Suspects Plotted Attacks, Including RAF Fairford Incident (source: BBC News)\n  Summary: The U.S. Department of Justice states three Iran-backed suspects were involved in a series of plots, including a significant incident near the UK airbase RAF Fairford, used by U.S. armed forces.\n  Background: The U.S. and Iran have a long history of geopolitical tensions and proxy conflicts.\n  Background: RAF Fairford is a key operational base for U.S. military activities in Europe.\n  Background: Accusations of state-sponsored plots heighten international security concerns.\n  Possible knock-on effect: Could lead to increased counter-terrorism measures and intelligence sharing by Western allies.\n  Possible knock-on effect: May further strain U.S.-Iran relations and regional stability.\n  Possible knock-on effect: Likely to prompt a review of security protocols at strategic military installations.\n- Iran Warns of European Retaliation; Israel Prepares as Trump Downplays US Attacks (source: The Guardian, BBC News, Al Jazeera)\n  Summary: Iranian officials reportedly believe the U.S. is planning further military strikes or tighter sanctions, prompting Tehran to warn of retaliation against Europe if attacked. Meanwhile, President Trump stated that further U.S. attacks on Iran are 'highly unlikely.'\n  Background: Tensions between the U.S. and Iran remain high amidst ongoing regional conflicts.\n  Background: Iran has consistently vowed retaliation for any perceived aggression.\n  Background: U.S. administrations have often balanced pressure with de-escalation rhetoric.\n  Possible knock-on effect: Could increase uncertainty for energy markets and global shipping routes.\n  Possible knock-on effect: May intensify diplomatic efforts to prevent a wider regional conflict.\n  Possible knock-on effect: Likely to keep regional military forces on high alert, risking miscalculation.\n- Iran's Parliament Speaker Says Hormuz Strait Will 'Never Return' to Pre-War Status (source: Al Jazeera)\n  Summary: Iran's Parliament Speaker and top negotiator, Mohammad Bagher Ghalibaf, stated that the Strait of Hormuz will 'never return' to its pre-war status, implying lasting changes to the crucial global shipping lane.\n  Background: The Strait of Hormuz is a vital chokepoint for global oil and gas shipments.\n  Background: Iran has previously threatened to disrupt shipping in the Strait during tensions.\n  Background: Any changes to its status could have significant international economic repercussions.\n  Possible knock-on effect: Could lead to sustained elevated oil and gas prices globally.\n  Possible knock-on effect: May prompt international efforts to ensure freedom of navigation.\n  Possible knock-on effect: Likely to increase geopolitical competition and military presence in the Persian Gulf.\n- Board of Peace Criticizes Israeli Aid Response After Gaza Floods as 'Insufficient' (source: BBC News)\n  Summary: The 'Board of Peace,' formed by former President Trump, criticized Israel's aid response following Gaza floods as 'insufficient,' while also blaming Hamas for civilian suffering.\n  Background: Gaza experienced severe flooding, exacerbating existing humanitarian challenges.\n  Background: Aid agencies have consistently warned about dire conditions and lack of supplies.\n  Background: The Board of Peace's criticism of Israel marks a notable shift from its typical stance.\n  Possible knock-on effect: Could increase international pressure on Israel to facilitate more aid into Gaza.\n  Possible knock-on effect: May highlight the urgent need for humanitarian assistance and infrastructure repair.\n  Possible knock-on effect: Likely to draw further attention to the plight of civilians in the affected region.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
