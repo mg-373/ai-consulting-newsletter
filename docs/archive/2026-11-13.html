@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Friday, November 13, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Friday, November 13, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">7 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your Friday briefing on AI, consulting, and global affairs.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/jensen-huang-is-out-at-nvidia-who-is-colette-kress-his-interim-replacement/">Jensen Huang Resigns from Nvidia Amid Scandal, Congressional Investigation Looms</a></h3>
+  <p class="story-summary">Jensen Huang, co-founder and longtime CEO of Nvidia, has resigned following reports of multiple extramarital affairs, including one with an alleged Chinese spy, which has triggered a congressional investigation. CFO Colette Kress has been named interim CEO as the company navigates this leadership crisis and questions arise about its future direction. Huang has agreed to testify before Congress.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Huang&#x27;s resignation follows reports of affairs, including with an alleged Chinese spy.</li>
+<li>The scandal prompted a Congressional investigation into Nvidia&#x27;s China sales and security implications.</li>
+<li>Nvidia dominates AI chip manufacturing, crucial for global AI development.</li>
+<li>Huang has agreed to testify before Congress regarding the allegations.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to a shift in Nvidia&#x27;s strategic direction and open-source commitments.</li>
+<li>May prompt increased scrutiny on tech executives&#x27; conduct and national security risks.</li>
+<li>Could influence US-China tech policy regarding AI and chip exports.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/googles-latest-search-upgrade-promises-better-answers-to-your-most-complicated-questions/">Google Rolls Out Gemini 4 Hydrogen, Promising Better Search Answers for Complex Queries</a></h3>
+  <p class="story-summary">Google has launched its latest AI model, Gemini 4 Hydrogen, which is now integrated into Search. The update promises improved understanding of complex queries, more relevant links, and richer visual responses for users.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Google continuously upgrades its AI models to enhance user experience.</li>
+<li>Gemini 4 Hydrogen is designed to handle multi-part questions and typos.</li>
+<li>This update replaces the previous Gemini 3.8 Flash model.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May solidify Google&#x27;s search dominance against emerging AI-powered alternatives.</li>
+<li>Could set a new benchmark for AI chatbot capabilities in search engines.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/nebius-tests-the-neocloud-playbook-with-40-billion-in-planned-spending/">Nebius Plans $40 Billion AI Infrastructure Expansion, Raising Financing Questions</a></h3>
+  <p class="story-summary">Nebius intends to fund its ambitious $40 billion AI infrastructure expansion through customer prepayments and loans. This aggressive financing model comes amidst reports of delays at other major data centers, prompting scrutiny.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Demand for AI computing infrastructure is rapidly accelerating globally.</li>
+<li>Nebius is adopting a model reliant on upfront customer payments and loans.</li>
+<li>Delays at other data centers highlight potential risks in large-scale financing.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could set a precedent for financing large-scale AI infrastructure projects.</li>
+<li>May intensify competition in the AI cloud market for providers.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/united-airlines-blocks-ai-agents-from-booking-flights-citing-cybersecurity-risks/">United Airlines Blocks AI Agents from Booking Flights, Citing Cybersecurity Risks</a></h3>
+  <p class="story-summary">United Airlines announced it will not allow customers to use AI agents for booking flights or managing reservations. The airline stated its decision is based on cybersecurity concerns, highlighting the risks of new autonomous technologies.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Autonomous AI agents introduce new operational and security challenges.</li>
+<li>Airlines handle sensitive customer data and critical operational processes.</li>
+<li>United&#x27;s decision reflects caution about potential vulnerabilities.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May prompt other airlines or industries to implement similar AI agent restrictions.</li>
+<li>Could accelerate development of more secure and verifiable AI agent protocols.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/softbanks-billion-dollar-loss-may-have-put-a-cap-on-ais-natural-gas-ambitions/">SoftBank’s Billion-Dollar Loss May Temper AI’s Natural Gas Ambitions</a></h3>
+  <p class="story-summary">SoftBank incurred over a $3 billion loss from preordering natural gas turbines intended to power AI data centers. This significant financial setback could impact future investment strategies for energy infrastructure within the AI industry.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Powering massive AI data centers requires significant energy sources.</li>
+<li>SoftBank&#x27;s loss highlights financial risks in securing energy infrastructure.</li>
+<li>This incident reveals the high capital expenditure involved in AI power.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could shift investment towards alternative energy sources for AI data centers.</li>
+<li>May lead to a reassessment of energy procurement strategies across the AI industry.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/norwest-pushes-deeper-into-ai-with-new-4b-fund/">Norwest Expands AI Investment with New $4 Billion Fund</a></h3>
+  <p class="story-summary">Investment firm Norwest has launched its largest fund to date, totaling $4 billion, specifically to push deeper into the artificial intelligence sector. This significant capital infusion signals continued strong investor confidence in AI innovation.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Venture capital firms see high potential in the rapidly growing AI sector.</li>
+<li>This new fund is Norwest&#x27;s largest, indicating strong investor confidence.</li>
+<li>The capital will likely flow into diverse AI startups and innovations.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Will fuel growth and innovation within the AI startup ecosystem.</li>
+<li>May intensify competition for talent and market share among funded AI companies.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/12/cyberattack-on-fireworks-ai-allowed-hackers-to-access-notion-customers-chat-transcripts/">Cyberattack on Fireworks AI Exposes Notion Customers’ Chat Transcripts</a></h3>
+  <p class="story-summary">Fireworks AI has experienced its second data breach in as many months, with a recent cyberattack allowing hackers to access Notion customers’ chat transcripts. The incident raises significant concerns about data security within AI service providers.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI companies handling sensitive user data are prime targets for cyberattacks.</li>
+<li>This is Fireworks AI&#x27;s second data breach in a short period.</li>
+<li>The breach compromised chat transcripts of Notion users, impacting a wider base.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could erode customer trust in AI service providers and third-party integrations.</li>
+<li>May prompt stricter security audits and compliance requirements for AI companies.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/31fe2e2d-630d-47c6-b747-54d4310ebf79?syn-25a6b1a6=1">Simpson Thacher Joins Law Firms Withholding Financial Data from Industry Rankings</a></h3>
+  <p class="story-summary">Simpson Thacher has become the latest major law firm to withdraw its financial data from influential industry rankings. This move follows similar decisions by firms like Kirkland &amp; Ellis and Paul Weiss, signaling a growing trend in the legal sector.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Several prominent law firms have recently opted out of influential industry rankings.</li>
+<li>This trend suggests a strategic move to control public perception of their finances.</li>
+<li>It reduces competitive transparency in a highly lucrative professional services sector.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May reduce transparency across the professional services industry, making comparisons harder.</li>
+<li>Could shift how firms market their success and attract talent.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/881c1179-67f6-4f56-861f-5bb01fcbafeb">Crowded Legal-Tech Market Highlights &#x27;Tool Fatigue&#x27; Among Buyers</a></h3>
+  <p class="story-summary">The expanding legal-tech market is experiencing &#x27;tool fatigue&#x27; among buyers, as a proliferation of software products overwhelms law firms and clients. The challenge now lies in navigating the breadth of offerings and addressing specific business needs effectively.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The legal technology sector has seen a proliferation of software products.</li>
+<li>&#x27;Tool fatigue&#x27; indicates buyers are overwhelmed by the volume of solutions.</li>
+<li>Differentiation and clear value propositions are crucial for new entrants.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to market consolidation as buyers favor integrated platforms over niche tools.</li>
+<li>May force legal tech startups to innovate on user experience and demonstrate clearer ROI.</li></ul>
+</details>
+</div>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/ckzd9p7e4eqeo?at_medium=RSS&amp;at_campaign=rss">Israeli Strike on Gaza Hospital Kills Six Palestinians, Health Ministry Says</a></h3>
+  <p class="story-summary">Gaza&#x27;s health ministry reports an Israeli strike hit Nasser hospital, the largest in southern Gaza, killing six Palestinians, including a surgeon, and wounding 28 others. Witnesses stated a missile struck surgical and intensive care units.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Gaza Health Ministry reported a strike on Nasser hospital in southern Gaza.</li>
+<li>Witnesses described a missile hitting surgical and intensive care units.</li>
+<li>The Israeli military has not yet commented on this specific incident.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could escalate international condemnation and calls for de-escalation.</li>
+<li>May further strain an already overwhelmed healthcare system in Gaza.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/ck9q8g8209l2o?at_medium=RSS&amp;at_campaign=rss">Two Men Convicted in UK of Spying for Iran, Targeting Journalists and Lawyer</a></h3>
+  <p class="story-summary">Two men have been found guilty in a UK court of engaging in conduct likely to assist an Iranian intelligence service. The convictions relate to plans to target journalists and a lawyer in Britain.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>A UK court found two men guilty of assisting Iranian intelligence services.</li>
+<li>British authorities are concerned about foreign state interference and threats to dissidents.</li>
+<li>The conviction falls under Britain&#x27;s National Security Act.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Likely to heighten tensions between the UK and Iran.</li>
+<li>May prompt other nations to increase vigilance against foreign espionage.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/13/iran-war-live-riyadh-china-discuss-houthis-as-group-claims-aramco-attacks?traffic_source=rss">Trump Says Gulf Allies Urged Pause in Iran Strikes</a></h3>
+  <p class="story-summary">President Trump stated at the White House that Gulf countries asked him to halt further attacks against Iran. This comes after recent US military actions targeting Iran.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>President Trump publicly acknowledged requests from Gulf allies.</li>
+<li>The US has conducted military actions against Iran recently.</li>
+<li>Gulf nations have complex security interests in the region.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could indicate a potential de-escalation of direct US-Iran military confrontation.</li>
+<li>May signal increased diplomatic influence of Gulf states in regional conflict management.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/12/yemens-houthis-renew-strikes-on-saudi-arabia-as-unsc-extends-sanctions?traffic_source=rss">Yemen’s Houthis Renew Strikes on Saudi Arabia as UNSC Extends Sanctions</a></h3>
+  <p class="story-summary">Yemen&#x27;s Houthi rebels have renewed strikes on Saudi Arabia, with a Saudi-led coalition intercepting suspected drones targeting oil and military infrastructure. Simultaneously, the UN Security Council extended sanctions against the Houthi group.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Houthi group claimed renewed drone attacks on Saudi targets.</li>
+<li>A Saudi-led coalition reported intercepting suspected Houthi drones.</li>
+<li>The UN Security Council extended sanctions, indicating continued international pressure.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Likely to prolong the conflict in Yemen and regional instability.</li>
+<li>May lead to further disruptions in global oil supply chains and energy prices.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/12/palestinian-baby-dies-from-cold-in-gaza-amid-israeli-restrictions-on-aid?traffic_source=rss">Palestinian Baby Dies from Cold in Gaza Amid Israeli Restrictions on Aid</a></h3>
+  <p class="story-summary">Al Jazeera reports a Palestinian baby died from hypothermia in a tent in southern Gaza, according to the father. Aid agencies have warned about severe shortages of humanitarian supplies due to Israeli restrictions.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Al Jazeera reported a baby&#x27;s death from cold in a tent in southern Gaza.</li>
+<li>Aid agencies warn about severe shortages of humanitarian supplies, including fuel.</li>
+<li>Winter conditions are exacerbating the humanitarian crisis in Gaza.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could intensify international pressure for increased humanitarian aid access to Gaza.</li>
+<li>May highlight the dire humanitarian situation and impact on vulnerable populations.</li></ul>
+</details>
+</div>
+
+<p class="closer">For a deeper dive, read about Jensen Huang&#x27;s resignation and the unfolding implications for Nvidia and the entire AI industry.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">39</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">6</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">29</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#4338ca;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#a16207;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#1d4ed8;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#78350f;--bar-pct:33%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-13.html">Friday, November 13, 2026</a></li>
+<li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+<li><a href="archive/2026-11-06.html">Friday, November 06, 2026</a></li>
+<li><a href="archive/2026-11-05.html">Thursday, November 05, 2026</a></li>
+<li><a href="archive/2026-11-04.html">Wednesday, November 04, 2026</a></li>
+<li><a href="archive/2026-11-03.html">Tuesday, November 03, 2026</a></li>
+<li><a href="archive/2026-11-02.html">Monday, November 02, 2026</a></li>
+<li><a href="archive/2026-10-31.html">Saturday, October 31, 2026</a></li>
+<li><a href="archive/2026-10-30.html">Friday, October 30, 2026</a></li>
+<li><a href="archive/2026-10-29.html">Thursday, October 29, 2026</a></li>
+<li><a href="archive/2026-10-28.html">Wednesday, October 28, 2026</a></li>
+<li><a href="archive/2026-10-27.html">Tuesday, October 27, 2026</a></li>
+<li><a href="archive/2026-10-25.html">Sunday, October 25, 2026</a></li>
+<li><a href="archive/2026-10-24.html">Saturday, October 24, 2026</a></li>
+<li><a href="archive/2026-10-23.html">Friday, October 23, 2026</a></li>
+<li><a href="archive/2026-10-22.html">Thursday, October 22, 2026</a></li>
+<li><a href="archive/2026-10-21.html">Wednesday, October 21, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Friday, November 13, 2026\n\nTOP STORY: Jensen Huang Resigns from Nvidia Amid Scandal, Congressional Investigation Looms (source: TechCrunch)\nSummary: Jensen Huang, co-founder and longtime CEO of Nvidia, has resigned following reports of multiple extramarital affairs, including one with an alleged Chinese spy, which has triggered a congressional investigation. CFO Colette Kress has been named interim CEO as the company navigates this leadership crisis and questions arise about its future direction. Huang has agreed to testify before Congress.\nBackground: Huang's resignation follows reports of affairs, including with an alleged Chinese spy.\nBackground: The scandal prompted a Congressional investigation into Nvidia's China sales and security implications.\nBackground: Nvidia dominates AI chip manufacturing, crucial for global AI development.\nBackground: Huang has agreed to testify before Congress regarding the allegations.\nPossible knock-on effect: Could lead to a shift in Nvidia's strategic direction and open-source commitments.\nPossible knock-on effect: May prompt increased scrutiny on tech executives' conduct and national security risks.\nPossible knock-on effect: Could influence US-China tech policy regarding AI and chip exports.\n\nAI STORIES:\n- Google Rolls Out Gemini 4 Hydrogen, Promising Better Search Answers for Complex Queries (source: TechCrunch)\n  Summary: Google has launched its latest AI model, Gemini 4 Hydrogen, which is now integrated into Search. The update promises improved understanding of complex queries, more relevant links, and richer visual responses for users.\n  Background: Google continuously upgrades its AI models to enhance user experience.\n  Background: Gemini 4 Hydrogen is designed to handle multi-part questions and typos.\n  Background: This update replaces the previous Gemini 3.8 Flash model.\n  Possible knock-on effect: May solidify Google's search dominance against emerging AI-powered alternatives.\n  Possible knock-on effect: Could set a new benchmark for AI chatbot capabilities in search engines.\n- Nebius Plans $40 Billion AI Infrastructure Expansion, Raising Financing Questions (source: TechCrunch)\n  Summary: Nebius intends to fund its ambitious $40 billion AI infrastructure expansion through customer prepayments and loans. This aggressive financing model comes amidst reports of delays at other major data centers, prompting scrutiny.\n  Background: Demand for AI computing infrastructure is rapidly accelerating globally.\n  Background: Nebius is adopting a model reliant on upfront customer payments and loans.\n  Background: Delays at other data centers highlight potential risks in large-scale financing.\n  Possible knock-on effect: Could set a precedent for financing large-scale AI infrastructure projects.\n  Possible knock-on effect: May intensify competition in the AI cloud market for providers.\n- United Airlines Blocks AI Agents from Booking Flights, Citing Cybersecurity Risks (source: TechCrunch)\n  Summary: United Airlines announced it will not allow customers to use AI agents for booking flights or managing reservations. The airline stated its decision is based on cybersecurity concerns, highlighting the risks of new autonomous technologies.\n  Background: Autonomous AI agents introduce new operational and security challenges.\n  Background: Airlines handle sensitive customer data and critical operational processes.\n  Background: United's decision reflects caution about potential vulnerabilities.\n  Possible knock-on effect: May prompt other airlines or industries to implement similar AI agent restrictions.\n  Possible knock-on effect: Could accelerate development of more secure and verifiable AI agent protocols.\n- SoftBank\u2019s Billion-Dollar Loss May Temper AI\u2019s Natural Gas Ambitions (source: TechCrunch)\n  Summary: SoftBank incurred over a $3 billion loss from preordering natural gas turbines intended to power AI data centers. This significant financial setback could impact future investment strategies for energy infrastructure within the AI industry.\n  Background: Powering massive AI data centers requires significant energy sources.\n  Background: SoftBank's loss highlights financial risks in securing energy infrastructure.\n  Background: This incident reveals the high capital expenditure involved in AI power.\n  Possible knock-on effect: Could shift investment towards alternative energy sources for AI data centers.\n  Possible knock-on effect: May lead to a reassessment of energy procurement strategies across the AI industry.\n- Norwest Expands AI Investment with New $4 Billion Fund (source: TechCrunch)\n  Summary: Investment firm Norwest has launched its largest fund to date, totaling $4 billion, specifically to push deeper into the artificial intelligence sector. This significant capital infusion signals continued strong investor confidence in AI innovation.\n  Background: Venture capital firms see high potential in the rapidly growing AI sector.\n  Background: This new fund is Norwest's largest, indicating strong investor confidence.\n  Background: The capital will likely flow into diverse AI startups and innovations.\n  Possible knock-on effect: Will fuel growth and innovation within the AI startup ecosystem.\n  Possible knock-on effect: May intensify competition for talent and market share among funded AI companies.\n- Cyberattack on Fireworks AI Exposes Notion Customers\u2019 Chat Transcripts (source: TechCrunch)\n  Summary: Fireworks AI has experienced its second data breach in as many months, with a recent cyberattack allowing hackers to access Notion customers\u2019 chat transcripts. The incident raises significant concerns about data security within AI service providers.\n  Background: AI companies handling sensitive user data are prime targets for cyberattacks.\n  Background: This is Fireworks AI's second data breach in a short period.\n  Background: The breach compromised chat transcripts of Notion users, impacting a wider base.\n  Possible knock-on effect: Could erode customer trust in AI service providers and third-party integrations.\n  Possible knock-on effect: May prompt stricter security audits and compliance requirements for AI companies.\n\nCONSULTING STORIES:\n- Simpson Thacher Joins Law Firms Withholding Financial Data from Industry Rankings (source: Financial Times)\n  Summary: Simpson Thacher has become the latest major law firm to withdraw its financial data from influential industry rankings. This move follows similar decisions by firms like Kirkland & Ellis and Paul Weiss, signaling a growing trend in the legal sector.\n  Background: Several prominent law firms have recently opted out of influential industry rankings.\n  Background: This trend suggests a strategic move to control public perception of their finances.\n  Background: It reduces competitive transparency in a highly lucrative professional services sector.\n  Possible knock-on effect: May reduce transparency across the professional services industry, making comparisons harder.\n  Possible knock-on effect: Could shift how firms market their success and attract talent.\n- Crowded Legal-Tech Market Highlights 'Tool Fatigue' Among Buyers (source: Financial Times)\n  Summary: The expanding legal-tech market is experiencing 'tool fatigue' among buyers, as a proliferation of software products overwhelms law firms and clients. The challenge now lies in navigating the breadth of offerings and addressing specific business needs effectively.\n  Background: The legal technology sector has seen a proliferation of software products.\n  Background: 'Tool fatigue' indicates buyers are overwhelmed by the volume of solutions.\n  Background: Differentiation and clear value propositions are crucial for new entrants.\n  Possible knock-on effect: Could lead to market consolidation as buyers favor integrated platforms over niche tools.\n  Possible knock-on effect: May force legal tech startups to innovate on user experience and demonstrate clearer ROI.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- Israeli Strike on Gaza Hospital Kills Six Palestinians, Health Ministry Says (source: BBC News)\n  Summary: Gaza's health ministry reports an Israeli strike hit Nasser hospital, the largest in southern Gaza, killing six Palestinians, including a surgeon, and wounding 28 others. Witnesses stated a missile struck surgical and intensive care units.\n  Background: The Gaza Health Ministry reported a strike on Nasser hospital in southern Gaza.\n  Background: Witnesses described a missile hitting surgical and intensive care units.\n  Background: The Israeli military has not yet commented on this specific incident.\n  Possible knock-on effect: Could escalate international condemnation and calls for de-escalation.\n  Possible knock-on effect: May further strain an already overwhelmed healthcare system in Gaza.\n- Two Men Convicted in UK of Spying for Iran, Targeting Journalists and Lawyer (source: BBC News)\n  Summary: Two men have been found guilty in a UK court of engaging in conduct likely to assist an Iranian intelligence service. The convictions relate to plans to target journalists and a lawyer in Britain.\n  Background: A UK court found two men guilty of assisting Iranian intelligence services.\n  Background: British authorities are concerned about foreign state interference and threats to dissidents.\n  Background: The conviction falls under Britain's National Security Act.\n  Possible knock-on effect: Likely to heighten tensions between the UK and Iran.\n  Possible knock-on effect: May prompt other nations to increase vigilance against foreign espionage.\n- Trump Says Gulf Allies Urged Pause in Iran Strikes (source: Al Jazeera)\n  Summary: President Trump stated at the White House that Gulf countries asked him to halt further attacks against Iran. This comes after recent US military actions targeting Iran.\n  Background: President Trump publicly acknowledged requests from Gulf allies.\n  Background: The US has conducted military actions against Iran recently.\n  Background: Gulf nations have complex security interests in the region.\n  Possible knock-on effect: Could indicate a potential de-escalation of direct US-Iran military confrontation.\n  Possible knock-on effect: May signal increased diplomatic influence of Gulf states in regional conflict management.\n- Yemen\u2019s Houthis Renew Strikes on Saudi Arabia as UNSC Extends Sanctions (source: Al Jazeera)\n  Summary: Yemen's Houthi rebels have renewed strikes on Saudi Arabia, with a Saudi-led coalition intercepting suspected drones targeting oil and military infrastructure. Simultaneously, the UN Security Council extended sanctions against the Houthi group.\n  Background: The Houthi group claimed renewed drone attacks on Saudi targets.\n  Background: A Saudi-led coalition reported intercepting suspected Houthi drones.\n  Background: The UN Security Council extended sanctions, indicating continued international pressure.\n  Possible knock-on effect: Likely to prolong the conflict in Yemen and regional instability.\n  Possible knock-on effect: May lead to further disruptions in global oil supply chains and energy prices.\n- Palestinian Baby Dies from Cold in Gaza Amid Israeli Restrictions on Aid (source: Al Jazeera)\n  Summary: Al Jazeera reports a Palestinian baby died from hypothermia in a tent in southern Gaza, according to the father. Aid agencies have warned about severe shortages of humanitarian supplies due to Israeli restrictions.\n  Background: Al Jazeera reported a baby's death from cold in a tent in southern Gaza.\n  Background: Aid agencies warn about severe shortages of humanitarian supplies, including fuel.\n  Background: Winter conditions are exacerbating the humanitarian crisis in Gaza.\n  Possible knock-on effect: Could intensify international pressure for increased humanitarian aid access to Gaza.\n  Possible knock-on effect: May highlight the dire humanitarian situation and impact on vulnerable populations.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
