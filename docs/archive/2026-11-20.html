@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Friday, November 20, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Friday, November 20, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">8 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your essential AI and Consulting briefing for Friday.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/1035384/anthropic-ipo-trading-nasdaq">Anthropic Goes Public, Valued at $1.5 Trillion, Sparking Debate on AI&#x27;s Future</a></h3>
+  <p class="story-summary">Anthropic made a record-breaking debut on the Nasdaq, valuing the frontier AI lab at $1.5 trillion and raising over $80 billion in new capital. The IPO has ignited discussions about the company&#x27;s commitment to &#x27;safe AI&#x27; and the sustainability of circular financing models, given its significant compute commitments.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Anthropic was founded as a public benefit corporation, emphasizing AI safety.</li>
+<li>The AI industry requires immense capital for compute infrastructure and research.</li>
+<li>Major tech firms like Amazon and Google are also key infrastructure partners for Anthropic.</li>
+<li>The IPO is seen as a test case for future AI lab public offerings and market appetite.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could set a precedent for valuations of other frontier AI companies.</li>
+<li>May increase scrutiny on AI companies&#x27; safety claims versus commercial pressures.</li>
+<li>Likely to fuel further investment in AI infrastructure, benefiting cloud providers.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/19/nvidia-ceo-jensen-huangs-affair-with-alleged-chinese-spy-a-timeline/">Nvidia CEO Jensen Huang Resigns Amid Scandal with National Security Implications</a></h3>
+  <p class="story-summary">Jensen Huang has stepped down as CEO of Nvidia following an affair with an alleged Chinese spy, a development with potential ramifications for US national security and the global AI infrastructure race. Nvidia&#x27;s stock has dropped by nearly 40% since October 6th.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Nvidia is a dominant player in AI chip manufacturing, crucial for AI development.</li>
+<li>The US and China are engaged in a strategic competition over AI leadership.</li>
+<li>Allegations of espionage link personal conduct to geopolitical concerns.</li>
+<li>The company&#x27;s stock has been highly volatile, reflecting market uncertainty.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could trigger leadership shifts and strategic reviews at Nvidia.</li>
+<li>May prompt increased scrutiny on tech executives&#x27; ties to foreign entities.</li>
+<li>Likely to intensify US-China tensions over technology and espionage.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/tech/1037902/google-gemini-macos-ai-computer-use">Google&#x27;s Gemini Extends Mac Control; Apple Develops Its Own AI Agent</a></h3>
+  <p class="story-summary">Google has updated Gemini to control Mac functions, organizing files and automating workflows, while Apple is actively hiring to build its own competitive AI agent for macOS. This signals an accelerating race to embed AI deeply into operating systems and user interactions.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Major tech companies are vying to integrate advanced AI directly into user devices.</li>
+<li>AI agents promise to automate complex, multi-step tasks across applications.</li>
+<li>Controlling a user&#x27;s operating system offers significant competitive advantage.</li>
+<li>User adoption will depend on ease of use, reliability, and trust.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could transform how users interact with their computers and software.</li>
+<li>May intensify competition among AI providers for platform dominance.</li>
+<li>Likely to raise new questions about data privacy and system security.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/19/metas-ai-agent-muse-is-mixing-up-conversations-and-exposing-private-data-report-says/">Meta&#x27;s AI Agent Muse Reportedly Mixing Conversations and Exposing Private Data</a></h3>
+  <p class="story-summary">Meta&#x27;s AI agent, Muse, is reportedly mixing up user conversations and potentially exposing private data, with employees observing incorrect surfacing of personal information. This raises significant privacy and security concerns for AI agent deployment.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI agents require access to extensive personal data to perform tasks effectively.</li>
+<li>Maintaining strict data isolation and privacy is technically challenging.</li>
+<li>Early deployment of complex AI systems often uncovers unforeseen issues.</li>
+<li>User trust is critical for the widespread adoption of ambient AI.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to increased regulatory scrutiny on AI data handling practices.</li>
+<li>May erode user trust in AI agents and related wearable technologies.</li>
+<li>Likely to push developers to prioritize robust privacy safeguards in AI design.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/19/these-tech-outages-are-giving-y2k-ai-agent-style/">Cybersecurity Experts Link Recent Tech Outages to AI Agent-Style Attacks</a></h3>
+  <p class="story-summary">Cybersecurity experts are suggesting that recent widespread outages in airline booking systems, banking platforms, and productivity tools may be linked to a deeper, underlying issue reminiscent of &quot;AI agent style&quot; attacks. This highlights emerging threats to critical infrastructure.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Increased reliance on complex, interconnected AI systems for critical services.</li>
+<li>AI agents can operate autonomously, potentially amplifying attack vectors.</li>
+<li>Cybersecurity frameworks are still adapting to novel AI-driven threats.</li>
+<li>Infrastructure stability is paramount for public trust and economic function.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could prompt significant investments in AI-specific cybersecurity defenses.</li>
+<li>May lead to new regulations for AI systems in critical infrastructure.</li>
+<li>Likely to increase demand for skilled cybersecurity professionals.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/1037126/canva-ai-features-off-button">Canva Introduces an &#x27;Off&#x27; Button for Generative AI Features</a></h3>
+  <p class="story-summary">Canva has added a new feature allowing users to disable its generative AI capabilities, including Magic Expand and image generation. This gives users more control over AI integration within the popular design platform.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Users are increasingly demanding control over AI features and their data.</li>
+<li>Concerns exist about AI&#x27;s impact on creative work, data usage, and bias.</li>
+<li>Companies are responding to user feedback and ethical considerations.</li>
+<li>This move addresses user agency in the age of pervasive AI.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could become a new standard for AI integration in consumer software.</li>
+<li>May increase user adoption for those wary of always-on AI.</li>
+<li>Likely to influence other platforms to offer similar user controls.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/tech/1038087/meta-muse-charm-ai-price">Meta&#x27;s Muse Charm AI Wearable Reportedly Priced at $300</a></h3>
+  <p class="story-summary">Meta&#x27;s upcoming Muse Charm, a compact AI wearable designed to interface with its Muse AI agent, is rumored to be priced at $300. This device aims to provide a dedicated, portable interface for AI interaction.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Meta is investing heavily in AI and hardware to expand its ecosystem.</li>
+<li>Wearable AI devices represent a new frontier for ambient computing.</li>
+<li>Pricing strategies are crucial for market entry and mainstream adoption.</li>
+<li>The device integrates with Meta&#x27;s broader AI agent strategy.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could accelerate the adoption of dedicated AI wearable devices.</li>
+<li>May intensify competition in the nascent AI hardware market.</li>
+<li>Likely to open new avenues for AI-powered, on-the-go services.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/4e712188-9dfc-4e2a-b997-3dacde95bf08?syn-25a6b1a6=1">Law Firms That Served Trump Administration Face New Congressional Scrutiny</a></h3>
+  <p class="story-summary">Law firms that provided services to the Trump administration are now bracing for intense scrutiny from the new Congress, with Democrats pledging investigations into what they term &quot;official coercion&quot; following reports of $11.8 million in free services.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Democrats control Congress and are reviewing past administration dealings.</li>
+<li>Concerns exist about the independence of legal counsel provided to the executive.</li>
+<li>Law firms must balance client representation with ethical guidelines.</li>
+<li>This probe targets potential misuse of power and ethical breaches.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to new ethics guidelines or regulations for legal services to government.</li>
+<li>May impact law firms&#x27; willingness to engage in politically sensitive work.</li>
+<li>Likely to result in internal reviews and enhanced compliance efforts within firms.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c55;--glow:#b91c1c;">M&amp;A</span><span class="source">Financial Times</span></div>
+  <h3 class="story-title"><a href="https://www.ft.com/content/d3f558d6-bbe3-4ba6-b831-8064579a6731?syn-25a6b1a6=1">Milbank Expands European Footprint with Acquisition of Weil&#x27;s Paris Office</a></h3>
+  <p class="story-summary">US law firm Milbank is significantly expanding its European presence by acquiring an 87-lawyer team from Weil&#x27;s Paris office, marking its first French office. This move reflects a broader trend of American law firms targeting growth in the European market.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>US law firms seek international expansion to serve global clients.</li>
+<li>Paris is a key legal market within Europe, especially for finance and M&amp;A.</li>
+<li>Talent acquisition through team transfers is a common growth strategy.</li>
+<li>Increased competition among global legal powerhouses in European markets.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could intensify competition for legal talent in major European cities.</li>
+<li>May lead to further consolidation or strategic partnerships in the legal sector.</li>
+<li>Likely to offer Milbank enhanced capabilities for cross-border transactions.</li></ul>
+</details>
+</div>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cw8r7510degno?at_medium=RSS&amp;at_campaign=rss">Israeli Military Conducts Ground Operation Beyond &#x27;Yellow Line&#x27; in Gaza</a></h3>
+  <p class="story-summary">The Israeli military completed a ground operation in central Gaza beyond the &#x27;Yellow Line&#x27; boundary, stating its purpose was to dismantle a &quot;terror tunnel.&quot; Hamas condemned the action, calling it a &quot;flagrant&quot; ceasefire violation.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>A fragile ceasefire has been in place since October last year.</li>
+<li>The &quot;Yellow Line&quot; refers to a buffer zone or de-facto boundary in Gaza.</li>
+<li>Israeli officials said operations target Hamas infrastructure.</li>
+<li>Hamas views Israeli incursions as violations of agreed-upon terms.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could escalate tensions and threaten the existing ceasefire agreement.</li>
+<li>May prompt retaliatory actions from Hamas or other militant groups.</li>
+<li>Likely to increase international pressure for de-escalation and adherence to terms.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/19/iran-war-live-houthis-escalate-attacks-on-saudi-capital?traffic_source=rss">Houthi Forces Reportedly Escalate Missile Attacks on Saudi Capital, Riyadh</a></h3>
+  <p class="story-summary">Al Jazeera reports Houthi missile fire has struck Riyadh&#x27;s financial center, signifying an escalation of attacks on the Saudi capital. This comes amid ongoing regional tensions described as leaving &#x27;lasting marks&#x27; on global energy.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Houthis are an Iran-backed rebel group in Yemen, opposing Saudi-led coalition.</li>
+<li>Riyadh has been a frequent target of Houthi missile and drone attacks.</li>
+<li>The broader &#x27;Iran war&#x27; refers to regional proxy conflicts involving Iran.</li>
+<li>Escalations in the Gulf region often impact global oil markets.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could further destabilize the region and potentially draw in other actors.</li>
+<li>May lead to increased global energy prices and supply chain disruptions.</li>
+<li>Likely to prompt a stronger response from Saudi Arabia and its allies.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/video/newsfeed/2026/11/19/aje-onl-nf_mosque-torched-in-israel-sparks-political-backlash-191126?traffic_source=rss">Mosque Torched in Palestinian Village in Israel, Sparks Political Backlash</a></h3>
+  <p class="story-summary">A mosque in al-Dahi, a Palestinian Arab village in northern Israel, was set on fire in a suspected arson attack. The incident has sparked a political backlash against Prime Minister Netanyahu within Israel.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Al-Dahi is a village within Israel, home to Palestinian Arab citizens.</li>
+<li>Arson attacks on religious sites can signify heightened communal tensions.</li>
+<li>Netanyahu&#x27;s government faces internal political challenges and divisions.</li>
+<li>Such incidents can exacerbate ethnic and religious friction within Israel.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could inflame inter-communal tensions within Israel.</li>
+<li>May increase political pressure on the Israeli government to address extremism.</li>
+<li>Likely to draw international attention to the status of Palestinian citizens in Israel.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/19/senate-republicans-in-us-reject-measure-to-limit-trumps-war-powers-in-iran?traffic_source=rss">US Senate Republicans Block Measure to Limit President Trump&#x27;s War Powers in Iran</a></h3>
+  <p class="story-summary">A resolution aimed at limiting President Trump&#x27;s war powers concerning Iran was defeated in the US Senate by a 51-48 vote. Three Republicans reportedly voted with Democrats in favor of the measure.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The US Constitution grants war-making powers to Congress, but presidents often act unilaterally.</li>
+<li>Concerns about executive overreach on military action, particularly towards Iran, are ongoing.</li>
+<li>The vote reflects ongoing partisan divisions over foreign policy and presidential authority.</li>
+<li>President Trump&#x27;s administration has had a contentious relationship with Iran.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could signal a continuation of broad executive authority regarding military actions in Iran.</li>
+<li>May embolden the President to act without explicit Congressional approval.</li>
+<li>Likely to fuel further debate on the separation of powers in foreign policy.</li></ul>
+</details>
+</div>
+
+<p class="closer">For a deeper dive, consider the implications of Jensen Huang&#x27;s resignation on Nvidia and the broader AI chip landscape.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">46</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">7</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">34</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#4338ca22;color:#4338ca;border:1px solid #4338ca55;--glow:#4338ca;">Hiring &amp; Leadership</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#4338ca;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c55;--glow:#b91c1c;">M&amp;A</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#b91c1c;--bar-pct:33%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-20.html">Friday, November 20, 2026</a></li>
+<li><a href="archive/2026-11-19.html">Thursday, November 19, 2026</a></li>
+<li><a href="archive/2026-11-18.html">Wednesday, November 18, 2026</a></li>
+<li><a href="archive/2026-11-17.html">Tuesday, November 17, 2026</a></li>
+<li><a href="archive/2026-11-16.html">Monday, November 16, 2026</a></li>
+<li><a href="archive/2026-11-15.html">Sunday, November 15, 2026</a></li>
+<li><a href="archive/2026-11-14.html">Saturday, November 14, 2026</a></li>
+<li><a href="archive/2026-11-13.html">Friday, November 13, 2026</a></li>
+<li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+<li><a href="archive/2026-11-06.html">Friday, November 06, 2026</a></li>
+<li><a href="archive/2026-11-05.html">Thursday, November 05, 2026</a></li>
+<li><a href="archive/2026-11-04.html">Wednesday, November 04, 2026</a></li>
+<li><a href="archive/2026-11-03.html">Tuesday, November 03, 2026</a></li>
+<li><a href="archive/2026-11-02.html">Monday, November 02, 2026</a></li>
+<li><a href="archive/2026-10-31.html">Saturday, October 31, 2026</a></li>
+<li><a href="archive/2026-10-30.html">Friday, October 30, 2026</a></li>
+<li><a href="archive/2026-10-29.html">Thursday, October 29, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Friday, November 20, 2026\n\nTOP STORY: Anthropic Goes Public, Valued at $1.5 Trillion, Sparking Debate on AI's Future (source: The Verge)\nSummary: Anthropic made a record-breaking debut on the Nasdaq, valuing the frontier AI lab at $1.5 trillion and raising over $80 billion in new capital. The IPO has ignited discussions about the company's commitment to 'safe AI' and the sustainability of circular financing models, given its significant compute commitments.\nBackground: Anthropic was founded as a public benefit corporation, emphasizing AI safety.\nBackground: The AI industry requires immense capital for compute infrastructure and research.\nBackground: Major tech firms like Amazon and Google are also key infrastructure partners for Anthropic.\nBackground: The IPO is seen as a test case for future AI lab public offerings and market appetite.\nPossible knock-on effect: Could set a precedent for valuations of other frontier AI companies.\nPossible knock-on effect: May increase scrutiny on AI companies' safety claims versus commercial pressures.\nPossible knock-on effect: Likely to fuel further investment in AI infrastructure, benefiting cloud providers.\n\nAI STORIES:\n- Nvidia CEO Jensen Huang Resigns Amid Scandal with National Security Implications (source: TechCrunch)\n  Summary: Jensen Huang has stepped down as CEO of Nvidia following an affair with an alleged Chinese spy, a development with potential ramifications for US national security and the global AI infrastructure race. Nvidia's stock has dropped by nearly 40% since October 6th.\n  Background: Nvidia is a dominant player in AI chip manufacturing, crucial for AI development.\n  Background: The US and China are engaged in a strategic competition over AI leadership.\n  Background: Allegations of espionage link personal conduct to geopolitical concerns.\n  Background: The company's stock has been highly volatile, reflecting market uncertainty.\n  Possible knock-on effect: Could trigger leadership shifts and strategic reviews at Nvidia.\n  Possible knock-on effect: May prompt increased scrutiny on tech executives' ties to foreign entities.\n  Possible knock-on effect: Likely to intensify US-China tensions over technology and espionage.\n- Google's Gemini Extends Mac Control; Apple Develops Its Own AI Agent (source: The Verge)\n  Summary: Google has updated Gemini to control Mac functions, organizing files and automating workflows, while Apple is actively hiring to build its own competitive AI agent for macOS. This signals an accelerating race to embed AI deeply into operating systems and user interactions.\n  Background: Major tech companies are vying to integrate advanced AI directly into user devices.\n  Background: AI agents promise to automate complex, multi-step tasks across applications.\n  Background: Controlling a user's operating system offers significant competitive advantage.\n  Background: User adoption will depend on ease of use, reliability, and trust.\n  Possible knock-on effect: Could transform how users interact with their computers and software.\n  Possible knock-on effect: May intensify competition among AI providers for platform dominance.\n  Possible knock-on effect: Likely to raise new questions about data privacy and system security.\n- Meta's AI Agent Muse Reportedly Mixing Conversations and Exposing Private Data (source: TechCrunch)\n  Summary: Meta's AI agent, Muse, is reportedly mixing up user conversations and potentially exposing private data, with employees observing incorrect surfacing of personal information. This raises significant privacy and security concerns for AI agent deployment.\n  Background: AI agents require access to extensive personal data to perform tasks effectively.\n  Background: Maintaining strict data isolation and privacy is technically challenging.\n  Background: Early deployment of complex AI systems often uncovers unforeseen issues.\n  Background: User trust is critical for the widespread adoption of ambient AI.\n  Possible knock-on effect: Could lead to increased regulatory scrutiny on AI data handling practices.\n  Possible knock-on effect: May erode user trust in AI agents and related wearable technologies.\n  Possible knock-on effect: Likely to push developers to prioritize robust privacy safeguards in AI design.\n- Cybersecurity Experts Link Recent Tech Outages to AI Agent-Style Attacks (source: TechCrunch)\n  Summary: Cybersecurity experts are suggesting that recent widespread outages in airline booking systems, banking platforms, and productivity tools may be linked to a deeper, underlying issue reminiscent of \"AI agent style\" attacks. This highlights emerging threats to critical infrastructure.\n  Background: Increased reliance on complex, interconnected AI systems for critical services.\n  Background: AI agents can operate autonomously, potentially amplifying attack vectors.\n  Background: Cybersecurity frameworks are still adapting to novel AI-driven threats.\n  Background: Infrastructure stability is paramount for public trust and economic function.\n  Possible knock-on effect: Could prompt significant investments in AI-specific cybersecurity defenses.\n  Possible knock-on effect: May lead to new regulations for AI systems in critical infrastructure.\n  Possible knock-on effect: Likely to increase demand for skilled cybersecurity professionals.\n- Canva Introduces an 'Off' Button for Generative AI Features (source: The Verge)\n  Summary: Canva has added a new feature allowing users to disable its generative AI capabilities, including Magic Expand and image generation. This gives users more control over AI integration within the popular design platform.\n  Background: Users are increasingly demanding control over AI features and their data.\n  Background: Concerns exist about AI's impact on creative work, data usage, and bias.\n  Background: Companies are responding to user feedback and ethical considerations.\n  Background: This move addresses user agency in the age of pervasive AI.\n  Possible knock-on effect: Could become a new standard for AI integration in consumer software.\n  Possible knock-on effect: May increase user adoption for those wary of always-on AI.\n  Possible knock-on effect: Likely to influence other platforms to offer similar user controls.\n- Meta's Muse Charm AI Wearable Reportedly Priced at $300 (source: The Verge)\n  Summary: Meta's upcoming Muse Charm, a compact AI wearable designed to interface with its Muse AI agent, is rumored to be priced at $300. This device aims to provide a dedicated, portable interface for AI interaction.\n  Background: Meta is investing heavily in AI and hardware to expand its ecosystem.\n  Background: Wearable AI devices represent a new frontier for ambient computing.\n  Background: Pricing strategies are crucial for market entry and mainstream adoption.\n  Background: The device integrates with Meta's broader AI agent strategy.\n  Possible knock-on effect: Could accelerate the adoption of dedicated AI wearable devices.\n  Possible knock-on effect: May intensify competition in the nascent AI hardware market.\n  Possible knock-on effect: Likely to open new avenues for AI-powered, on-the-go services.\n\nCONSULTING STORIES:\n- Law Firms That Served Trump Administration Face New Congressional Scrutiny (source: Financial Times)\n  Summary: Law firms that provided services to the Trump administration are now bracing for intense scrutiny from the new Congress, with Democrats pledging investigations into what they term \"official coercion\" following reports of $11.8 million in free services.\n  Background: Democrats control Congress and are reviewing past administration dealings.\n  Background: Concerns exist about the independence of legal counsel provided to the executive.\n  Background: Law firms must balance client representation with ethical guidelines.\n  Background: This probe targets potential misuse of power and ethical breaches.\n  Possible knock-on effect: Could lead to new ethics guidelines or regulations for legal services to government.\n  Possible knock-on effect: May impact law firms' willingness to engage in politically sensitive work.\n  Possible knock-on effect: Likely to result in internal reviews and enhanced compliance efforts within firms.\n- Milbank Expands European Footprint with Acquisition of Weil's Paris Office (source: Financial Times)\n  Summary: US law firm Milbank is significantly expanding its European presence by acquiring an 87-lawyer team from Weil's Paris office, marking its first French office. This move reflects a broader trend of American law firms targeting growth in the European market.\n  Background: US law firms seek international expansion to serve global clients.\n  Background: Paris is a key legal market within Europe, especially for finance and M&A.\n  Background: Talent acquisition through team transfers is a common growth strategy.\n  Background: Increased competition among global legal powerhouses in European markets.\n  Possible knock-on effect: Could intensify competition for legal talent in major European cities.\n  Possible knock-on effect: May lead to further consolidation or strategic partnerships in the legal sector.\n  Possible knock-on effect: Likely to offer Milbank enhanced capabilities for cross-border transactions.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- Israeli Military Conducts Ground Operation Beyond 'Yellow Line' in Gaza (source: BBC News)\n  Summary: The Israeli military completed a ground operation in central Gaza beyond the 'Yellow Line' boundary, stating its purpose was to dismantle a \"terror tunnel.\" Hamas condemned the action, calling it a \"flagrant\" ceasefire violation.\n  Background: A fragile ceasefire has been in place since October last year.\n  Background: The \"Yellow Line\" refers to a buffer zone or de-facto boundary in Gaza.\n  Background: Israeli officials said operations target Hamas infrastructure.\n  Background: Hamas views Israeli incursions as violations of agreed-upon terms.\n  Possible knock-on effect: Could escalate tensions and threaten the existing ceasefire agreement.\n  Possible knock-on effect: May prompt retaliatory actions from Hamas or other militant groups.\n  Possible knock-on effect: Likely to increase international pressure for de-escalation and adherence to terms.\n- Houthi Forces Reportedly Escalate Missile Attacks on Saudi Capital, Riyadh (source: Al Jazeera)\n  Summary: Al Jazeera reports Houthi missile fire has struck Riyadh's financial center, signifying an escalation of attacks on the Saudi capital. This comes amid ongoing regional tensions described as leaving 'lasting marks' on global energy.\n  Background: The Houthis are an Iran-backed rebel group in Yemen, opposing Saudi-led coalition.\n  Background: Riyadh has been a frequent target of Houthi missile and drone attacks.\n  Background: The broader 'Iran war' refers to regional proxy conflicts involving Iran.\n  Background: Escalations in the Gulf region often impact global oil markets.\n  Possible knock-on effect: Could further destabilize the region and potentially draw in other actors.\n  Possible knock-on effect: May lead to increased global energy prices and supply chain disruptions.\n  Possible knock-on effect: Likely to prompt a stronger response from Saudi Arabia and its allies.\n- Mosque Torched in Palestinian Village in Israel, Sparks Political Backlash (source: Al Jazeera)\n  Summary: A mosque in al-Dahi, a Palestinian Arab village in northern Israel, was set on fire in a suspected arson attack. The incident has sparked a political backlash against Prime Minister Netanyahu within Israel.\n  Background: Al-Dahi is a village within Israel, home to Palestinian Arab citizens.\n  Background: Arson attacks on religious sites can signify heightened communal tensions.\n  Background: Netanyahu's government faces internal political challenges and divisions.\n  Background: Such incidents can exacerbate ethnic and religious friction within Israel.\n  Possible knock-on effect: Could inflame inter-communal tensions within Israel.\n  Possible knock-on effect: May increase political pressure on the Israeli government to address extremism.\n  Possible knock-on effect: Likely to draw international attention to the status of Palestinian citizens in Israel.\n- US Senate Republicans Block Measure to Limit President Trump's War Powers in Iran (source: Al Jazeera)\n  Summary: A resolution aimed at limiting President Trump's war powers concerning Iran was defeated in the US Senate by a 51-48 vote. Three Republicans reportedly voted with Democrats in favor of the measure.\n  Background: The US Constitution grants war-making powers to Congress, but presidents often act unilaterally.\n  Background: Concerns about executive overreach on military action, particularly towards Iran, are ongoing.\n  Background: The vote reflects ongoing partisan divisions over foreign policy and presidential authority.\n  Background: President Trump's administration has had a contentious relationship with Iran.\n  Possible knock-on effect: Could signal a continuation of broad executive authority regarding military actions in Iran.\n  Possible knock-on effect: May embolden the President to act without explicit Congressional approval.\n  Possible knock-on effect: Likely to fuel further debate on the separation of powers in foreign policy.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
