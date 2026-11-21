@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Saturday, November 21, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Saturday, November 21, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">7 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your Saturday update on AI, consulting, and the evolving geopolitical landscape.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/1010051/anthropic-riemann-hypothesis-millennium-prize-problem">Anthropic Mathematician Claims to Solve Riemann Hypothesis with Claude&#x27;s Aid</a></h3>
+  <p class="story-summary">An Anthropic mathematician, Levent Alpöge, claims to have proven the 167-year-old Riemann hypothesis, one of mathematics&#x27; most challenging Millennium Prize problems, using their AI model Claude. If verified, this represents a monumental achievement for AI in complex scientific reasoning, potentially unlocking new mathematical insights and dramatically showcasing advanced AI capabilities.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Riemann hypothesis is a 167-year-old unsolved problem in mathematics.</li>
+<li>It is one of seven Millennium Prize Problems, carrying a $1 million award.</li>
+<li>Solving it would have profound implications for number theory and cryptography.</li>
+<li>AI models are increasingly demonstrating advanced reasoning and problem-solving skills.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could boost confidence in AI for fundamental scientific research.</li>
+<li>May intensify investment and competition in AI mathematical capabilities.</li>
+<li>Could redefine the boundary between human and AI intellectual achievement.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/podcast/the-fallout-from-nvidias-jensen-huang-scandal-continues/">Nvidia Faces Fallout from CEO Scandal Amidst Strong Earnings and China Export Ban</a></h3>
+  <p class="story-summary">Nvidia reported healthy growth this week, but continues to grapple with the aftermath of CEO Jensen Huang&#x27;s ouster, announcing a halt in H200 chip sales to China. Concurrently, California authorities are investigating if the company misled investors regarding past chip exports to China.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Nvidia is a dominant player in the AI chip market.</li>
+<li>Jensen Huang&#x27;s unexpected departure created leadership uncertainty.</li>
+<li>US government aims to restrict advanced AI chip exports to China.</li>
+<li>California is scrutinizing corporate governance and disclosure practices.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could impact Nvidia&#x27;s market share in key regions.</li>
+<li>May lead to increased regulatory scrutiny for chipmakers.</li>
+<li>Likely to accelerate China&#x27;s domestic chip development efforts.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/policy/1038892/trump-foreign-data-centers-tax">Trump Threatens &#x27;Tremendous Tax&#x27; on US Companies Building AI Data Centers Abroad</a></h3>
+  <p class="story-summary">President Donald Trump announced plans to impose significant taxes on US tech companies that build AI data centers outside the country, despite domestic restrictions on new data center applications. This aligns with his &#x27;America First&#x27; policy, aiming to incentivize domestic infrastructure development.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>President Trump advocates for domestic job growth and economic nationalism.</li>
+<li>AI data centers require substantial investment and infrastructure.</li>
+<li>Some US states and cities are imposing restrictions on new data center builds.</li>
+<li>Global competition for AI infrastructure investment is intensifying.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could increase costs for tech companies expanding internationally.</li>
+<li>May incentivize more domestic AI infrastructure investment in the US.</li>
+<li>Likely to prompt international partners to reassess US tech policies.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">Ars Technica</span></div>
+  <h3 class="story-title"><a href="https://arstechnica.com/ai/2026/11/meta-reconsiders-2030-net-zero-goal-amid-record-emissions-from-ai-data-centers/">Meta Reconsiders 2030 Net-Zero Goal Amid Record AI Data Center Emissions</a></h3>
+  <p class="story-summary">Meta is reportedly &#x27;re-evaluating&#x27; its 2030 net-zero sustainability targets due to the significant and growing energy demands of its AI data centers. This highlights the increasing environmental footprint of large-scale AI infrastructure.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI data centers consume vast amounts of electricity for processing and cooling.</li>
+<li>Meta, like many tech giants, had set ambitious climate sustainability goals.</li>
+<li>Public and investor pressure for corporate environmental responsibility is high.</li>
+<li>The rapid expansion of AI is driving unprecedented hardware and energy needs.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could set a precedent for other AI companies to adjust climate goals.</li>
+<li>May increase scrutiny on AI&#x27;s environmental impact.</li>
+<li>Likely to spur innovation in energy-efficient AI hardware and operations.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/ai-artificial-intelligence/1038390/signal-blocking-ai-agent-screenshots-mobile-app">Signal Blocks AI Agents from Reading User Screens to Protect Privacy</a></h3>
+  <p class="story-summary">Signal is implementing new restrictions on Android and iOS to prevent AI agents from taking screenshots and accessing user messages and data. This proactive measure aims to safeguard user privacy against operating system-level AI capabilities that analyze on-screen information.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Agentic AI features are becoming integrated into mobile operating systems.</li>
+<li>These AI agents can access and interpret on-screen content.</li>
+<li>Signal prioritizes end-to-end encryption and user data privacy.</li>
+<li>Users are increasingly concerned about pervasive digital surveillance.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could challenge the design of OS-level AI features.</li>
+<li>May influence other privacy-focused apps to adopt similar protections.</li>
+<li>Likely to raise public awareness about AI&#x27;s data access capabilities.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">Ars Technica</span></div>
+  <h3 class="story-title"><a href="https://arstechnica.com/security/2026/11/a-leaky-ai-supply-chain-is-exposing-secret-user-data-at-an-alarming-rate/">Researcher Uncovers Widespread Privacy Disaster in AI Supply Chain via &#x27;Canaries&#x27;</a></h3>
+  <p class="story-summary">A researcher demonstrated a significant privacy vulnerability in the AI supply chain by planting two million unique, trackable secrets, or &#x27;canaries,&#x27; into training data. The subsequent surfacing of these prompts confirmed that user data is not remaining private within AI systems.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI models are trained on vast datasets, often sourced from the internet.</li>
+<li>Data privacy and security in AI training pipelines are ongoing concerns.</li>
+<li>The &#x27;canary&#x27; method is a known technique for detecting data exfiltration.</li>
+<li>Regulatory bodies are increasing scrutiny on AI data handling practices.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could prompt stronger data governance and security standards in AI.</li>
+<li>May lead to new regulations for AI model training data privacy.</li>
+<li>Likely to impact user trust in AI services handling personal data.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/20/daniel-ek-backs-ai-researchers-fusion-power-startup-heres-what-theyre-building/">Spotify Founder Daniel Ek Backs AI Researcher&#x27;s Fusion Power Startup, Europa Fusion</a></h3>
+  <p class="story-summary">Spotify founder Daniel Ek is investing in Europa Fusion, a new startup focused on fusion power, co-founded by an AI researcher. The investment signals a growing trend of tech leaders backing ambitious projects at the intersection of AI and climate tech, aiming for scalable clean energy solutions.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Fusion power promises clean, abundant energy but faces immense technical hurdles.</li>
+<li>AI is being applied to optimize complex scientific research, including fusion.</li>
+<li>Tech entrepreneurs are increasingly investing in deep tech and climate solutions.</li>
+<li>The global push for decarbonization requires innovative energy sources.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could attract more venture capital to AI-enhanced fusion research.</li>
+<li>May accelerate progress in achieving viable fusion energy.</li>
+<li>Likely to inspire other AI experts to enter hard science problems.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<p>No notable consulting stories in the last 24 hours.</p>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/21/iran-war-live-saudi-led-coalition-repels-houthi-missiles?traffic_source=rss">Saudi-Led Coalition Intercepts Houthi Missiles Targeting Riyadh</a></h3>
+  <p class="story-summary">The Saudi-led coalition reported intercepting three Houthi missiles targeting the capital, Riyadh, issuing emergency alerts across the city. This marks a continued escalation of cross-border attacks in the Yemen conflict.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Yemen has been embroiled in civil war since 2014, involving the Houthis.</li>
+<li>Saudi Arabia leads a coalition backing the Yemeni government.</li>
+<li>Houthis frequently launch drone and missile attacks into Saudi Arabia.</li>
+<li>Regional tensions remain high, with proxy conflicts ongoing.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could intensify regional air defense initiatives.</li>
+<li>May disrupt civilian life and economic activity in targeted areas.</li>
+<li>Likely to hinder efforts for a negotiated peace settlement in Yemen.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza?traffic_source=rss">Israeli Drone Attacks Reported to Kill Seven Palestinians in Central Gaza</a></h3>
+  <p class="story-summary">Al Jazeera reports that Israeli drone attacks in central Gaza killed seven Palestinians, causing &#x27;fear and panic&#x27; despite a reported ceasefire. Israeli authorities have not yet commented on the specific incident or the ceasefire violation claims.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Gaza remains a flashpoint for conflict between Israel and Palestinian groups.</li>
+<li>Drone strikes are a common tactic used by Israel in the Strip.</li>
+<li>Reports of ceasefires are often fragile and subject to violations.</li>
+<li>Civilian casualties fuel humanitarian concerns and regional instability.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could escalate tensions and lead to retaliatory actions.</li>
+<li>May undermine fragile diplomatic efforts for de-escalation.</li>
+<li>Likely to exacerbate humanitarian conditions in Gaza.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/20/palestinian-anti-hamas-groups-accused-of-role-in-israel-gaza-operation?traffic_source=rss">Palestinian Anti-Hamas Groups Accused of Role in Israeli Gaza Operation</a></h3>
+  <p class="story-summary">Al Jazeera reports that Israeli-backed Palestinian militias are accused of expanding their operations and playing a role in Israel&#x27;s Gaza campaign, raising concerns about their involvement in future security arrangements. The specific extent and nature of their role remain contested.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Israel seeks to dismantle Hamas and stabilize Gaza post-conflict.</li>
+<li>Hamas is the dominant political and military force in Gaza.</li>
+<li>Various Palestinian factions exist, with differing political agendas.</li>
+<li>The question of Gaza&#x27;s post-conflict governance is highly contentious.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could complicate efforts to establish a unified Palestinian leadership.</li>
+<li>May fuel internal Palestinian divisions and proxy conflicts.</li>
+<li>Likely to impact perceptions of Israel&#x27;s long-term strategy in Gaza.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cx7v2d8q879eo?at_medium=RSS&amp;at_campaign=rss">Life Inside Yemeni City of Taiz Besieged by Houthis</a></h3>
+  <p class="story-summary">The BBC reports on the dire humanitarian situation in Taiz, a key Yemeni city besieged by Houthis for weeks, with residents cut off from outside access. This highlights the severe impact of the protracted conflict on civilian populations.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Taiz is a strategic city in Yemen, subject to a long-standing Houthi siege.</li>
+<li>The civil war has caused widespread famine and humanitarian crisis.</li>
+<li>Houthis control significant territory, including Sanaa, the capital.</li>
+<li>Access to essential supplies for civilians is severely restricted.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could worsen the humanitarian crisis for trapped civilians.</li>
+<li>May increase international pressure for humanitarian aid access.</li>
+<li>Likely to deepen the long-term instability of Yemen.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/video/newsfeed/2026/11/20/rahul-gandhi-backs-strong-india-israel-ties-despite-gaza-war?traffic_source=rss">India&#x27;s Opposition Leader Rahul Gandhi Backs Strong India-Israel Ties Despite Gaza War</a></h3>
+  <p class="story-summary">India&#x27;s opposition leader, Rahul Gandhi, affirmed New Delhi&#x27;s commitment to maintaining strong ties with Israel, even amidst the ongoing conflict in Gaza. His statement underscores India&#x27;s balanced foreign policy approach in the region.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>India has historical ties with both Israel and Palestine.</li>
+<li>The current conflict in Gaza has led to international condemnation of Israel.</li>
+<li>India maintains significant defense and economic partnerships with Israel.</li>
+<li>Gandhi&#x27;s statement reflects India&#x27;s non-aligned foreign policy tradition.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could reinforce India&#x27;s strategic partnership with Israel.</li>
+<li>May draw criticism from pro-Palestinian segments of the international community.</li>
+<li>Likely to be interpreted as continuity in India&#x27;s foreign policy stance.</li></ul>
+</details>
+</div>
+
+<p class="closer">For a truly mind-bending read, dive into the claims of Anthropic&#x27;s Claude potentially solving the Riemann hypothesis.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">46</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">7</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">34</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#7a3fd6;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#a1620722;color:#a16207;border:1px solid #a1620755;--glow:#a16207;">Earnings</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#a16207;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#78350f;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#1d4ed8;--bar-pct:33%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-21.html">Saturday, November 21, 2026</a></li>
+<li><a href="archive/2026-11-20.html">Friday, November 20, 2026</a></li>
+<li><a href="archive/2026-11-19.html">Thursday, November 19, 2026</a></li>
+<li><a href="archive/2026-11-18.html">Wednesday, November 18, 2026</a></li>
+<li><a href="archive/2026-11-17.html">Tuesday, November 17, 2026</a></li>
+<li><a href="archive/2026-11-16.html">Monday, November 16, 2026</a></li>
+<li><a href="archive/2026-11-15.html">Sunday, November 15, 2026</a></li>
+<li><a href="archive/2026-11-14.html">Saturday, November 14, 2026</a></li>
+<li><a href="archive/2026-11-13.html">Friday, November 13, 2026</a></li>
+<li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+<li><a href="archive/2026-11-06.html">Friday, November 06, 2026</a></li>
+<li><a href="archive/2026-11-05.html">Thursday, November 05, 2026</a></li>
+<li><a href="archive/2026-11-04.html">Wednesday, November 04, 2026</a></li>
+<li><a href="archive/2026-11-03.html">Tuesday, November 03, 2026</a></li>
+<li><a href="archive/2026-11-02.html">Monday, November 02, 2026</a></li>
+<li><a href="archive/2026-10-31.html">Saturday, October 31, 2026</a></li>
+<li><a href="archive/2026-10-30.html">Friday, October 30, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Saturday, November 21, 2026\n\nTOP STORY: Anthropic Mathematician Claims to Solve Riemann Hypothesis with Claude's Aid (source: The Verge)\nSummary: An Anthropic mathematician, Levent Alp\u00f6ge, claims to have proven the 167-year-old Riemann hypothesis, one of mathematics' most challenging Millennium Prize problems, using their AI model Claude. If verified, this represents a monumental achievement for AI in complex scientific reasoning, potentially unlocking new mathematical insights and dramatically showcasing advanced AI capabilities.\nBackground: Riemann hypothesis is a 167-year-old unsolved problem in mathematics.\nBackground: It is one of seven Millennium Prize Problems, carrying a $1 million award.\nBackground: Solving it would have profound implications for number theory and cryptography.\nBackground: AI models are increasingly demonstrating advanced reasoning and problem-solving skills.\nPossible knock-on effect: Could boost confidence in AI for fundamental scientific research.\nPossible knock-on effect: May intensify investment and competition in AI mathematical capabilities.\nPossible knock-on effect: Could redefine the boundary between human and AI intellectual achievement.\n\nAI STORIES:\n- Nvidia Faces Fallout from CEO Scandal Amidst Strong Earnings and China Export Ban (source: TechCrunch)\n  Summary: Nvidia reported healthy growth this week, but continues to grapple with the aftermath of CEO Jensen Huang's ouster, announcing a halt in H200 chip sales to China. Concurrently, California authorities are investigating if the company misled investors regarding past chip exports to China.\n  Background: Nvidia is a dominant player in the AI chip market.\n  Background: Jensen Huang's unexpected departure created leadership uncertainty.\n  Background: US government aims to restrict advanced AI chip exports to China.\n  Background: California is scrutinizing corporate governance and disclosure practices.\n  Possible knock-on effect: Could impact Nvidia's market share in key regions.\n  Possible knock-on effect: May lead to increased regulatory scrutiny for chipmakers.\n  Possible knock-on effect: Likely to accelerate China's domestic chip development efforts.\n- Trump Threatens 'Tremendous Tax' on US Companies Building AI Data Centers Abroad (source: The Verge)\n  Summary: President Donald Trump announced plans to impose significant taxes on US tech companies that build AI data centers outside the country, despite domestic restrictions on new data center applications. This aligns with his 'America First' policy, aiming to incentivize domestic infrastructure development.\n  Background: President Trump advocates for domestic job growth and economic nationalism.\n  Background: AI data centers require substantial investment and infrastructure.\n  Background: Some US states and cities are imposing restrictions on new data center builds.\n  Background: Global competition for AI infrastructure investment is intensifying.\n  Possible knock-on effect: Could increase costs for tech companies expanding internationally.\n  Possible knock-on effect: May incentivize more domestic AI infrastructure investment in the US.\n  Possible knock-on effect: Likely to prompt international partners to reassess US tech policies.\n- Meta Reconsiders 2030 Net-Zero Goal Amid Record AI Data Center Emissions (source: Ars Technica)\n  Summary: Meta is reportedly 're-evaluating' its 2030 net-zero sustainability targets due to the significant and growing energy demands of its AI data centers. This highlights the increasing environmental footprint of large-scale AI infrastructure.\n  Background: AI data centers consume vast amounts of electricity for processing and cooling.\n  Background: Meta, like many tech giants, had set ambitious climate sustainability goals.\n  Background: Public and investor pressure for corporate environmental responsibility is high.\n  Background: The rapid expansion of AI is driving unprecedented hardware and energy needs.\n  Possible knock-on effect: Could set a precedent for other AI companies to adjust climate goals.\n  Possible knock-on effect: May increase scrutiny on AI's environmental impact.\n  Possible knock-on effect: Likely to spur innovation in energy-efficient AI hardware and operations.\n- Signal Blocks AI Agents from Reading User Screens to Protect Privacy (source: The Verge)\n  Summary: Signal is implementing new restrictions on Android and iOS to prevent AI agents from taking screenshots and accessing user messages and data. This proactive measure aims to safeguard user privacy against operating system-level AI capabilities that analyze on-screen information.\n  Background: Agentic AI features are becoming integrated into mobile operating systems.\n  Background: These AI agents can access and interpret on-screen content.\n  Background: Signal prioritizes end-to-end encryption and user data privacy.\n  Background: Users are increasingly concerned about pervasive digital surveillance.\n  Possible knock-on effect: Could challenge the design of OS-level AI features.\n  Possible knock-on effect: May influence other privacy-focused apps to adopt similar protections.\n  Possible knock-on effect: Likely to raise public awareness about AI's data access capabilities.\n- Researcher Uncovers Widespread Privacy Disaster in AI Supply Chain via 'Canaries' (source: Ars Technica)\n  Summary: A researcher demonstrated a significant privacy vulnerability in the AI supply chain by planting two million unique, trackable secrets, or 'canaries,' into training data. The subsequent surfacing of these prompts confirmed that user data is not remaining private within AI systems.\n  Background: AI models are trained on vast datasets, often sourced from the internet.\n  Background: Data privacy and security in AI training pipelines are ongoing concerns.\n  Background: The 'canary' method is a known technique for detecting data exfiltration.\n  Background: Regulatory bodies are increasing scrutiny on AI data handling practices.\n  Possible knock-on effect: Could prompt stronger data governance and security standards in AI.\n  Possible knock-on effect: May lead to new regulations for AI model training data privacy.\n  Possible knock-on effect: Likely to impact user trust in AI services handling personal data.\n- Spotify Founder Daniel Ek Backs AI Researcher's Fusion Power Startup, Europa Fusion (source: TechCrunch)\n  Summary: Spotify founder Daniel Ek is investing in Europa Fusion, a new startup focused on fusion power, co-founded by an AI researcher. The investment signals a growing trend of tech leaders backing ambitious projects at the intersection of AI and climate tech, aiming for scalable clean energy solutions.\n  Background: Fusion power promises clean, abundant energy but faces immense technical hurdles.\n  Background: AI is being applied to optimize complex scientific research, including fusion.\n  Background: Tech entrepreneurs are increasingly investing in deep tech and climate solutions.\n  Background: The global push for decarbonization requires innovative energy sources.\n  Possible knock-on effect: Could attract more venture capital to AI-enhanced fusion research.\n  Possible knock-on effect: May accelerate progress in achieving viable fusion energy.\n  Possible knock-on effect: Likely to inspire other AI experts to enter hard science problems.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- Saudi-Led Coalition Intercepts Houthi Missiles Targeting Riyadh (source: Al Jazeera)\n  Summary: The Saudi-led coalition reported intercepting three Houthi missiles targeting the capital, Riyadh, issuing emergency alerts across the city. This marks a continued escalation of cross-border attacks in the Yemen conflict.\n  Background: Yemen has been embroiled in civil war since 2014, involving the Houthis.\n  Background: Saudi Arabia leads a coalition backing the Yemeni government.\n  Background: Houthis frequently launch drone and missile attacks into Saudi Arabia.\n  Background: Regional tensions remain high, with proxy conflicts ongoing.\n  Possible knock-on effect: Could intensify regional air defense initiatives.\n  Possible knock-on effect: May disrupt civilian life and economic activity in targeted areas.\n  Possible knock-on effect: Likely to hinder efforts for a negotiated peace settlement in Yemen.\n- Israeli Drone Attacks Reported to Kill Seven Palestinians in Central Gaza (source: Al Jazeera)\n  Summary: Al Jazeera reports that Israeli drone attacks in central Gaza killed seven Palestinians, causing 'fear and panic' despite a reported ceasefire. Israeli authorities have not yet commented on the specific incident or the ceasefire violation claims.\n  Background: Gaza remains a flashpoint for conflict between Israel and Palestinian groups.\n  Background: Drone strikes are a common tactic used by Israel in the Strip.\n  Background: Reports of ceasefires are often fragile and subject to violations.\n  Background: Civilian casualties fuel humanitarian concerns and regional instability.\n  Possible knock-on effect: Could escalate tensions and lead to retaliatory actions.\n  Possible knock-on effect: May undermine fragile diplomatic efforts for de-escalation.\n  Possible knock-on effect: Likely to exacerbate humanitarian conditions in Gaza.\n- Palestinian Anti-Hamas Groups Accused of Role in Israeli Gaza Operation (source: Al Jazeera)\n  Summary: Al Jazeera reports that Israeli-backed Palestinian militias are accused of expanding their operations and playing a role in Israel's Gaza campaign, raising concerns about their involvement in future security arrangements. The specific extent and nature of their role remain contested.\n  Background: Israel seeks to dismantle Hamas and stabilize Gaza post-conflict.\n  Background: Hamas is the dominant political and military force in Gaza.\n  Background: Various Palestinian factions exist, with differing political agendas.\n  Background: The question of Gaza's post-conflict governance is highly contentious.\n  Possible knock-on effect: Could complicate efforts to establish a unified Palestinian leadership.\n  Possible knock-on effect: May fuel internal Palestinian divisions and proxy conflicts.\n  Possible knock-on effect: Likely to impact perceptions of Israel's long-term strategy in Gaza.\n- Life Inside Yemeni City of Taiz Besieged by Houthis (source: BBC News)\n  Summary: The BBC reports on the dire humanitarian situation in Taiz, a key Yemeni city besieged by Houthis for weeks, with residents cut off from outside access. This highlights the severe impact of the protracted conflict on civilian populations.\n  Background: Taiz is a strategic city in Yemen, subject to a long-standing Houthi siege.\n  Background: The civil war has caused widespread famine and humanitarian crisis.\n  Background: Houthis control significant territory, including Sanaa, the capital.\n  Background: Access to essential supplies for civilians is severely restricted.\n  Possible knock-on effect: Could worsen the humanitarian crisis for trapped civilians.\n  Possible knock-on effect: May increase international pressure for humanitarian aid access.\n  Possible knock-on effect: Likely to deepen the long-term instability of Yemen.\n- India's Opposition Leader Rahul Gandhi Backs Strong India-Israel Ties Despite Gaza War (source: Al Jazeera)\n  Summary: India's opposition leader, Rahul Gandhi, affirmed New Delhi's commitment to maintaining strong ties with Israel, even amidst the ongoing conflict in Gaza. His statement underscores India's balanced foreign policy approach in the region.\n  Background: India has historical ties with both Israel and Palestine.\n  Background: The current conflict in Gaza has led to international condemnation of Israel.\n  Background: India maintains significant defense and economic partnerships with Israel.\n  Background: Gandhi's statement reflects India's non-aligned foreign policy tradition.\n  Possible knock-on effect: Could reinforce India's strategic partnership with Israel.\n  Possible knock-on effect: May draw criticism from pro-Palestinian segments of the international community.\n  Possible knock-on effect: Likely to be interpreted as continuity in India's foreign policy stance.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
