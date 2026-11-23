@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Monday, November 23, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Monday, November 23, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">5 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your essential briefing on AI, consulting, and global dynamics.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/22/how-notable-capital-gic-and-baillie-gicford-bet-big-on-anthropic-before-its-ipo/">How Notable Capital, GIC, and Baillie Gifford Bet Big on Anthropic Before its IPO</a></h3>
+  <p class="story-summary">Three prominent investment firms — Notable Capital, GIC, and Baillie Gifford — have detailed their substantial, multi-billion-dollar investments in leading AI developer Anthropic. Their disclosed rationale highlights strong conviction in Anthropic&#x27;s foundational AI models and long-term market potential ahead of its anticipated public offering.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Anthropic is a top competitor in the frontier AI development space.</li>
+<li>The AI market is experiencing intense investment and valuation growth.</li>
+<li>Strategic investors aim for early positions in potential market leaders.</li>
+<li>Upcoming AI company IPOs are keenly watched by global markets.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May signal strong investor confidence in the broader AI sector.</li>
+<li>Could encourage other AI startups to pursue IPOs sooner.</li>
+<li>Likely to intensify competition for talent and resources in AI.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/22/openais-chief-scientist-has-thoughts-on-how-to-limit-ai-development/">OpenAI’s chief scientist has thoughts on how to limit AI development</a></h3>
+  <p class="story-summary">OpenAI&#x27;s chief scientist proposed a framework for establishing a &#x27;speed limit&#x27; on AI development, stressing the necessity of agreeing on specific measurement metrics for effective regulation.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Growing concerns exist over AI safety, control, and potential risks.</li>
+<li>Developers face pressure to balance innovation with ethical responsibility.</li>
+<li>Lack of clear, agreed-upon metrics hinders effective AI regulation.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could spark industry-wide discussions on AI development ethics.</li>
+<li>May influence future global regulatory frameworks for AI.</li>
+<li>Likely to lead to new research on AI capability measurement.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">MarkTechPost</span></div>
+  <h3 class="story-title"><a href="https://www.marktechpost.com/2026/11/22/nvidia-alpamayo-2-edge-2b-reasoning-vla-drive-thor/">NVIDIA Releases Alpamayo 2 Edge: A 2B Reasoning VLA for DRIVE Thor</a></h3>
+  <p class="story-summary">NVIDIA launched Alpamayo 2 Edge, a 2-billion-parameter vision-language-action model for its DRIVE AGX Thor platform, enabling advanced reasoning and driving trajectory planning with low latency.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The automotive industry demands advanced AI for autonomous driving.</li>
+<li>NVIDIA aims to dominate edge AI and in-vehicle computing markets.</li>
+<li>Real-time, efficient AI processing is critical for safety-sensitive applications.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May accelerate autonomous vehicle development and deployment.</li>
+<li>Could boost NVIDIA&#x27;s market share in edge AI hardware/software.</li>
+<li>Likely to inspire competitors to develop similar integrated VLA models.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/22/why-data-centers-are-at-the-center-of-the-big-tech-backlash/">Why data centers are at the center of the Big Tech backlash</a></h3>
+  <p class="story-summary">A new book, &#x27;Hyperscale,&#x27; investigates the increasing public backlash against Big Tech, focusing on the significant environmental and societal impact of large data centers that power AI.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>AI infrastructure requires massive energy, increasing environmental footprint.</li>
+<li>Public and regulatory scrutiny of Big Tech&#x27;s resource usage is rising.</li>
+<li>Growing awareness exists of tech power&#x27;s concentrated externalities.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to greater scrutiny of data center energy use.</li>
+<li>May pressure tech companies to invest more in sustainable infrastructure.</li>
+<li>Likely to fuel public discourse on AI&#x27;s indirect societal costs.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/tech/1039851/major-tech-outages">We haven’t seen the last of the major tech outages</a></h3>
+  <p class="story-summary">Following recent widespread outages affecting services like the FAA, Outlook, and JPMorgan Chase, Director of National Intelligence Jay Clayton warned that more significant tech disruptions are anticipated.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Critical national services increasingly rely on centralized digital infrastructure.</li>
+<li>Interconnected systems&#x27; growing complexity raises vulnerability.</li>
+<li>Geopolitical and cyber threats to national infrastructure are rising.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could prompt increased investment in digital infrastructure resilience.</li>
+<li>May lead to new regulations for critical tech service providers.</li>
+<li>Likely to raise public awareness of technological vulnerabilities.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/games/1039770/binding-of-isaac-ai-music">Binding of Isaac developer removes AI music from Repentance Plus</a></h3>
+  <p class="story-summary">The developer of &#x27;The Binding of Isaac: Repentance Plus&#x27; removed AI-generated music after widespread &#x27;review-bombing&#x27; on Steam, triggered by Reddit users discovering Suno metadata in audio files.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Concerns exist over ethical implications of AI-generated content.</li>
+<li>Strong consumer preference exists for human-created art in games.</li>
+<li>Intellectual property and licensing issues surround AI outputs.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May set a precedent for community expectations on AI in games.</li>
+<li>Could influence other game developers&#x27; use of AI assets.</li>
+<li>Likely to increase scrutiny of AI tools&#x27; metadata and provenance.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">MarkTechPost</span></div>
+  <h3 class="story-title"><a href="https://www.marktechpost.com/2026/11/22/google-gemini-api-tool-retrieval/">Google AI Previews Tool Retrieval in the Gemini API for Large Tool Libraries</a></h3>
+  <p class="story-summary">Google AI launched a preview of Tool Retrieval in its Gemini API, enabling AI agents to efficiently access specific parameter schemas from large tool libraries only when needed.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Developers increasingly integrate large language models with external tools.</li>
+<li>There&#x27;s a need for scalable ways for AI agents to use diverse tools.</li>
+<li>The Gemini API aims to be a leading platform for AI application development.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>May enhance the capabilities and efficiency of AI agents.</li>
+<li>Could simplify development of complex AI applications.</li>
+<li>Likely to foster broader adoption of Gemini API for agentic workflows.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<p>No notable consulting stories in the last 24 hours.</p>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/22/iran-war-live-tankers-set-ablaze-in-hormuz-as-irgc-warns-of-unrest-threat?traffic_source=rss">Tankers set ablaze in Hormuz as IRGC warns of unrest threat</a></h3>
+  <p class="story-summary">Iranian state media reported Iran’s navy claimed tankers contravening its rules were set ablaze in the Strait of Hormuz. Separately, the IRGC warned that &#x27;enemies&#x27; sought to stoke unrest.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Strait of Hormuz is a critical global oil transit chokepoint.</li>
+<li>Tensions between Iran and international shipping have been ongoing.</li>
+<li>Iran often attributes regional instability to external &#x27;enemies&#x27;.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to increased oil prices and market instability.</li>
+<li>May prompt greater naval presence from international powers.</li>
+<li>Likely to escalate regional tensions and diplomatic efforts.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/22/netanyahus-likud-eisenkots-yashar-end-coalition-talks-without-deal?traffic_source=rss">Netanyahu’s Likud, Eisenkot’s Yashar end coalition talks without deal</a></h3>
+  <p class="story-summary">Coalition negotiations between Israeli Prime Minister Netanyahu’s Likud party and opposition leader Gadi Eisenkot’s Yashar party concluded without an agreement, signaling continued political deadlock.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Israel has faced persistent political instability and multiple elections.</li>
+<li>Coalition formation requires complex negotiations among diverse parties.</li>
+<li>Disagreements include leadership and roles for far-right figures.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to further political instability or snap elections.</li>
+<li>May impact Israel&#x27;s policy decisions regarding regional conflicts.</li>
+<li>Might affect international diplomatic relations with Israel.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/world/2026/nov/22/netanyahu-rival-condemns-settler-arson-attacks-palestinian-villages-west-bank">Netanyahu rival condemns ‘Jewish terrorism’ after settler attacks on Palestinian villages</a></h3>
+  <p class="story-summary">Israeli opposition leader Gadi Eisenkot condemned recent arson attacks by militant Israeli settlers on Palestinian villages in the occupied West Bank, describing them as &#x27;Jewish terrorism.&#x27;</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Long-standing Israeli-Palestinian conflict in the West Bank continues.</li>
+<li>Settler violence against Palestinians is a recurring, documented issue.</li>
+<li>Eisenkot represents a more centrist stance than hardline elements.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could deepen internal political divisions within Israel.</li>
+<li>May increase international pressure on Israel regarding settler violence.</li>
+<li>Likely to exacerbate tensions and incite further conflict in the West Bank.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/world/2026/nov/22/briton-lewis-pugh-swims-strait-of-hormuz-environment-war">Briton swims length of strait of Hormuz to highlight environmental cost of war</a></h3>
+  <p class="story-summary">UN patron Lewis Pugh completed a three-day swim across the Strait of Hormuz to raise awareness of the environmental impact of regional conflicts, observing ships ablaze and fighter jets.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The Strait of Hormuz is militarily sensitive and environmentally fragile.</li>
+<li>Ongoing conflicts in the region have significant ecological consequences.</li>
+<li>Environmental activism draws attention to geopolitical issues.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could raise international awareness of ecological damage from conflicts.</li>
+<li>May prompt calls for environmental protection in war zones.</li>
+<li>Likely to generate discussion on the broader costs of regional instability.</li></ul>
+</details>
+</div>
+
+<p class="closer">For a deeper dive, consider the TechCrunch piece on Anthropic&#x27;s significant investor backing, offering insights into the market&#x27;s conviction in frontier AI.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">45</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">7</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">33</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b8a3e22;color:#0b8a3e;border:1px solid #0b8a3e55;--glow:#0b8a3e;">Funding</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b8a3e;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#1d4ed8;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#78350f;--bar-pct:33%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-23.html">Monday, November 23, 2026</a></li>
+<li><a href="archive/2026-11-22.html">Sunday, November 22, 2026</a></li>
+<li><a href="archive/2026-11-21.html">Saturday, November 21, 2026</a></li>
+<li><a href="archive/2026-11-20.html">Friday, November 20, 2026</a></li>
+<li><a href="archive/2026-11-19.html">Thursday, November 19, 2026</a></li>
+<li><a href="archive/2026-11-18.html">Wednesday, November 18, 2026</a></li>
+<li><a href="archive/2026-11-17.html">Tuesday, November 17, 2026</a></li>
+<li><a href="archive/2026-11-16.html">Monday, November 16, 2026</a></li>
+<li><a href="archive/2026-11-15.html">Sunday, November 15, 2026</a></li>
+<li><a href="archive/2026-11-14.html">Saturday, November 14, 2026</a></li>
+<li><a href="archive/2026-11-13.html">Friday, November 13, 2026</a></li>
+<li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+<li><a href="archive/2026-11-06.html">Friday, November 06, 2026</a></li>
+<li><a href="archive/2026-11-05.html">Thursday, November 05, 2026</a></li>
+<li><a href="archive/2026-11-04.html">Wednesday, November 04, 2026</a></li>
+<li><a href="archive/2026-11-03.html">Tuesday, November 03, 2026</a></li>
+<li><a href="archive/2026-11-02.html">Monday, November 02, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Monday, November 23, 2026\n\nTOP STORY: How Notable Capital, GIC, and Baillie Gifford Bet Big on Anthropic Before its IPO (source: TechCrunch)\nSummary: Three prominent investment firms \u2014 Notable Capital, GIC, and Baillie Gifford \u2014 have detailed their substantial, multi-billion-dollar investments in leading AI developer Anthropic. Their disclosed rationale highlights strong conviction in Anthropic's foundational AI models and long-term market potential ahead of its anticipated public offering.\nBackground: Anthropic is a top competitor in the frontier AI development space.\nBackground: The AI market is experiencing intense investment and valuation growth.\nBackground: Strategic investors aim for early positions in potential market leaders.\nBackground: Upcoming AI company IPOs are keenly watched by global markets.\nPossible knock-on effect: May signal strong investor confidence in the broader AI sector.\nPossible knock-on effect: Could encourage other AI startups to pursue IPOs sooner.\nPossible knock-on effect: Likely to intensify competition for talent and resources in AI.\n\nAI STORIES:\n- OpenAI\u2019s chief scientist has thoughts on how to limit AI development (source: TechCrunch)\n  Summary: OpenAI's chief scientist proposed a framework for establishing a 'speed limit' on AI development, stressing the necessity of agreeing on specific measurement metrics for effective regulation.\n  Background: Growing concerns exist over AI safety, control, and potential risks.\n  Background: Developers face pressure to balance innovation with ethical responsibility.\n  Background: Lack of clear, agreed-upon metrics hinders effective AI regulation.\n  Possible knock-on effect: Could spark industry-wide discussions on AI development ethics.\n  Possible knock-on effect: May influence future global regulatory frameworks for AI.\n  Possible knock-on effect: Likely to lead to new research on AI capability measurement.\n- NVIDIA Releases Alpamayo 2 Edge: A 2B Reasoning VLA for DRIVE Thor (source: MarkTechPost)\n  Summary: NVIDIA launched Alpamayo 2 Edge, a 2-billion-parameter vision-language-action model for its DRIVE AGX Thor platform, enabling advanced reasoning and driving trajectory planning with low latency.\n  Background: The automotive industry demands advanced AI for autonomous driving.\n  Background: NVIDIA aims to dominate edge AI and in-vehicle computing markets.\n  Background: Real-time, efficient AI processing is critical for safety-sensitive applications.\n  Possible knock-on effect: May accelerate autonomous vehicle development and deployment.\n  Possible knock-on effect: Could boost NVIDIA's market share in edge AI hardware/software.\n  Possible knock-on effect: Likely to inspire competitors to develop similar integrated VLA models.\n- Why data centers are at the center of the Big Tech backlash (source: TechCrunch)\n  Summary: A new book, 'Hyperscale,' investigates the increasing public backlash against Big Tech, focusing on the significant environmental and societal impact of large data centers that power AI.\n  Background: AI infrastructure requires massive energy, increasing environmental footprint.\n  Background: Public and regulatory scrutiny of Big Tech's resource usage is rising.\n  Background: Growing awareness exists of tech power's concentrated externalities.\n  Possible knock-on effect: Could lead to greater scrutiny of data center energy use.\n  Possible knock-on effect: May pressure tech companies to invest more in sustainable infrastructure.\n  Possible knock-on effect: Likely to fuel public discourse on AI's indirect societal costs.\n- We haven\u2019t seen the last of the major tech outages (source: The Verge)\n  Summary: Following recent widespread outages affecting services like the FAA, Outlook, and JPMorgan Chase, Director of National Intelligence Jay Clayton warned that more significant tech disruptions are anticipated.\n  Background: Critical national services increasingly rely on centralized digital infrastructure.\n  Background: Interconnected systems' growing complexity raises vulnerability.\n  Background: Geopolitical and cyber threats to national infrastructure are rising.\n  Possible knock-on effect: Could prompt increased investment in digital infrastructure resilience.\n  Possible knock-on effect: May lead to new regulations for critical tech service providers.\n  Possible knock-on effect: Likely to raise public awareness of technological vulnerabilities.\n- Binding of Isaac developer removes AI music from Repentance Plus (source: The Verge)\n  Summary: The developer of 'The Binding of Isaac: Repentance Plus' removed AI-generated music after widespread 'review-bombing' on Steam, triggered by Reddit users discovering Suno metadata in audio files.\n  Background: Concerns exist over ethical implications of AI-generated content.\n  Background: Strong consumer preference exists for human-created art in games.\n  Background: Intellectual property and licensing issues surround AI outputs.\n  Possible knock-on effect: May set a precedent for community expectations on AI in games.\n  Possible knock-on effect: Could influence other game developers' use of AI assets.\n  Possible knock-on effect: Likely to increase scrutiny of AI tools' metadata and provenance.\n- Google AI Previews Tool Retrieval in the Gemini API for Large Tool Libraries (source: MarkTechPost)\n  Summary: Google AI launched a preview of Tool Retrieval in its Gemini API, enabling AI agents to efficiently access specific parameter schemas from large tool libraries only when needed.\n  Background: Developers increasingly integrate large language models with external tools.\n  Background: There's a need for scalable ways for AI agents to use diverse tools.\n  Background: The Gemini API aims to be a leading platform for AI application development.\n  Possible knock-on effect: May enhance the capabilities and efficiency of AI agents.\n  Possible knock-on effect: Could simplify development of complex AI applications.\n  Possible knock-on effect: Likely to foster broader adoption of Gemini API for agentic workflows.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- Tankers set ablaze in Hormuz as IRGC warns of unrest threat (source: Al Jazeera)\n  Summary: Iranian state media reported Iran\u2019s navy claimed tankers contravening its rules were set ablaze in the Strait of Hormuz. Separately, the IRGC warned that 'enemies' sought to stoke unrest.\n  Background: The Strait of Hormuz is a critical global oil transit chokepoint.\n  Background: Tensions between Iran and international shipping have been ongoing.\n  Background: Iran often attributes regional instability to external 'enemies'.\n  Possible knock-on effect: Could lead to increased oil prices and market instability.\n  Possible knock-on effect: May prompt greater naval presence from international powers.\n  Possible knock-on effect: Likely to escalate regional tensions and diplomatic efforts.\n- Netanyahu\u2019s Likud, Eisenkot\u2019s Yashar end coalition talks without deal (source: Al Jazeera)\n  Summary: Coalition negotiations between Israeli Prime Minister Netanyahu\u2019s Likud party and opposition leader Gadi Eisenkot\u2019s Yashar party concluded without an agreement, signaling continued political deadlock.\n  Background: Israel has faced persistent political instability and multiple elections.\n  Background: Coalition formation requires complex negotiations among diverse parties.\n  Background: Disagreements include leadership and roles for far-right figures.\n  Possible knock-on effect: Could lead to further political instability or snap elections.\n  Possible knock-on effect: May impact Israel's policy decisions regarding regional conflicts.\n  Possible knock-on effect: Might affect international diplomatic relations with Israel.\n- Netanyahu rival condemns \u2018Jewish terrorism\u2019 after settler attacks on Palestinian villages (source: The Guardian)\n  Summary: Israeli opposition leader Gadi Eisenkot condemned recent arson attacks by militant Israeli settlers on Palestinian villages in the occupied West Bank, describing them as 'Jewish terrorism.'\n  Background: Long-standing Israeli-Palestinian conflict in the West Bank continues.\n  Background: Settler violence against Palestinians is a recurring, documented issue.\n  Background: Eisenkot represents a more centrist stance than hardline elements.\n  Possible knock-on effect: Could deepen internal political divisions within Israel.\n  Possible knock-on effect: May increase international pressure on Israel regarding settler violence.\n  Possible knock-on effect: Likely to exacerbate tensions and incite further conflict in the West Bank.\n- Briton swims length of strait of Hormuz to highlight environmental cost of war (source: The Guardian)\n  Summary: UN patron Lewis Pugh completed a three-day swim across the Strait of Hormuz to raise awareness of the environmental impact of regional conflicts, observing ships ablaze and fighter jets.\n  Background: The Strait of Hormuz is militarily sensitive and environmentally fragile.\n  Background: Ongoing conflicts in the region have significant ecological consequences.\n  Background: Environmental activism draws attention to geopolitical issues.\n  Possible knock-on effect: Could raise international awareness of ecological damage from conflicts.\n  Possible knock-on effect: May prompt calls for environmental protection in war zones.\n  Possible knock-on effect: Likely to generate discussion on the broader costs of regional instability.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
