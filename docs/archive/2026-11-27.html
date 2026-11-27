@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Friday, November 27, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Friday, November 27, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">6 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your essential AI and Consulting briefing for Friday.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">TechCrunch</span></div>
+  <h3 class="story-title"><a href="https://techcrunch.com/2026/11/26/nvidia-hits-pause-on-chip-shipments-to-southeast-asia/">Nvidia Halts AI Chip Shipments to Southeast Asia Amid US Export Controls</a></h3>
+  <p class="story-summary">Nvidia has instructed its manufacturing partners to pause server shipments to Malaysia, Singapore, Thailand, and Indonesia. This action broadens the scope of U.S. efforts to prevent advanced AI chips from reaching China, intensifying the global tech rivalry and impacting supply chains.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>US aims to restrict China&#x27;s access to advanced AI technology.</li>
+<li>Southeast Asian nations are key manufacturing and transit hubs.</li>
+<li>Nvidia is a dominant supplier of high-performance AI chips globally.</li>
+<li>Previous US regulations targeted direct sales to China and specific entities.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could force companies to re-evaluate AI supply chain logistics.</li>
+<li>May accelerate domestic AI chip development in affected regions.</li>
+<li>Likely to increase scrutiny on tech transfers via third countries.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/policy/1042620/character-ai-sale-state-ags-block-selling-users-chats">42 State Attorneys General Seek to Block Character.AI from Selling User Chat Data</a></h3>
+  <p class="story-summary">A coalition of 42 state attorneys general is attempting to prevent Character.AI from selling off user chat histories during its Chapter 11 bankruptcy. They accuse the company of planning to auction private data from over 21 million U.S. accounts, raising significant privacy concerns.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Character.AI is undergoing Chapter 11 bankruptcy proceedings.</li>
+<li>User chat data is considered highly sensitive personal information.</li>
+<li>State AGs are increasingly active in digital privacy protection.</li>
+<li>Company is seeking to maximize asset value for its creditors.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could set a precedent for data handling in tech bankruptcies.</li>
+<li>May prompt stricter guidelines for AI companies on user data ownership.</li>
+<li>Likely to increase consumer scrutiny on AI platform privacy policies.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">MarkTechPost</span></div>
+  <h3 class="story-title"><a href="https://www.marktechpost.com/2026/11/26/sakana-ai-namazu-small-30b-nemotron-3-nano/">Sakana AI Launches Namazu Small, a 30B Model Outperforming Larger Competitors</a></h3>
+  <p class="story-summary">Sakana AI has released Namazu Small, a 30B-parameter reasoning model built on NVIDIA Nemotron 3 Nano, achieving a 60.1 benchmark score. This model notably outperforms the larger 120B Nemotron 3 Super model (56.2), indicating significant efficiency gains in AI development.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Smaller, efficient models are crucial for broader AI adoption.</li>
+<li>NVIDIA provides foundational platforms like Nemotron 3 Nano.</li>
+<li>Benchmarks are key for evaluating AI model performance.</li>
+<li>Competitive pressure drives innovation in AI model efficiency.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could democratize access to advanced AI due to lower resource needs.</li>
+<li>May spur further optimization efforts for smaller AI models.</li>
+<li>Likely to influence future hardware design for AI inference.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">Hugging Face Blog</span></div>
+  <h3 class="story-title"><a href="https://huggingface.co/blog/ggml-org/llamacpp-amd-bench">Hugging Face Introduces llama.cpp Benchmark Dashboard for AMD Ryzen and Radeon</a></h3>
+  <p class="story-summary">Hugging Face has launched a new benchmark dashboard for llama.cpp, focusing on performance with AMD Ryzen CPUs and Radeon GPUs. This initiative provides transparency and insights for running large language models efficiently on AMD hardware, fostering broader compatibility.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>llama.cpp enables local LLM inference on consumer hardware.</li>
+<li>AMD hardware is gaining traction for AI alongside Nvidia.</li>
+<li>Developers need reliable benchmarks for hardware compatibility.</li>
+<li>Open-source AI community relies on shared performance data.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could drive wider adoption of AMD hardware for local AI development.</li>
+<li>May foster more optimized software for non-Nvidia AI ecosystems.</li>
+<li>Likely to empower more users to run LLMs on personal devices.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="source">Hugging Face Blog</span></div>
+  <h3 class="story-title"><a href="https://huggingface.co/blog/nvidia/building-on-nemotron-35-parse-open-data-fine-tunin">Hugging Face Blog Details Building on Nemotron 3.5 Parse with Open Data and Fine-Tuning</a></h3>
+  <p class="story-summary">A new Hugging Face blog post explores advanced techniques for leveraging NVIDIA Nemotron 3.5 Parse, emphasizing open data, fine-tuning, and faster inference. This resource aims to guide developers in customizing and optimizing models based on Nvidia&#x27;s powerful framework.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>NVIDIA&#x27;s Nemotron series offers powerful base models for AI development.</li>
+<li>Fine-tuning adapts general models to specific tasks effectively.</li>
+<li>Open data fosters collaboration and improves model robustness.</li>
+<li>Faster inference is critical for real-time AI applications.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could accelerate the development of specialized AI applications.</li>
+<li>May increase the efficiency and accessibility of Nvidia-based models.</li>
+<li>Likely to broaden the community contributing to Nemotron 3.5 ecosystem.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<p>No notable consulting stories in the last 24 hours.</p>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">BBC News, The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/cqvg2n4mzl1jo?at_medium=RSS&amp;at_campaign=rss">Hamas Official and Civilians, Including 16 Children, Reported Killed in Israeli Gaza Strikes</a></h3>
+  <p class="story-summary">Israeli strikes in Gaza killed a Hamas political official and his wife, alongside eight other Palestinians, as reported by BBC News. The Gaza ministry of education also reported at least 16 schoolchildren have been killed in Israeli strikes since early November, highlighting ongoing civilian casualties.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Israel states its strikes target Hamas infrastructure and operatives.</li>
+<li>Gaza is a densely populated area, increasing civilian risk.</li>
+<li>Hamas is the governing authority in Gaza and a designated terror group.</li>
+<li>Humanitarian organizations frequently report on civilian casualties.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could intensify calls for de-escalation and a humanitarian ceasefire.</li>
+<li>May increase international pressure on Israel regarding rules of engagement.</li>
+<li>Likely to exacerbate the humanitarian crisis within the Gaza Strip.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/27/iran-war-live-irans-araghchi-calls-deadly-kuwait-attack-suspicious?traffic_source=rss">Iranian Foreign Minister Calls Deadly Kuwait Attack &#x27;Suspicious&#x27; and &#x27;Pre-cooked Recipe&#x27; for War</a></h3>
+  <p class="story-summary">Iran&#x27;s Foreign Minister Abbas Araghchi stated that a deadly incident in Kuwait is &quot;suspicious&quot; and appears to be a &quot;pre-cooked recipe&quot; for war. This comment, reported by Al Jazeera, suggests potential for heightened regional tensions and accusations of external manipulation.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Regional tensions are high, with proxies and direct confrontations.</li>
+<li>Kuwait is a US ally and neighbor to both Saudi Arabia and Iraq.</li>
+<li>Iran often attributes regional incidents to external plots.</li>
+<li>A deadly attack in Kuwait could be destabilizing.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could heighten suspicions and accusations among regional powers.</li>
+<li>May lead to increased security alerts in the Gulf states.</li>
+<li>Likely to complicate diplomatic efforts to de-escalate regional conflicts.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/26/attack-on-saudi-aramcos-jazan-refinery-kills-worker-disrupts-operations?traffic_source=rss">Attack on Saudi Arabia&#x27;s Jazan Refinery Kills One, Disrupts Operations</a></h3>
+  <p class="story-summary">An attack on Saudi Aramco&#x27;s Jazan refinery resulted in the death of a Nepali national, injured several others, and sparked a fire, according to the Saudi Energy Ministry. The incident, reported by Al Jazeera, disrupted operations at the critical oil facility.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Saudi Arabia&#x27;s oil infrastructure has been targeted previously by Houthi rebels.</li>
+<li>Jazan is a key industrial city on the Red Sea coast.</li>
+<li>Attacks on energy facilities affect global oil supply and prices.</li>
+<li>Regional proxy conflicts often spill over into infrastructure attacks.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could prompt retaliatory actions against perceived aggressors.</li>
+<li>May lead to an increase in global oil prices and market volatility.</li>
+<li>Likely to intensify calls for stronger regional security cooperation.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/26/israeli-settlers-damage-palestinian-familys-homes-in-west-bank-attack?traffic_source=rss">Israeli Settlers Damage Palestinian Family Homes in West Bank, Despite Court Order</a></h3>
+  <p class="story-summary">Israeli settlers reportedly damaged the homes of the Tubasi family in the West Bank, who had been forced out months prior and denied return by settlers despite an Israeli court order. Al Jazeera reports this highlights ongoing tensions and legal complexities in the occupied territories.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The West Bank has been under Israeli occupation since 1967.</li>
+<li>Settler violence against Palestinians is documented by human rights groups.</li>
+<li>Israeli courts sometimes rule in favor of Palestinian property rights.</li>
+<li>Conflict over land and property is a core aspect of the Israeli-Palestinian issue.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could further destabilize the West Bank and escalate local confrontations.</li>
+<li>May draw international condemnation and renewed calls for protection of Palestinians.</li>
+<li>Likely to deepen mistrust and hinder prospects for peaceful coexistence.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/world/2026/nov/26/israel-officially-sanctions-torture-palestinian-prisoners-confessions-report">Report Concludes Israel &#x27;Officially Sanctions&#x27; Torture of Palestinian Prisoners for Confessions</a></h3>
+  <p class="story-summary">A report by the Public Committee Against Torture in Israel alleges that Israel has institutionalized the use of torture to extract confessions from Palestinian prisoners. The Guardian reports claims that abuse is sometimes documented in official records or receives advance approval for &quot;special measures&quot; in interrogation.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Human rights organizations monitor detention conditions in Israel.</li>
+<li>International law prohibits torture under all circumstances.</li>
+<li>Israel&#x27;s Shin Bet handles Palestinian interrogations.</li>
+<li>Allegations of prisoner abuse have been made over many years.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could spark international inquiries and human rights investigations.</li>
+<li>May increase scrutiny of Israel&#x27;s legal and security practices.</li>
+<li>Likely to fuel anti-Israeli sentiment and diplomatic pressure.</li></ul>
+</details>
+</div>
+
+<p class="closer">For a deeper dive into geopolitics and AI supply chains, don&#x27;t miss the hero story on Nvidia&#x27;s chip shipment halt.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">42</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">3</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">34</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#c2410c22;color:#c2410c;border:1px solid #c2410c55;--glow:#c2410c;">Policy &amp; Regulation</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#c2410c;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#7a3fd622;color:#7a3fd6;border:1px solid #7a3fd655;--glow:#7a3fd6;">Research</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#7a3fd6;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed855;--glow:#1d4ed8;">Diplomacy &amp; Talks</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#1d4ed8;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#78350f;--bar-pct:33%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-27.html">Friday, November 27, 2026</a></li>
+<li><a href="archive/2026-11-26.html">Thursday, November 26, 2026</a></li>
+<li><a href="archive/2026-11-25.html">Wednesday, November 25, 2026</a></li>
+<li><a href="archive/2026-11-24.html">Tuesday, November 24, 2026</a></li>
+<li><a href="archive/2026-11-23.html">Monday, November 23, 2026</a></li>
+<li><a href="archive/2026-11-22.html">Sunday, November 22, 2026</a></li>
+<li><a href="archive/2026-11-21.html">Saturday, November 21, 2026</a></li>
+<li><a href="archive/2026-11-20.html">Friday, November 20, 2026</a></li>
+<li><a href="archive/2026-11-19.html">Thursday, November 19, 2026</a></li>
+<li><a href="archive/2026-11-18.html">Wednesday, November 18, 2026</a></li>
+<li><a href="archive/2026-11-17.html">Tuesday, November 17, 2026</a></li>
+<li><a href="archive/2026-11-16.html">Monday, November 16, 2026</a></li>
+<li><a href="archive/2026-11-15.html">Sunday, November 15, 2026</a></li>
+<li><a href="archive/2026-11-14.html">Saturday, November 14, 2026</a></li>
+<li><a href="archive/2026-11-13.html">Friday, November 13, 2026</a></li>
+<li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+<li><a href="archive/2026-11-06.html">Friday, November 06, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Friday, November 27, 2026\n\nTOP STORY: Nvidia Halts AI Chip Shipments to Southeast Asia Amid US Export Controls (source: TechCrunch)\nSummary: Nvidia has instructed its manufacturing partners to pause server shipments to Malaysia, Singapore, Thailand, and Indonesia. This action broadens the scope of U.S. efforts to prevent advanced AI chips from reaching China, intensifying the global tech rivalry and impacting supply chains.\nBackground: US aims to restrict China's access to advanced AI technology.\nBackground: Southeast Asian nations are key manufacturing and transit hubs.\nBackground: Nvidia is a dominant supplier of high-performance AI chips globally.\nBackground: Previous US regulations targeted direct sales to China and specific entities.\nPossible knock-on effect: Could force companies to re-evaluate AI supply chain logistics.\nPossible knock-on effect: May accelerate domestic AI chip development in affected regions.\nPossible knock-on effect: Likely to increase scrutiny on tech transfers via third countries.\n\nAI STORIES:\n- 42 State Attorneys General Seek to Block Character.AI from Selling User Chat Data (source: The Verge)\n  Summary: A coalition of 42 state attorneys general is attempting to prevent Character.AI from selling off user chat histories during its Chapter 11 bankruptcy. They accuse the company of planning to auction private data from over 21 million U.S. accounts, raising significant privacy concerns.\n  Background: Character.AI is undergoing Chapter 11 bankruptcy proceedings.\n  Background: User chat data is considered highly sensitive personal information.\n  Background: State AGs are increasingly active in digital privacy protection.\n  Background: Company is seeking to maximize asset value for its creditors.\n  Possible knock-on effect: Could set a precedent for data handling in tech bankruptcies.\n  Possible knock-on effect: May prompt stricter guidelines for AI companies on user data ownership.\n  Possible knock-on effect: Likely to increase consumer scrutiny on AI platform privacy policies.\n- Sakana AI Launches Namazu Small, a 30B Model Outperforming Larger Competitors (source: MarkTechPost)\n  Summary: Sakana AI has released Namazu Small, a 30B-parameter reasoning model built on NVIDIA Nemotron 3 Nano, achieving a 60.1 benchmark score. This model notably outperforms the larger 120B Nemotron 3 Super model (56.2), indicating significant efficiency gains in AI development.\n  Background: Smaller, efficient models are crucial for broader AI adoption.\n  Background: NVIDIA provides foundational platforms like Nemotron 3 Nano.\n  Background: Benchmarks are key for evaluating AI model performance.\n  Background: Competitive pressure drives innovation in AI model efficiency.\n  Possible knock-on effect: Could democratize access to advanced AI due to lower resource needs.\n  Possible knock-on effect: May spur further optimization efforts for smaller AI models.\n  Possible knock-on effect: Likely to influence future hardware design for AI inference.\n- Hugging Face Introduces llama.cpp Benchmark Dashboard for AMD Ryzen and Radeon (source: Hugging Face Blog)\n  Summary: Hugging Face has launched a new benchmark dashboard for llama.cpp, focusing on performance with AMD Ryzen CPUs and Radeon GPUs. This initiative provides transparency and insights for running large language models efficiently on AMD hardware, fostering broader compatibility.\n  Background: llama.cpp enables local LLM inference on consumer hardware.\n  Background: AMD hardware is gaining traction for AI alongside Nvidia.\n  Background: Developers need reliable benchmarks for hardware compatibility.\n  Background: Open-source AI community relies on shared performance data.\n  Possible knock-on effect: Could drive wider adoption of AMD hardware for local AI development.\n  Possible knock-on effect: May foster more optimized software for non-Nvidia AI ecosystems.\n  Possible knock-on effect: Likely to empower more users to run LLMs on personal devices.\n- Hugging Face Blog Details Building on Nemotron 3.5 Parse with Open Data and Fine-Tuning (source: Hugging Face Blog)\n  Summary: A new Hugging Face blog post explores advanced techniques for leveraging NVIDIA Nemotron 3.5 Parse, emphasizing open data, fine-tuning, and faster inference. This resource aims to guide developers in customizing and optimizing models based on Nvidia's powerful framework.\n  Background: NVIDIA's Nemotron series offers powerful base models for AI development.\n  Background: Fine-tuning adapts general models to specific tasks effectively.\n  Background: Open data fosters collaboration and improves model robustness.\n  Background: Faster inference is critical for real-time AI applications.\n  Possible knock-on effect: Could accelerate the development of specialized AI applications.\n  Possible knock-on effect: May increase the efficiency and accessibility of Nvidia-based models.\n  Possible knock-on effect: Likely to broaden the community contributing to Nemotron 3.5 ecosystem.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- Hamas Official and Civilians, Including 16 Children, Reported Killed in Israeli Gaza Strikes (source: BBC News, The Guardian)\n  Summary: Israeli strikes in Gaza killed a Hamas political official and his wife, alongside eight other Palestinians, as reported by BBC News. The Gaza ministry of education also reported at least 16 schoolchildren have been killed in Israeli strikes since early November, highlighting ongoing civilian casualties.\n  Background: Israel states its strikes target Hamas infrastructure and operatives.\n  Background: Gaza is a densely populated area, increasing civilian risk.\n  Background: Hamas is the governing authority in Gaza and a designated terror group.\n  Background: Humanitarian organizations frequently report on civilian casualties.\n  Possible knock-on effect: Could intensify calls for de-escalation and a humanitarian ceasefire.\n  Possible knock-on effect: May increase international pressure on Israel regarding rules of engagement.\n  Possible knock-on effect: Likely to exacerbate the humanitarian crisis within the Gaza Strip.\n- Iranian Foreign Minister Calls Deadly Kuwait Attack 'Suspicious' and 'Pre-cooked Recipe' for War (source: Al Jazeera)\n  Summary: Iran's Foreign Minister Abbas Araghchi stated that a deadly incident in Kuwait is \"suspicious\" and appears to be a \"pre-cooked recipe\" for war. This comment, reported by Al Jazeera, suggests potential for heightened regional tensions and accusations of external manipulation.\n  Background: Regional tensions are high, with proxies and direct confrontations.\n  Background: Kuwait is a US ally and neighbor to both Saudi Arabia and Iraq.\n  Background: Iran often attributes regional incidents to external plots.\n  Background: A deadly attack in Kuwait could be destabilizing.\n  Possible knock-on effect: Could heighten suspicions and accusations among regional powers.\n  Possible knock-on effect: May lead to increased security alerts in the Gulf states.\n  Possible knock-on effect: Likely to complicate diplomatic efforts to de-escalate regional conflicts.\n- Attack on Saudi Arabia's Jazan Refinery Kills One, Disrupts Operations (source: Al Jazeera)\n  Summary: An attack on Saudi Aramco's Jazan refinery resulted in the death of a Nepali national, injured several others, and sparked a fire, according to the Saudi Energy Ministry. The incident, reported by Al Jazeera, disrupted operations at the critical oil facility.\n  Background: Saudi Arabia's oil infrastructure has been targeted previously by Houthi rebels.\n  Background: Jazan is a key industrial city on the Red Sea coast.\n  Background: Attacks on energy facilities affect global oil supply and prices.\n  Background: Regional proxy conflicts often spill over into infrastructure attacks.\n  Possible knock-on effect: Could prompt retaliatory actions against perceived aggressors.\n  Possible knock-on effect: May lead to an increase in global oil prices and market volatility.\n  Possible knock-on effect: Likely to intensify calls for stronger regional security cooperation.\n- Israeli Settlers Damage Palestinian Family Homes in West Bank, Despite Court Order (source: Al Jazeera)\n  Summary: Israeli settlers reportedly damaged the homes of the Tubasi family in the West Bank, who had been forced out months prior and denied return by settlers despite an Israeli court order. Al Jazeera reports this highlights ongoing tensions and legal complexities in the occupied territories.\n  Background: The West Bank has been under Israeli occupation since 1967.\n  Background: Settler violence against Palestinians is documented by human rights groups.\n  Background: Israeli courts sometimes rule in favor of Palestinian property rights.\n  Background: Conflict over land and property is a core aspect of the Israeli-Palestinian issue.\n  Possible knock-on effect: Could further destabilize the West Bank and escalate local confrontations.\n  Possible knock-on effect: May draw international condemnation and renewed calls for protection of Palestinians.\n  Possible knock-on effect: Likely to deepen mistrust and hinder prospects for peaceful coexistence.\n- Report Concludes Israel 'Officially Sanctions' Torture of Palestinian Prisoners for Confessions (source: The Guardian)\n  Summary: A report by the Public Committee Against Torture in Israel alleges that Israel has institutionalized the use of torture to extract confessions from Palestinian prisoners. The Guardian reports claims that abuse is sometimes documented in official records or receives advance approval for \"special measures\" in interrogation.\n  Background: Human rights organizations monitor detention conditions in Israel.\n  Background: International law prohibits torture under all circumstances.\n  Background: Israel's Shin Bet handles Palestinian interrogations.\n  Background: Allegations of prisoner abuse have been made over many years.\n  Possible knock-on effect: Could spark international inquiries and human rights investigations.\n  Possible knock-on effect: May increase scrutiny of Israel's legal and security practices.\n  Possible knock-on effect: Likely to fuel anti-Israeli sentiment and diplomatic pressure.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
