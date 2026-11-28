@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehul&#x27;s AI &amp; Consulting Daily — Saturday, November 28, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Mehul&#x27;s AI &amp; Consulting Daily RSS Feed" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f1;
+    --text: #14161a;
+    --muted: #6b7075;
+    --border: #e3e2dc;
+    --card-bg: #ffffff;
+    --link: #0f8c82;
+    --accent-a: #0f8c82;
+    --accent-b: #5b4fe8;
+    --accent-c: #c08a1f;
+    --shadow: rgba(20, 20, 30, 0.09);
+    --shadow-rest: rgba(20, 20, 30, 0.05);
+    --grad-a: rgba(15, 140, 130, 0.20);
+    --grad-b: rgba(91, 79, 232, 0.16);
+    --grad-c: rgba(192, 138, 31, 0.16);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e12;
+    --text: #ecebe7;
+    --muted: #8b9097;
+    --border: #262a31;
+    --card-bg: #161920;
+    --link: #3fc4b5;
+    --accent-a: #3fc4b5;
+    --accent-b: #9089ff;
+    --accent-c: #e0a530;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-rest: rgba(0, 0, 0, 0.3);
+    --grad-a: rgba(63, 196, 181, 0.20);
+    --grad-b: rgba(144, 137, 255, 0.16);
+    --grad-c: rgba(224, 165, 48, 0.14);
+  }
+  * { box-sizing: border-box; }
+  html {
+    background: var(--bg);
+  }
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--grad-a), transparent 42%),
+      radial-gradient(circle at 85% 15%, var(--grad-b), transparent 42%),
+      radial-gradient(circle at 50% 90%, var(--grad-c), transparent 45%);
+    background-repeat: no-repeat;
+    background-size: 160% 160%, 160% 160%, 160% 160%;
+    background-attachment: fixed, fixed, fixed;
+    animation: driftGradient 22s ease-in-out infinite alternate;
+  }
+  @keyframes driftGradient {
+    0%   { background-position: 0% 10%, 100% 0%, 40% 100%; }
+    50%  { background-position: 25% 45%, 70% 40%, 60% 65%; }
+    100% { background-position: 55% 75%, 40% 80%, 20% 30%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .main { min-width: 0; grid-column: 1; grid-row: 1; }
+  .sidebar-chat, .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .sidebar-chat { grid-row: 2; }
+  .sidebar-stats { grid-row: 3; }
+
+  /* Two columns: news + a right rail (chat on top, stats below) */
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: minmax(0, 700px) 300px;
+      align-items: start;
+    }
+    .main { grid-column: 1; grid-row: 1; }
+    .sidebar-chat { grid-column: 2; grid-row: 1; position: sticky; top: 24px; }
+    .sidebar-stats { grid-column: 2; grid-row: 2; }
+    /* No chat widget configured -> stats simply takes the top of the column */
+    .layout:not(:has(.sidebar-chat)) .sidebar-stats { grid-row: 1; }
+  }
+  /* Wide screens with the assistant enabled: give it its own dedicated column */
+  @media (min-width: 1340px) {
+    .layout:has(.sidebar-chat) {
+      max-width: 1340px;
+      grid-template-columns: 300px minmax(0, 680px) 300px;
+    }
+    .layout:has(.sidebar-chat) .sidebar-chat { grid-column: 1; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .main { grid-column: 2; grid-row: 1; }
+    .layout:has(.sidebar-chat) .sidebar-stats { grid-column: 3; grid-row: 1; position: sticky; top: 24px; }
+    .layout:has(.sidebar-chat) .chat-messages { max-height: 480px; }
+  }
+  .widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .widget h3 {
+    font-family: var(--font-mono);
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .widget-list li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .widget-list li:last-child { margin-bottom: 0; }
+  .widget-archive {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+  }
+  .category-row:last-child { margin-bottom: 0; }
+  .bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: var(--bar-color, var(--link));
+    animation: fillBar 1.1s ease forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes fillBar {
+    from { width: 0%; }
+    to { width: var(--bar-pct, 0%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { animation: none; width: var(--bar-pct, 0%); }
+  }
+  .category-count {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 2px 0 0;
+  }
+  .stat-pair {
+    display: flex;
+    gap: 12px;
+  }
+  .stat-pair > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .subscribe-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .rss-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  header {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    margin-top: 16px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-a);
+    margin-bottom: 8px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--grad-a); }
+    50% { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow .dot { animation: none; }
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  header .date {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-rest);
+  }
+  .meta-line {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 26px;
+  }
+  .greeting {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-a);
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 24px;
+    margin: 16px 0 32px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hero-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px var(--shadow);
+  }
+  .hero-card .story-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .story-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .story-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+  .story-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    animation: tagGlow 3.5s ease-in-out infinite;
+  }
+  @keyframes tagGlow {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { box-shadow: 0 0 7px var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag { animation: none; }
+  }
+  .source {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .story-title {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .story-summary {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .context {
+    margin-top: 10px;
+  }
+  .context summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--link);
+    list-style: none;
+  }
+  .context summary::-webkit-details-marker {
+    display: none;
+  }
+  .context summary::before {
+    content: "▸ ";
+  }
+  .context[open] summary::before {
+    content: "▾ ";
+  }
+  .context ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .context li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .context li:last-child { margin-bottom: 0; }
+  .knock-on {
+    margin-top: 8px;
+  }
+  .knock-on summary {
+    cursor: pointer;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #a16207;
+    list-style: none;
+  }
+  html[data-theme="dark"] .knock-on summary {
+    color: #e0a530;
+  }
+  .knock-on summary::-webkit-details-marker {
+    display: none;
+  }
+  .knock-on summary::before {
+    content: "▸ ";
+  }
+  .knock-on[open] summary::before {
+    content: "▾ ";
+  }
+  .knock-on ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .knock-on li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .knock-on li:last-child { margin-bottom: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .closer {
+    margin-top: 28px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: -8px 0 14px;
+    font-style: italic;
+  }
+  .widget-chat {
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .chat-msg {
+    padding: 8px 11px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .chat-msg.user {
+    background: var(--link);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+  }
+  .chat-msg.assistant {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  #chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  #chat-input:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+  }
+  #chat-send {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--link);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  #chat-send:hover { opacity: 0.85; }
+  #chat-send:disabled, #chat-input:disabled { opacity: 0.6; cursor: default; }
+  .chat-disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+<header>
+  <div class="header-top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Daily Briefing</div>
+      <h1>Mehul&#x27;s AI &amp; Consulting Daily</h1>
+      <div class="date">Saturday, November 28, 2026</div>
+    </div>
+    <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark mode</button>
+  </div>
+</header>
+
+<div class="meta-line">5 min read · <a href="feed.xml">RSS feed</a></div>
+
+<p class="greeting">Morning, Mehul — here&#x27;s your essential AI and Consulting update for the day.</p>
+
+<div class="hero-card">
+  <div class="story-meta"><span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/technology/2026/nov/27/openai-countersues-apple-trade-secrets">OpenAI Countersues Apple Over Trade Secrets Amid Escalating AI Race</a></h3>
+  <p class="story-summary">OpenAI has filed a countersuit against Apple, accusing the tech giant of stealing its trade secrets and attempting to dissuade hardware suppliers from collaborating on future OpenAI devices. This move follows Apple&#x27;s prior lawsuit against OpenAI for allegedly poaching employees, marking an intensifying legal and competitive battle in the rapidly evolving AI landscape.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Apple previously sued OpenAI, alleging employee poaching.</li>
+<li>Competition for AI talent and intellectual property is intense.</li>
+<li>Both companies are heavily investing in AI product development.</li>
+<li>The tech industry often sees disputes over IP and talent.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could lead to increased legal scrutiny of AI industry hiring practices.</li>
+<li>May impact future collaborations between major tech giants.</li>
+<li>Could influence corporate strategies for AI development and IP protection.</li></ul>
+</details>
+</div>
+
+<h2>🤖 AI</h2>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">MarkTechPost</span></div>
+  <h3 class="story-title"><a href="https://www.marktechpost.com/2026/11/26/nexos-ai-ai-gateway-200-models-governance/">nexos.ai Launches AI Adoption Platform with Gateway, Governance, and Budget Controls</a></h3>
+  <p class="story-summary">nexos.ai has introduced an AI Adoption Platform that integrates over 200 AI models behind a single gateway, offering built-in budget limits and governance features for enterprises. This aims to simplify the deployment and management of diverse AI solutions within organizations, addressing common adoption challenges.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Enterprises struggle to manage multiple AI models from different vendors.</li>
+<li>Cost control and data governance are major concerns for AI adoption.</li>
+<li>A unified platform can streamline AI integration and oversight.</li>
+<li>Fragmented AI solutions create operational complexities.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could accelerate enterprise AI adoption by simplifying management.</li>
+<li>May increase demand for AI governance and budget tools.</li>
+<li>Could prompt competitors to offer similar integrated platforms.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="source">The Verge</span></div>
+  <h3 class="story-title"><a href="https://www.theverge.com/tech/1041801/android-intelligence-create-my-widget-gemini">Android&#x27;s DIY Widgets Offer Personalized, Vibe-Coding AI Experiences</a></h3>
+  <p class="story-summary">Android users are exploring DIY widgets to create personalized AI-powered functionalities, like real-time bus arrival notifications, offering a customizable and intuitive approach to daily task management. This &#x27;vibe-coding&#x27; trend highlights a growing demand for user-centric, adaptable AI tools beyond standard applications.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Users desire more personalized, proactive digital assistants.</li>
+<li>AI is enabling more complex, real-time local information processing.</li>
+<li>Mobile operating systems are enhancing customization options.</li>
+<li>&quot;No-code&quot; or &quot;low-code&quot; approaches are empowering users.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could drive broader consumer adoption of AI-powered personalization.</li>
+<li>May influence future mobile OS design towards more customization.</li>
+<li>Could foster a new ecosystem of user-created AI tools.</li></ul>
+</details>
+</div>
+
+<h2>📊 Consulting</h2>
+<p>No notable consulting stories in the last 24 hours.</p>
+
+<h2>🌍 Israel-Iran-US Conflict</h2>
+<p class="section-note">Reported factually from multiple outlets across different vantage points — see "Why this is happening" on each story for context, and note where accounts differ.</p>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/2026/11/27/us-military-says-it-disabled-merchant-ship-trying-to-breach-iran-blockade">US Military Disables Ship Allegedly Attempting to Breach Iran Blockade</a></h3>
+  <p class="story-summary">The US military reported disabling a commercial ship after it departed an Iranian port and ignored warnings to stop, stating its propulsion was disabled but the crew was unharmed. The US indicated the ship was attempting to breach a blockade.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>The US enforces blockades as part of sanctions against Iran.</li>
+<li>Iran frequently challenges international sanctions and blockades.</li>
+<li>Commercial shipping in the region is highly contested.</li>
+<li>Maritime security in the Gulf remains a point of tension.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could heighten tensions between the US and Iran.</li>
+<li>May lead to increased scrutiny of commercial shipping in the Gulf.</li>
+<li>Could prompt further US enforcement actions or Iranian responses.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/news/liveblog/2026/11/28/iran-war-live-italy-says-drone-in-deadly-kuwait-attack-was-made-in-iran">Italy Alleges Iran-Made Drone Used in Deadly Kuwait Attack</a></h3>
+  <p class="story-summary">Italian Foreign Minister Antonio Tajani stated that the drone responsible for a deadly attack in Kuwait was manufactured in Iran. This allegation links Iran directly to a significant military incident in the region.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Regional powers often accuse Iran of supplying drones to proxy groups.</li>
+<li>Kuwait has previously been targeted by drone attacks.</li>
+<li>Attribution of weapons origin is a key aspect of international diplomacy.</li>
+<li>The conflict raises concerns about drone proliferation.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Likely to increase international pressure on Iran.</li>
+<li>Could lead to calls for new sanctions or defensive measures.</li>
+<li>May escalate regional tensions and diplomatic disputes.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="source">BBC News</span></div>
+  <h3 class="story-title"><a href="https://www.bbc.co.uk/news/articles/c6ly7jgv7jzdo">Houthi Attacks Challenge Saudi Security Image; Allies Condemn Actions</a></h3>
+  <p class="story-summary">Houthi attacks continue to test Saudi Arabia&#x27;s perceived security, though residents express confidence in government protection. Separately, allies from the Mecca pact, including Pakistan and Turkiye, condemned these &#x27;heinous&#x27; Houthi attacks on the kingdom during talks in Islamabad.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Yemen&#x27;s Houthi rebels frequently launch attacks on Saudi Arabia.</li>
+<li>Saudi Arabia leads a coalition against the Houthis in Yemen.</li>
+<li>Regional security is a top concern for Gulf states.</li>
+<li>The Mecca pact aims to foster regional cooperation and security.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could prompt intensified Saudi and allied military responses.</li>
+<li>May increase calls for a diplomatic resolution to the Yemen conflict.</li>
+<li>Likely to reinforce regional security alliances.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="source">Al Jazeera</span></div>
+  <h3 class="story-title"><a href="https://www.aljazeera.com/video/newsfeed/2026/11/28/israel-kills-two-msf-staff-in-targeted-strike-on-gaza-clinic">Israeli Strike on Gaza Clinic Kills Two MSF Staff Members</a></h3>
+  <p class="story-summary">Al Jazeera reports that an Israeli strike reportedly targeted a clinic operated by Doctors Without Borders (MSF) in Gaza, resulting in the deaths of two watchmen. MSF is an international humanitarian organization providing medical aid in conflict zones.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Gaza remains an active conflict zone with ongoing Israeli military operations.</li>
+<li>Humanitarian organizations often operate in high-risk environments.</li>
+<li>International law protects medical facilities in conflict.</li>
+<li>Previous incidents have drawn criticism over civilian and aid worker safety.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Likely to draw strong condemnation from international bodies.</li>
+<li>Could lead to increased scrutiny of Israeli military actions.</li>
+<li>May complicate humanitarian aid delivery in Gaza.</li></ul>
+</details>
+</div>
+<div class="story-card">
+  <div class="story-meta"><span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="source">The Guardian</span></div>
+  <h3 class="story-title"><a href="https://www.theguardian.com/business/2026/nov/27/norse-atlantic-airways-files-for-bankruptcy-cancels-all-future-flights">Norse Atlantic Airways Files for Bankruptcy, Cites &#x27;Iran War&#x27; Fuel Costs</a></h3>
+  <p class="story-summary">Norse Atlantic Airways, a Norwegian airline, has filed for bankruptcy and canceled all future flights, attributing its financial collapse to surging fuel costs caused by what it termed the &#x27;Iran war.&#x27; The company advised customers not to come to airports.</p>
+  <details class="context">
+  <summary>Why this is happening</summary>
+  <ul><li>Global oil markets are highly sensitive to Middle East instability.</li>
+<li>Aviation is a fuel-intensive industry with thin profit margins.</li>
+<li>The &#x27;Iran war&#x27; refers to the broader regional conflict&#x27;s impact on oil.</li>
+<li>Geopolitical events can have significant economic ripple effects.</li></ul>
+</details>
+  <details class="knock-on">
+  <summary>Possible knock-on effects</summary>
+  <ul><li>Could signal broader economic fallout from the Middle East conflict.</li>
+<li>May prompt other airlines to reassess operational costs and routes.</li>
+<li>Likely to raise concerns about energy security and price volatility.</li></ul>
+</details>
+</div>
+
+<p class="closer">The escalating legal battle between OpenAI and Apple over trade secrets is definitely worth a deeper dive.</p>
+</div>
+
+<aside class="sidebar-chat">
+<div class="widget widget-chat">
+  <h3>Ask about today's news</h3>
+  <div id="chat-messages" class="chat-messages">
+    <div class="chat-msg assistant">Ask me anything about today's stories — I'll go deeper than the summaries above.</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="e.g. Why does the sanctions story matter?" autocomplete="off">
+    <button id="chat-send" onclick="sendChatMessage()">Ask</button>
+  </div>
+  <p class="chat-disclaimer">AI-generated answers based on today's stories — worth double-checking anything important.</p>
+</div>
+</aside>
+
+<aside class="sidebar-stats">
+  <div class="widget">
+    <h3>This week</h3>
+    <div class="stat-pair">
+      <div>
+        <p class="stat-number">38</p>
+        <p class="stat-label">AI stories</p>
+      </div>
+      <div>
+        <p class="stat-number">3</p>
+        <p class="stat-label">Consulting stories</p>
+      </div>
+      <div>
+        <p class="stat-number">34</p>
+        <p class="stat-label">Conflict updates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's mix</h3>
+    <div class="category-row">
+  <span class="tag" style="background:#991b1b22;color:#991b1b;border:1px solid #991b1b55;--glow:#991b1b;">Military Action</span><span class="category-count">3</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#991b1b;--bar-pct:100%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#0b5fff22;color:#0b5fff;border:1px solid #0b5fff55;--glow:#0b5fff;">Product Launch</span><span class="category-count">2</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#0b5fff;--bar-pct:67%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#52525222;color:#525252;border:1px solid #52525255;--glow:#525252;">Other</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#525252;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#78350f22;color:#78350f;border:1px solid #78350f55;--glow:#78350f;">Humanitarian Impact</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#78350f;--bar-pct:33%;"></div>
+</div>
+<div class="category-row">
+  <span class="tag" style="background:#92400e22;color:#92400e;border:1px solid #92400e55;--glow:#92400e;">Sanctions &amp; Economy</span><span class="category-count">1</span>
+</div>
+<div class="bar-track">
+  <div class="bar-fill" style="--bar-color:#92400e;--bar-pct:33%;"></div>
+</div>
+  </div>
+
+  <div class="widget">
+    <h3>Stay in the loop</h3>
+    <p class="subscribe-note">Add this feed to any RSS reader to get each edition automatically.</p>
+    <a class="rss-link" href="feed.xml">📡 Subscribe via RSS</a>
+  </div>
+
+  <div class="widget widget-archive">
+    <h3>Past editions</h3>
+    <ul class="widget-list">
+    <li><a href="archive/2026-11-28.html">Saturday, November 28, 2026</a></li>
+<li><a href="archive/2026-11-27.html">Friday, November 27, 2026</a></li>
+<li><a href="archive/2026-11-26.html">Thursday, November 26, 2026</a></li>
+<li><a href="archive/2026-11-25.html">Wednesday, November 25, 2026</a></li>
+<li><a href="archive/2026-11-24.html">Tuesday, November 24, 2026</a></li>
+<li><a href="archive/2026-11-23.html">Monday, November 23, 2026</a></li>
+<li><a href="archive/2026-11-22.html">Sunday, November 22, 2026</a></li>
+<li><a href="archive/2026-11-21.html">Saturday, November 21, 2026</a></li>
+<li><a href="archive/2026-11-20.html">Friday, November 20, 2026</a></li>
+<li><a href="archive/2026-11-19.html">Thursday, November 19, 2026</a></li>
+<li><a href="archive/2026-11-18.html">Wednesday, November 18, 2026</a></li>
+<li><a href="archive/2026-11-17.html">Tuesday, November 17, 2026</a></li>
+<li><a href="archive/2026-11-16.html">Monday, November 16, 2026</a></li>
+<li><a href="archive/2026-11-15.html">Sunday, November 15, 2026</a></li>
+<li><a href="archive/2026-11-14.html">Saturday, November 14, 2026</a></li>
+<li><a href="archive/2026-11-13.html">Friday, November 13, 2026</a></li>
+<li><a href="archive/2026-11-12.html">Thursday, November 12, 2026</a></li>
+<li><a href="archive/2026-11-10.html">Tuesday, November 10, 2026</a></li>
+<li><a href="archive/2026-11-09.html">Monday, November 09, 2026</a></li>
+<li><a href="archive/2026-11-08.html">Sunday, November 08, 2026</a></li>
+<li><a href="archive/2026-11-07.html">Saturday, November 07, 2026</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  })();
+
+  // --- AI assistant (answers questions using today's stories as context) ---
+  const CHAT_ENDPOINT = "https://newsletter-ai-chat-proxy.mehul-garg373.workers.dev";
+  const CHAT_CONTEXT = "Edition date: Saturday, November 28, 2026\n\nTOP STORY: OpenAI Countersues Apple Over Trade Secrets Amid Escalating AI Race (source: The Guardian)\nSummary: OpenAI has filed a countersuit against Apple, accusing the tech giant of stealing its trade secrets and attempting to dissuade hardware suppliers from collaborating on future OpenAI devices. This move follows Apple's prior lawsuit against OpenAI for allegedly poaching employees, marking an intensifying legal and competitive battle in the rapidly evolving AI landscape.\nBackground: Apple previously sued OpenAI, alleging employee poaching.\nBackground: Competition for AI talent and intellectual property is intense.\nBackground: Both companies are heavily investing in AI product development.\nBackground: The tech industry often sees disputes over IP and talent.\nPossible knock-on effect: Could lead to increased legal scrutiny of AI industry hiring practices.\nPossible knock-on effect: May impact future collaborations between major tech giants.\nPossible knock-on effect: Could influence corporate strategies for AI development and IP protection.\n\nAI STORIES:\n- nexos.ai Launches AI Adoption Platform with Gateway, Governance, and Budget Controls (source: MarkTechPost)\n  Summary: nexos.ai has introduced an AI Adoption Platform that integrates over 200 AI models behind a single gateway, offering built-in budget limits and governance features for enterprises. This aims to simplify the deployment and management of diverse AI solutions within organizations, addressing common adoption challenges.\n  Background: Enterprises struggle to manage multiple AI models from different vendors.\n  Background: Cost control and data governance are major concerns for AI adoption.\n  Background: A unified platform can streamline AI integration and oversight.\n  Background: Fragmented AI solutions create operational complexities.\n  Possible knock-on effect: Could accelerate enterprise AI adoption by simplifying management.\n  Possible knock-on effect: May increase demand for AI governance and budget tools.\n  Possible knock-on effect: Could prompt competitors to offer similar integrated platforms.\n- Android's DIY Widgets Offer Personalized, Vibe-Coding AI Experiences (source: The Verge)\n  Summary: Android users are exploring DIY widgets to create personalized AI-powered functionalities, like real-time bus arrival notifications, offering a customizable and intuitive approach to daily task management. This 'vibe-coding' trend highlights a growing demand for user-centric, adaptable AI tools beyond standard applications.\n  Background: Users desire more personalized, proactive digital assistants.\n  Background: AI is enabling more complex, real-time local information processing.\n  Background: Mobile operating systems are enhancing customization options.\n  Background: \"No-code\" or \"low-code\" approaches are empowering users.\n  Possible knock-on effect: Could drive broader consumer adoption of AI-powered personalization.\n  Possible knock-on effect: May influence future mobile OS design towards more customization.\n  Possible knock-on effect: Could foster a new ecosystem of user-created AI tools.\n\nISRAEL-IRAN-US CONFLICT STORIES (report neutrally; attribute disputed claims to their source rather than stating them as fact):\n- US Military Disables Ship Allegedly Attempting to Breach Iran Blockade (source: Al Jazeera)\n  Summary: The US military reported disabling a commercial ship after it departed an Iranian port and ignored warnings to stop, stating its propulsion was disabled but the crew was unharmed. The US indicated the ship was attempting to breach a blockade.\n  Background: The US enforces blockades as part of sanctions against Iran.\n  Background: Iran frequently challenges international sanctions and blockades.\n  Background: Commercial shipping in the region is highly contested.\n  Background: Maritime security in the Gulf remains a point of tension.\n  Possible knock-on effect: Could heighten tensions between the US and Iran.\n  Possible knock-on effect: May lead to increased scrutiny of commercial shipping in the Gulf.\n  Possible knock-on effect: Could prompt further US enforcement actions or Iranian responses.\n- Italy Alleges Iran-Made Drone Used in Deadly Kuwait Attack (source: Al Jazeera)\n  Summary: Italian Foreign Minister Antonio Tajani stated that the drone responsible for a deadly attack in Kuwait was manufactured in Iran. This allegation links Iran directly to a significant military incident in the region.\n  Background: Regional powers often accuse Iran of supplying drones to proxy groups.\n  Background: Kuwait has previously been targeted by drone attacks.\n  Background: Attribution of weapons origin is a key aspect of international diplomacy.\n  Background: The conflict raises concerns about drone proliferation.\n  Possible knock-on effect: Likely to increase international pressure on Iran.\n  Possible knock-on effect: Could lead to calls for new sanctions or defensive measures.\n  Possible knock-on effect: May escalate regional tensions and diplomatic disputes.\n- Houthi Attacks Challenge Saudi Security Image; Allies Condemn Actions (source: BBC News)\n  Summary: Houthi attacks continue to test Saudi Arabia's perceived security, though residents express confidence in government protection. Separately, allies from the Mecca pact, including Pakistan and Turkiye, condemned these 'heinous' Houthi attacks on the kingdom during talks in Islamabad.\n  Background: Yemen's Houthi rebels frequently launch attacks on Saudi Arabia.\n  Background: Saudi Arabia leads a coalition against the Houthis in Yemen.\n  Background: Regional security is a top concern for Gulf states.\n  Background: The Mecca pact aims to foster regional cooperation and security.\n  Possible knock-on effect: Could prompt intensified Saudi and allied military responses.\n  Possible knock-on effect: May increase calls for a diplomatic resolution to the Yemen conflict.\n  Possible knock-on effect: Likely to reinforce regional security alliances.\n- Israeli Strike on Gaza Clinic Kills Two MSF Staff Members (source: Al Jazeera)\n  Summary: Al Jazeera reports that an Israeli strike reportedly targeted a clinic operated by Doctors Without Borders (MSF) in Gaza, resulting in the deaths of two watchmen. MSF is an international humanitarian organization providing medical aid in conflict zones.\n  Background: Gaza remains an active conflict zone with ongoing Israeli military operations.\n  Background: Humanitarian organizations often operate in high-risk environments.\n  Background: International law protects medical facilities in conflict.\n  Background: Previous incidents have drawn criticism over civilian and aid worker safety.\n  Possible knock-on effect: Likely to draw strong condemnation from international bodies.\n  Possible knock-on effect: Could lead to increased scrutiny of Israeli military actions.\n  Possible knock-on effect: May complicate humanitarian aid delivery in Gaza.\n- Norse Atlantic Airways Files for Bankruptcy, Cites 'Iran War' Fuel Costs (source: The Guardian)\n  Summary: Norse Atlantic Airways, a Norwegian airline, has filed for bankruptcy and canceled all future flights, attributing its financial collapse to surging fuel costs caused by what it termed the 'Iran war.' The company advised customers not to come to airports.\n  Background: Global oil markets are highly sensitive to Middle East instability.\n  Background: Aviation is a fuel-intensive industry with thin profit margins.\n  Background: The 'Iran war' refers to the broader regional conflict's impact on oil.\n  Background: Geopolitical events can have significant economic ripple effects.\n  Possible knock-on effect: Could signal broader economic fallout from the Middle East conflict.\n  Possible knock-on effect: May prompt other airlines to reassess operational costs and routes.\n  Possible knock-on effect: Likely to raise concerns about energy security and price volatility.\n";
+  let chatHistory = [];
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendChatMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    input.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+
+    appendChatMessage('user', question);
+    const thinkingEl = appendChatMessage('assistant', 'Thinking…');
+
+    const isFirstMessage = chatHistory.length === 0;
+    const messageText = isFirstMessage
+      ? "You are a helpful assistant embedded in a daily AI & Consulting newsletter page. " +
+        "Answer the reader's questions about today's stories in more depth than the newsletter " +
+        "itself, using the context below. If a question goes beyond what's in today's stories, " +
+        "say so briefly and answer from general knowledge if you reasonably can. Be concise but " +
+        "substantive, and stay neutral/objective on contested topics.\n\nTODAY'S STORIES:\n" +
+        CHAT_CONTEXT + "\n\nReader's question: " + question
+      : question;
+
+    chatHistory.push({ role: 'user', parts: [{ text: messageText }] });
+
+    try {
+      const response = await fetch(
+        CHAT_ENDPOINT,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: chatHistory })
+        }
+      );
+      const data = await response.json();
+      const reply = (data.candidates && data.candidates[0] && data.candidates[0].content &&
+                     data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+                     data.candidates[0].content.parts[0].text) ||
+                     "Sorry, I couldn't generate a response just then — try again?";
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      if (thinkingEl) {
+        thinkingEl.innerHTML = escapeHtml(reply).replace(/\n/g, '<br>');
+      }
+    } catch (err) {
+      if (thinkingEl) {
+        thinkingEl.innerHTML = "Couldn't reach the assistant just now — check your connection and try again.";
+      }
+      chatHistory.pop();
+    } finally {
+      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
+      input.focus();
+      const container = document.getElementById('chat-messages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
